@@ -4,14 +4,14 @@
   left: 0;
   position: absolute;
   top: 1200px;
-  width: 1446px;
+  width: 100%;
 }
 
 .FOOTER .overlap-group {
   background-color: #0000ffcc;
   height: 507px;
   position: relative;
-  width: 1440px;
+  width: 100%;
 }
 
 .FOOTER .frame {

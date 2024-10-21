@@ -19,19 +19,13 @@ const Navbar = () => {
 
   return (
     <>
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "2%",
-        }}
+      <nav className="container w-full flex justify-between items-center mt-2 mx-auto"
       >
         {/* Logo Section */}
         <div
           style={{
-            width: "50px",
-            fontSize: "20px",
+            width: "70px",
+            fontSize: "40px",
             fontWeight: "bold",
             color: "rgba(0,0,255,1)",
           }}
@@ -40,7 +34,7 @@ const Navbar = () => {
         </div>
 
         {/* Search Bar Section */}
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -62,7 +56,7 @@ const Navbar = () => {
               width: "250px",
             }}
           />
-        </div>
+        </div> */}
 
         {/* Links Section */}
         <div style={{ display: "flex", gap: "35px" }}>

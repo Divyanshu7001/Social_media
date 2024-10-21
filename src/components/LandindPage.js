@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import Footer from "./Footer";
 // import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
 
 // Inline styles for the Landing Page
@@ -40,6 +41,7 @@ const LandingPage = () => {
             {/* You can add more content here like buttons, articles preview, etc. */}
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );
