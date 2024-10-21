@@ -1,0 +1,10 @@
+.landing-page {
+    padding: 20px;
+  }
+  
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
