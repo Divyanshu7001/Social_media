@@ -1,5 +1,4 @@
 import React,{useState} from "react";
-import { FaEllipsisH } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { CiBookmark, CiShare2 } from "react-icons/ci";
 import Navbar from "./Navbar";

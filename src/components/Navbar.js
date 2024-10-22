@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
+import { FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
 import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
 import line4 from "../assets/img/line4.svg"; // Ensure the correct path to the image
 import Ellipse4 from "../assets/img/Ellipse4.png";
@@ -19,8 +19,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="container w-full flex justify-between items-center mt-2 mx-auto"
-      >
+      <nav className="container w-full flex justify-between items-center mt-2 mx-auto">
         {/* Logo Section */}
         <div
           style={{
@@ -241,6 +240,7 @@ const Navbar = () => {
           >
             <img
               src={LogOut}
+              alt=""
               style={{ width: "30px", height: "30px", marginRight: "20px" }}
             />
             <p

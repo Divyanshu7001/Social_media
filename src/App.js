@@ -11,6 +11,7 @@ import Article from "./components/Article";
 import JournalsPage from "./components/JournalsPage";
 import JournalDetails from "./components/JournalDetails";
 import UploadPaperDetails from "./components/UploadPaperDetails";
+import { Toaster } from "react-hot-toast";
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -38,6 +39,7 @@ const App = () => (
       <Route path="/Article" element={<Article />} />
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
     </Routes>
+    <Toaster position="top-center" reverseOrder={false} />
   </Router>
 );
 
