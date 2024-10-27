@@ -36,8 +36,8 @@ const App = () => (
       <Route path="/ProfileCard" element={<ProfileCard />} />
       <Route path="/Article" element={<Article />} />
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
-      <Route path="/Profile" element={<Profile />} />
-      <Route path="/Journals" element={<Journals />} />
+      <Route path="/connection" element={<Profile />} />
+      <Route path="/institution" element={<Journals />} />
       
       
     </Routes>
