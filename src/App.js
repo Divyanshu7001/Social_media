@@ -1,14 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LandingPage from './components/LandindPage';
-import LoginPage from './components/LoginPage';
-import SignupPage from './components/SignupPage';
-import  Homepage  from './components/HomePage';
-import UploadPage from './components/UploadPage';
-import ProfileCard from './components/ProfileCard';
-import CreatePost from './components/Createpost';
-import Article from './components/Article';
-import UploadPaperDetails  from "./components/UploadPaperDetails";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LandingPage from "./components/LandindPage";
+import LoginPage from "./components/LoginPage";
+import SignupPage from "./components/SignupPage";
+import Homepage from "./components/HomePage";
+import UploadPage from "./components/UploadPage";
+import ProfileCard from "./components/ProfileCard";
+import CreatePost from "./components/Createpost";
+import Article from "./components/Article";
+import UploadPaperDetails from "./components/UploadPaperDetails";
+import ViewProfile from "./components/ViewProfile";
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -20,7 +21,6 @@ import UploadPaperDetails  from "./components/UploadPaperDetails";
 //import About from './components/About';
 //import Journals from './components/Journals';
 //import Updates from './components/Updates';
-
 
 const App = () => (
   <Router>
@@ -34,8 +34,7 @@ const App = () => (
       <Route path="/ProfileCard" element={<ProfileCard />} />
       <Route path="/Article" element={<Article />} />
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
-      
-      
+      <Route path="/profileView" element={<ViewProfile />} />
     </Routes>
   </Router>
 );
