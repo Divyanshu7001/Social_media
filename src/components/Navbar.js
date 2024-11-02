@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
-import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
+import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
+import { Link, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
 import line4 from "../assets/img/line4.svg"; // Ensure the correct path to the image
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import LogOut from "../assets/img/uiw_logout.png";
@@ -211,23 +211,24 @@ const Navbar = () => {
               &times;
             </button>
           </div>
-          <button
-            onClick={() => navigate("/ProfileCard")}
-            style={{
-              marginTop: "40px",
-              padding: "10px",
-              borderRadius: "9999px",
-              border: "1px solid rgba(0,0,255,1)",
-              backgroundColor: "transparent",
-              width: "89%",
-              cursor: "pointer",
-              fontSize: "18px",
-              color: "rgba(0,0,255,1)",
-              fontWeight: "500",
-            }}
-          >
-            View Profile
-          </button>
+          <Link to="/profileView">
+            <button
+              style={{
+                marginTop: "40px",
+                padding: "10px",
+                borderRadius: "9999px",
+                border: "1px solid rgba(0,0,255,1)",
+                backgroundColor: "transparent",
+                width: "89%",
+                cursor: "pointer",
+                fontSize: "18px",
+                color: "rgba(0,0,255,1)",
+                fontWeight: "500",
+              }}
+            >
+              View Profile
+            </button>
+          </Link>
           <div
             style={{ border: "1px solid #cfcfcf", margin: "30px 10px" }}
           ></div>
@@ -241,7 +242,7 @@ const Navbar = () => {
           >
             <img
               src={LogOut}
-              alt=""
+              alt="LogOut Icon"
               style={{ width: "30px", height: "30px", marginRight: "20px" }}
             />
             <p

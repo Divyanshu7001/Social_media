@@ -14,7 +14,7 @@ import UploadPaperDetails  from "./components/UploadPaperDetails";
 import Profile from './components/Profile';
 import Journals from './components/Journals';
 import { Toaster } from "react-hot-toast";
-
+import ViewProfile from "./components/ViewProfile";
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -41,6 +41,7 @@ const App = () => (
       <Route path="/ProfileCard" element={<ProfileCard />} />
       <Route path="/Article" element={<Article />} />
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
+      <Route path="/profileView" element={<ViewProfile />} />
       <Route path="/connection" element={<Profile />} />
       <Route path="/institution" element={<Journals />} />
       
