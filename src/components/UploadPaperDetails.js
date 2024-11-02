@@ -2,38 +2,68 @@ import React, { useState } from "react";
 import "../style/UploadPaperDetails.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 export const UploadPaperDetails = () => {
   const [formData, setFormData] = useState({
     paperTitle: "",
     abstract: "",
     publicationName: "",
-    period: "",
+    year: "",
+    link: "",
     doi: "",
-    author: "",
-    coAuthor: "",
+    research_interest: "",
     category: "", // New category field
   });
+
   const [coAuthors, setCoAuthors] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [showUserList, setShowUserList] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [newCoAuthor, setNewCoAuthor] = useState("");
 
+  const location = useLocation();
+  const { selectedFile } = location.state || {};
+  console.log(selectedFile);
+  
+  const handleUpload = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("paperTitle", formData.paperTitle);
+    data.append("abstract", formData.abstract);
+    data.append("publication_name", formData.publicationName);
+    data.append("authors", coAuthors);
+    data.append("research_interest", formData.research_interest);
+    data.append("period", formData.period);
+    data.append("doi", formData.doi);
+    data.append("year", formData.year);
+    data.append("link", formData.link);
+    data.append("section", formData.category);
+
+    if (selectedFile) {
+      data.append("article", selectedFile);
+    }
+
+    console.log(data);
+
+    // const response = await axios.post(
+    //   "http://92.118.56.227/api/upload_journal"
+    // );
+  };
+
   const users = [
     "John Doe",
     "Alice Smith",
     "Robert Johnson",
     "Bob Riser",
-    "Levi Ackeraman",
-  ]; // Example list of users
+    "Levi Ackerman",
+  ];
 
-  // Handler for form input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Search co-author
   const handleCoAuthorChange = (e) => {
     const input = e.target.value;
     setFormData({ ...formData, coAuthor: input });
@@ -49,49 +79,33 @@ export const UploadPaperDetails = () => {
     }
   };
 
-  // Add co-author from the user list
   const addCoAuthor = (author) => {
     if (!coAuthors.includes(author)) {
       setCoAuthors([...coAuthors, author]);
     }
-    setFormData({ ...formData, coAuthor: "" }); // Clear the input field
-    setShowUserList(false); // Hide list after selecting
+    setFormData({ ...formData, coAuthor: "" });
+    setShowUserList(false);
   };
 
-  // Show the popup to manually add a co-author
-  const handleAddNewCoAuthor = () => {
-    setShowPopup(true);
-  };
+  const handleAddNewCoAuthor = () => setShowPopup(true);
 
-  // Add new co-author manually
   const handleNewCoAuthorSubmit = () => {
     if (newCoAuthor.trim() && !coAuthors.includes(newCoAuthor)) {
       setCoAuthors([...coAuthors, newCoAuthor]);
-      setNewCoAuthor(""); // Reset input field
-      setFormData({ ...formData, coAuthor: "" }); // Clear search input
-      setShowUserList(false); // Hide the user list
     }
-    setShowPopup(false); // Hide popup after adding
-  };
-
-  // Close the popup without adding
-  const handlePopupClose = () => {
+    setNewCoAuthor("");
+    setFormData({ ...formData, coAuthor: "" });
     setShowPopup(false);
   };
 
-  // Remove co-author by clicking the cross icon
+  const handlePopupClose = () => setShowPopup(false);
+
   const removeCoAuthor = (authorToRemove) => {
     setCoAuthors(coAuthors.filter((author) => author !== authorToRemove));
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "row",
-      }}
-    >
+    <div className="flex flex-col">
       <div className="UPLOAD-paper-details">
         <div className="div">
           <div className="overlap">
@@ -123,9 +137,19 @@ export const UploadPaperDetails = () => {
                 ></textarea>
               </div>
 
+              <div className="col-span-4 input-group">
+                <label htmlFor="paperTitle">Link</label>
+                <input
+                  type="text"
+                  name="link"
+                  value={formData.link}
+                  onChange={handleChange}
+                />
+              </div>
+
               {/* Inner container for author and co-author */}
               <label htmlFor="author" className="author-heading">
-                Author
+                Authors
               </label>
               <div className="author-container">
                 <div className="input-group1">
@@ -133,13 +157,14 @@ export const UploadPaperDetails = () => {
                     <input
                       type="text"
                       name="coAuthor"
-                      value={formData.coAuthor}
                       onChange={handleCoAuthorChange}
                       placeholder="Enter Co-Author Name"
                     />
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <p className="select-auth" onClick={handleAddNewCoAuthor}>
-                      + Add Co-Authors
+                    <p
+                      className="select-auth ml-2"
+                      onClick={handleAddNewCoAuthor}
+                    >
+                      +Add Co-Author
                     </p>
                   </div>
                   {showUserList && (
@@ -205,11 +230,11 @@ export const UploadPaperDetails = () => {
                 />
               </div>
               <div className="input-group">
-                <label htmlFor="period">Period</label>
+                <label htmlFor="period">Year</label>
                 <input
                   type="text"
-                  name="period"
-                  value={formData.period}
+                  name="year"
+                  value={formData.year}
                   onChange={handleChange}
                 />
               </div>
@@ -222,18 +247,33 @@ export const UploadPaperDetails = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="input-group">
-                <label htmlFor="category">Category</label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Category</option>
-                  <option value="research">Research</option>
-                  <option value="review">Review</option>
-                  <option value="case study">Case Study</option>
-                </select>
+              <div className="flex flex-col gap-2">
+                <div className="input-group2">
+                  <label htmlFor="category" className="text-lg font-semibold">
+                    Category
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-500 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="research">Research</option>
+                    <option value="review">Review</option>
+                    <option value="case study">Case Study</option>
+                  </select>
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="doi">Research Interests</label>
+                  <input
+                    type="text"
+                    name="research_interest"
+                    value={formData.research_interest}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -249,14 +289,16 @@ export const UploadPaperDetails = () => {
                   onChange={(e) => setNewCoAuthor(e.target.value)}
                   placeholder="Enter Co-Author Name"
                 />
-                <button onClick={handleNewCoAuthorSubmit}>Add Co-Author</button>
+                <button onClick={handleNewCoAuthorSubmit}>Add</button>
                 <button onClick={handlePopupClose}>Cancel</button>
               </div>
             </div>
           )}
 
           <div className="div-wrapper">
-            <div className="text-wrapper-7">Save</div>
+            <div className="text-wrapper-7" onClick={handleUpload}>
+              Save
+            </div>
           </div>
         </div>
       </div>

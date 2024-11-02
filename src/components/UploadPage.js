@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import "../style/Upload.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import rectangle65 from "../assets/img/rectangle-65.png";
 import rectangle64 from "../assets/img/rectangle-64.png";
 import Navbar from "./Navbar";
@@ -18,12 +18,16 @@ export const Upload = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file.name);
+      setSelectedFile(file);
     }
   };
 
   const handleNextClick = () => {
-    navigate("/UploadPaperDetails"); // Navigate to UploadPaperDetails
+    navigate("/UploadPaperDetails", { state: { selectedFile } });
+  };
+
+  const handleNoFileClick = () => {
+    navigate("/UploadPaperDetails"); // Navigate to the details page
   };
 
   return (
@@ -44,7 +48,7 @@ export const Upload = () => {
                 ) : (
                   <div className="file-container">
                     <p className="file-name" style={{ textAlign: "center" }}>
-                      File Uploaded: {selectedFile}
+                      File Uploaded: {selectedFile.name}
                     </p>
                     <div
                       className="frame next-button"
@@ -61,12 +65,22 @@ export const Upload = () => {
                   </>
                 )}
               </div>
+              {!selectedFile && (
+                <div className="no-file-link mt-32 text-center ml-5">
+                  <button
+                    className="no-file-button"
+                    onClick={handleNoFileClick}
+                  >
+                    No file to upload?
+                  </button>
+                </div>
+              )}
             </div>
 
             <p className="text-wrapper-4">
-              Upload Your Paper which contribute to the advancement of knowledge
-              in the field of information technology by submitting your research
-              to our journal.
+              Upload Your Paper which contributes to the advancement of
+              knowledge in the field of information technology by submitting
+              your research to our journal.
             </p>
           </div>
 
@@ -77,7 +91,6 @@ export const Upload = () => {
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
-
             <Navbar />
           </div>
         </div>
