@@ -212,6 +212,7 @@ const Navbar = () => {
             </button>
           </div>
           <button
+            onClick={() => navigate("/ProfileCard")}
             style={{
               marginTop: "40px",
               padding: "10px",

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import "../style/Upload.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import rectangle65 from "../assets/img/rectangle-65.png";
 import rectangle64 from "../assets/img/rectangle-64.png";
 import Navbar from "./Navbar";

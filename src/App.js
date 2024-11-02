@@ -1,17 +1,20 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LandingPage from "./components/LandindPage";
-import LoginPage from "./components/LoginPage";
-import SignupPage from "./components/SignupPage";
-import Homepage from "./components/HomePage";
-import UploadPage from "./components/UploadPage";
-import ProfileCard from "./components/ProfileCard";
-import CreatePost from "./components/Createpost";
-import Article from "./components/Article";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './components/LandindPage';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import  Homepage  from './components/HomePage';
+import UploadPage from './components/UploadPage';
+import ProfileCard from './components/ProfileCard';
+import CreatePost from './components/Createpost';
+import Article from './components/Article';
 import JournalsPage from "./components/JournalsPage";
 import JournalDetails from "./components/JournalDetails";
-import UploadPaperDetails from "./components/UploadPaperDetails";
+import UploadPaperDetails  from "./components/UploadPaperDetails";
+import Profile from './components/Profile';
+import Journals from './components/Journals';
 import { Toaster } from "react-hot-toast";
+
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -38,6 +41,9 @@ const App = () => (
       <Route path="/ProfileCard" element={<ProfileCard />} />
       <Route path="/Article" element={<Article />} />
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
+      <Route path="/connection" element={<Profile />} />
+      <Route path="/institution" element={<Journals />} />
+      
     </Routes>
     <Toaster position="top-center" reverseOrder={false} />
   </Router>

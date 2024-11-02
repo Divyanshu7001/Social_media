@@ -27,7 +27,7 @@ function Footer() {
               <h3 className="mt-4 p ml-2">
                 Enter your Email address and get updates directly to your email
               </h3>
-              <img className="mr-12" src={epback} style={{
+              <img alt="arrow" className="mr-12" src={epback} style={{
                 height: "28px",
                 width:"72px",
                 marginTop:"8px"

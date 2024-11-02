@@ -3,7 +3,6 @@ import "../style/UploadPaperDetails.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 export const UploadPaperDetails = () => {
   const [formData, setFormData] = useState({
     paperTitle: "",
