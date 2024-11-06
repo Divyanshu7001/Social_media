@@ -1,20 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LandingPage from './components/LandindPage';
-import LoginPage from './components/LoginPage';
-import SignupPage from './components/SignupPage';
-import  Homepage  from './components/HomePage';
-import UploadPage from './components/UploadPage';
-import ProfileCard from './components/ProfileCard';
-import CreatePost from './components/Createpost';
-import Article from './components/Article';
-import JournalsPage from "./components/JournalsPage";
-import JournalDetails from "./components/JournalDetails";
-import UploadPaperDetails  from "./components/UploadPaperDetails";
-import Profile from './components/Profile';
-import Journals from './components/Journals';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LandingPage from "./components/LandindPage.js";
+import LoginPage from "./components/LoginPage.js";
+import SignupPage from "./components/SignupPage.js";
+import Homepage from "./components/HomePage.js";
+import UploadPage from "./components/UploadPage.js";
+import ProfileCard from "./components/ProfileCard.js";
+import CreatePost from "./components/Createpost.js";
+import Article from "./components/Article.js";
+import JournalsPage from "./components/JournalsPage.js";
+import JournalDetails from "./components/JournalDetails.js";
+import UploadPaperDetails from "./components/UploadPaperDetails.js";
+import Profile from "./components/Profile.js";
+import Journals from "./components/Journals.js";
 import { Toaster } from "react-hot-toast";
-import ViewProfile from "./components/ViewProfile";
+import ViewProfile from "./components/ViewProfile.js";
+import OtherProfile from "./components/OtherProfile.js";
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -43,8 +44,8 @@ const App = () => (
       <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
       <Route path="/profileView" element={<ViewProfile />} />
       <Route path="/connection" element={<Profile />} />
-      <Route path="/institution" element={<Journals />} />
-      
+      <Route path="/institutions" element={<Journals />} />
+      <Route path="/profile" element={<OtherProfile />} />
     </Routes>
     <Toaster position="top-center" reverseOrder={false} />
   </Router>

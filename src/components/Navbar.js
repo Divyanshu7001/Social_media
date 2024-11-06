@@ -6,15 +6,15 @@ import Ellipse4 from "../assets/img/Ellipse4.png";
 import LogOut from "../assets/img/uiw_logout.png";
 
 const Navbar = () => {
-  const navigate = useNavigate(); // Initialize navigate
-  const [showPopup, setShowPopup] = useState(false); // State for popup visibility
+  const navigate = useNavigate(); 
+  const [showPopup, setShowPopup] = useState(false); 
 
   const handleUploadClick = () => {
-    navigate("/Upload"); // Navigate to Upload page when button is clicked
+    navigate("/Upload"); 
   };
 
   const togglePopup = () => {
-    setShowPopup(!showPopup); // Toggle popup visibility
+    setShowPopup(!showPopup); 
   };
 
   return (
@@ -27,35 +27,38 @@ const Navbar = () => {
             fontSize: "40px",
             fontWeight: "bold",
             color: "rgba(0,0,255,1)",
+            marginRight: "12px",
           }}
         >
           LOGO
         </div>
 
         {/* Search Bar Section */}
-        {/* <div
+        <div
+          className="ml-5 w-1/3 border-2 border-gray-400 items-center"
           style={{
             display: "flex",
             alignItems: "center",
             backgroundColor: "white",
-            padding: "5px 60px",
+            padding: "5px 20px",
             borderRadius: "5px",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-            height: "30px",
+            height: "50px",
           }}
         >
-          <FiSearch style={{ marginRight: "10px", fontSize: "20px" }} />
+          <FiSearch
+            style={{ marginRight: "20px", fontSize: "28px", color: "gray" }}
+          />
           <input
             type="text"
             placeholder="What are you looking for?"
             style={{
               border: "none",
               outline: "none",
-              fontSize: "16px",
+              fontSize: "19px",
               width: "250px",
             }}
           />
-        </div> */}
+        </div>
 
         {/* Links Section */}
         <div style={{ display: "flex", gap: "35px" }}>
