@@ -12,6 +12,7 @@ import UploadPaperDetails  from "./components/UploadPaperDetails";
 import Profile from './components/Profile';
 import Journals from './components/Journals';
 import SavedItems from './components/SavedItems';
+import ViewProfile from './components/ViewProfile';
 //import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import { Homepage } from './components/HomePage';
 //import Institutions from './components/Institutions';
@@ -40,6 +41,7 @@ const App = () => (
       <Route path="/connection" element={<Profile />} />
       <Route path="/institution" element={<Journals />} />
       <Route path="/savedItems" element={<SavedItems />} />
+      <Route path="/ViewProfile" element={<ViewProfile />} />
       
       
     </Routes>
