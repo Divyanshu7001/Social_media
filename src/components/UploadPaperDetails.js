@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../style/UploadPaperDetails.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Context } from "../index.js";
+import toast from "react-hot-toast";
 export const UploadPaperDetails = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(Context);
   const [formData, setFormData] = useState({
     paperTitle: "",
     abstract: "",
@@ -23,32 +28,55 @@ export const UploadPaperDetails = () => {
 
   const location = useLocation();
   const { selectedFile } = location.state || {};
-  console.log(selectedFile);
-  
+  //console.log(selectedFile);
+
   const handleUpload = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append("paperTitle", formData.paperTitle);
+    data.append("user_id", user.id);
+    data.append("paper_title", formData.paperTitle);
     data.append("abstract", formData.abstract);
     data.append("publication_name", formData.publicationName);
+    data.append("year", formData.year);
+    data.append("doi", formData.doi);
     data.append("authors", coAuthors);
     data.append("research_interest", formData.research_interest);
-    data.append("period", formData.period);
-    data.append("doi", formData.doi);
-    data.append("year", formData.year);
-    data.append("link", formData.link);
     data.append("section", formData.category);
+    data.append("link", formData.link);
+    data.append("period", formData.period);
 
+    let headers = { "Content-Type": "application/json" };
     if (selectedFile) {
       data.append("article", selectedFile);
+      headers["Content-Type"] = "multipart/form-data";
     }
 
     console.log(data);
 
-    // const response = await axios.post(
-    //   "http://92.118.56.227/api/upload_journal"
-    // );
+    try {
+      const response = await axios.post(
+        "http://92.118.56.227/api/uploadJournal",
+        data,
+        {
+          withCredentials: true,
+          headers,
+        }
+      );
+      toast.success(response.data.message, {
+        style: {
+          borderRadius: "8px",
+          background: "#f8f9fa",
+          color: "#212529",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          padding: "12px 20px",
+        },
+      });
+      //console.log(response.data);
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const users = [

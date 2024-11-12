@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import line8 from '../assets/img/Line8.png';
-import Ellipse4 from '../assets/img/Ellipse4.png';
-import materialsymbolslightclose from '../assets/img/materialsymbolslightclose.png';
-import bytesizedownload from '../assets/img/bytesizedownload.png';
+import line8 from "../assets/img/Line8.png";
+import Ellipse4 from "../assets/img/Ellipse4.png";
+import materialsymbolslightclose from "../assets/img/materialsymbolslightclose.png";
+import bytesizedownload from "../assets/img/bytesizedownload.png";
+import axios from "axios";
+import { Context } from "../index.js";
 //import Homepage from "./HomePage";
 
 export const Box = () => {
+  const { user } = useContext(Context);
   const [showPopup, setShowPopup] = useState(true);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null); // State to hold the uploaded image
-  const navigate = useNavigate(); 
+  const [uploadFile, setUploadFile] = useState(null);
+  const navigate = useNavigate();
 
   const closePopup = () => {
     setShowPopup(false);
@@ -22,6 +26,30 @@ export const Box = () => {
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setUploadedImage(imageURL); // Set the uploaded image
+      setUploadFile(file);
+    }
+  };
+
+  const handlePostUpload = async (e) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+      data.append("description", inputValue);
+      data.append("post", uploadFile);
+      data.append("user_id", user.id);
+      console.log(data);
+
+      const response = await axios.post(
+        "http://92.118.56.227/api/uploadPost",
+        data,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log("Error while uploading Post:", error);
     }
   };
 
@@ -61,11 +89,19 @@ export const Box = () => {
             {/* Upload Section */}
             <div style={uploadSectionStyle}>
               {uploadedImage ? (
-                <img src={uploadedImage} alt="Uploaded" style={uploadedImageStyle} />
+                <img
+                  src={uploadedImage}
+                  alt="Uploaded"
+                  style={uploadedImageStyle}
+                />
               ) : (
                 <>
                   <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-                    <img src={bytesizedownload} alt="Upload" style={downloadIconStyle} />
+                    <img
+                      src={bytesizedownload}
+                      alt="Upload"
+                      style={downloadIconStyle}
+                    />
                     <div style={textWrapperStyle}>Upload Image</div>
                   </label>
                   <input
@@ -82,7 +118,9 @@ export const Box = () => {
               <button style={cancelButtonStyle} onClick={closePopup}>
                 Cancel
               </button>
-              <button style={postButtonStyle}>Post</button>
+              <button onClick={handlePostUpload} style={postButtonStyle}>
+                Post
+              </button>
             </div>
           </div>
         </div>
@@ -195,9 +233,9 @@ const downloadIconStyle = {
 };
 
 const uploadedImageStyle = {
-  maxWidth: "100%",     // Ensures the image doesn't exceed the upload section width
-  maxHeight: "150px",   // Sets a fixed max height
-  objectFit: "cover",   // Ensures the image is contained and scaled properly
+  maxWidth: "100%", // Ensures the image doesn't exceed the upload section width
+  maxHeight: "150px", // Sets a fixed max height
+  objectFit: "cover", // Ensures the image is contained and scaled properly
   borderRadius: "10px",
 };
 

@@ -17,36 +17,36 @@ import openmojishare from "../assets/img/openmojishare.png";
 import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
 import circummenukebab from "../assets/img/circummenukebab.png";
 
-const articles = [
-  {
-    id: 1,
-    title: "The Future of Quantum Computing: Transforming IT Landscapes",
-    description:
-      "Dive into the potential of quantum computing and its implications for solving complex problems in record time.",
-    author: "John",
-  },
-  {
-    id: 2,
-    title: "AI in Cybersecurity: A Double-Edged Sword",
-    description:
-      "Discover how AI is revolutionizing cybersecurity, offering advanced protection while presenting new challenges.",
-    author: "John",
-  },
-  {
-    id: 3,
-    title: "Machine Learning: The New Frontier",
-    description:
-      "Explore the latest trends in machine learning and its impact on various industries.",
-    author: "Georgia",
-  },
-  {
-    id: 4,
-    title: "Machine Learning: The New Frontier",
-    description:
-      "Explore the latest trends in machine learning and its impact on various industries.",
-    author: "Georgia",
-  },
-];
+// const articles = [
+//   {
+//     id: 1,
+//     title: "The Future of Quantum Computing: Transforming IT Landscapes",
+//     description:
+//       "Dive into the potential of quantum computing and its implications for solving complex problems in record time.",
+//     author: "John",
+//   },
+//   {
+//     id: 2,
+//     title: "AI in Cybersecurity: A Double-Edged Sword",
+//     description:
+//       "Discover how AI is revolutionizing cybersecurity, offering advanced protection while presenting new challenges.",
+//     author: "John",
+//   },
+//   {
+//     id: 3,
+//     title: "Machine Learning: The New Frontier",
+//     description:
+//       "Explore the latest trends in machine learning and its impact on various industries.",
+//     author: "Georgia",
+//   },
+//   {
+//     id: 4,
+//     title: "Machine Learning: The New Frontier",
+//     description:
+//       "Explore the latest trends in machine learning and its impact on various industries.",
+//     author: "Georgia",
+//   },
+// ];
 
 const PostCard = ({ name, location, description }) => {
   const [views, setViews] = useState(0);
@@ -150,17 +150,26 @@ const ArticleCard = ({ title, description, author }) => {
   );
 };
 
-const ArticleList = () => (
+const ArticleList = (posts, articles) => (
   <div style={styles.scrollableContent}>
-    {articles.map((article) => (
-      <ArticleCard
-        key={article.id}
-        title={article.title}
-        description={article.description}
-        author={article.author}
-      />
-    ))}
-    <PostCard
+    {articles.length > 0 &&
+      articles.map((article) => (
+        <ArticleCard
+          key={article.id}
+          title={article.title}
+          description={article.description}
+          author={article.author}
+        />
+      ))}
+    {posts.length > 0 &&
+      posts.map((post) => (
+        <PostCard
+          name={post.name}
+          location={post.location}
+          description={post.description}
+        />
+      ))}
+    {/* <PostCard
       name="Georgia"
       location="Ahmedabad, Gujarat"
       description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
@@ -322,7 +331,7 @@ const ArticleList = () => (
       name="Georgia"
       location="Ahmedabad, Gujarat"
       description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
+    /> */}
   </div>
 );
 

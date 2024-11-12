@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,8 +11,11 @@ import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import signupImage from "../assets/img/aimscopefour-e70e3d5a-1.png"; // Update with your image path
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Context } from "../index.js";
 
 const SignupPage = () => {
+  const { isAuthenticated, setIsAuthenticated, user, setUser } =
+    useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -48,6 +51,11 @@ const SignupPage = () => {
           }
         )
         .then((res) => {
+          //console.log(res.data);
+          setUser(res.data.user);
+          setIsAuthenticated(true);
+          localStorage.setItem("isAuthenticated", true);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
           navigate("/home");
         });
     } catch (error) {
@@ -60,6 +68,8 @@ const SignupPage = () => {
           padding: "12px 20px",
         },
       });
+      setUser({});
+      setIsAuthenticated(false);
     }
   };
 

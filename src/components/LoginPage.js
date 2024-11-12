@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../index.js";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,6 +17,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const LoginPage = () => {
+  const { isAuthenticated, setIsAuthenticated, user, setUser } =
+    useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -26,6 +29,10 @@ const LoginPage = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
+
+  {
+    isAuthenticated && navigate("/home");
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -57,7 +64,12 @@ const LoginPage = () => {
           }
         )
         .then((res) => {
-         
+          //console.log(res.data);
+          setUser(res.data.user);
+          //console.log(user);
+          setIsAuthenticated(true);
+          localStorage.setItem("isAuthenticated", true);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
           navigate("/home");
         });
     } catch (error) {
@@ -70,7 +82,8 @@ const LoginPage = () => {
           padding: "12px 20px",
         },
       });
-      console.log("Login Error: ", error);
+      setUser({});
+      setIsAuthenticated(false);
     }
   };
 
@@ -335,9 +348,12 @@ const LoginPage = () => {
             </button>
 
             <div style={resetContainerStyle}>
-              <a href="#" onClick={() => setForgotPassword(true)}>
+              <p
+                className="cursor-pointer"
+                onClick={() => setForgotPassword(true)}
+              >
                 Forgot Password?
-              </a>
+              </p>
             </div>
 
             <div style={{ textAlign: "center", marginTop: "10px" }}>
