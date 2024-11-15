@@ -15,7 +15,8 @@ import Ellipse4 from "../assets/img/Ellipse4.png";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
 import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
-import circummenukebab from "../assets/img/circummenukebab.png";
+// import circummenukebab from "../assets/img/circummenukebab.png";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 // const articles = [
 //   {
@@ -63,8 +64,15 @@ const PostCard = ({ name, location, description }) => {
     <div style={styles.card}>
       <div style={styles.cardContent}>
         <img src={Ellipse4} alt="Profile" style={styles.profileImage} />
+
         <div style={styles.cardText}>
-          <div style={styles.name}>{name}</div>
+          <div className="flex items-center justify-between">
+            <div style={styles.name}>{name}</div>
+            <div className="flex items-center">
+              <p className="text-[#0000ff] text-lg mr-4">Follow</p>
+              <MoreVertIcon />
+            </div>
+          </div>
           <div style={styles.location}>{location}</div>
           <p style={styles.description}>{description}</p>
         </div>
@@ -93,7 +101,7 @@ const PostCard = ({ name, location, description }) => {
           />
           <span>Save</span>
         </div>
-        <img src={circummenukebab} alt="More" style={styles.moreIcon} />
+        {/* <img src={circummenukebab} alt="More" style={styles.moreIcon} /> */}
       </div>
     </div>
   );
@@ -144,7 +152,7 @@ const ArticleCard = ({ title, description, author }) => {
           />
           <span>{saved ? "Saved" : "Save"}</span>
         </div>
-        <img src={circummenukebab} alt="More" style={styles.moreIcon} />
+        {/* <img src={circummenukebab} alt="More" style={styles.moreIcon} /> */}
       </div>
     </div>
   );

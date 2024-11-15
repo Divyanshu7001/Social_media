@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./Header";
+import Navbar from "./Navbar";
 import Footer from "./Footer";
 // import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
 
@@ -22,10 +22,8 @@ const LandingPage = () => {
   return (
     <div>
       {/* Header/Navbar */}
-      <Header />
-      <div
-        style={{ border: "1px solid #cfcfcf", margin: "95px 95px 0 95px" }}
-      ></div>
+      <Navbar />
+      
 
       {/* Main Content */}
       <div style={landingPageStyle}>

@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
-import { Link, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
+import { Link, NavLink, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
 import line4 from "../assets/img/line4.svg"; // Ensure the correct path to the image
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import LogOut from "../assets/img/uiw_logout.png";
+import { Context } from "../index.js";
 
 const Navbar = () => {
-  const navigate = useNavigate(); 
-  const [showPopup, setShowPopup] = useState(false); 
+  const navigate = useNavigate();
 
+  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const [showPopup, setShowPopup] = useState(false);
+  console.log(isAuthenticated);
+  
   const handleUploadClick = () => {
-    navigate("/Upload"); 
+    navigate("/Upload");
   };
 
   const togglePopup = () => {
-    setShowPopup(!showPopup); 
+    setShowPopup(!showPopup);
   };
 
   return (
@@ -62,85 +66,147 @@ const Navbar = () => {
 
         {/* Links Section */}
         <div style={{ display: "flex", gap: "35px" }}>
-          <a
-            href="/"
-            style={{
-              textDecoration: "none",
-              color: "rgba(0,0,255,1)",
-              fontWeight: "bold",
-              borderBottom: "2px solid rgba(0,0,255,1)",
-              paddingBottom: "3px",
-            }}
+          <NavLink
+            to="/"
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    textDecoration: "none",
+                    color: "rgba(0,0,255,1)",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid rgba(0,0,255,1)",
+                    paddingBottom: "3px",
+                  }
+                : {
+                    textDecoration: "none",
+                    color: "#73736f",
+                    fontWeight: "bold",
+                  }
+            }
           >
             HOME
-          </a>
-          <a
-            href="/journals"
-            style={{
-              textDecoration: "none",
-              color: "#73736f",
-              fontWeight: "bold",
-            }}
+          </NavLink>
+          <NavLink
+            to="/journals"
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    textDecoration: "none",
+                    color: "rgba(0,0,255,1)",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid rgba(0,0,255,1)",
+                    paddingBottom: "3px",
+                  }
+                : {
+                    textDecoration: "none",
+                    color: "#73736f",
+                    fontWeight: "bold",
+                  }
+            }
           >
             JOURNALS
-          </a>
-          <a
-            href="/institutions"
-            style={{
-              textDecoration: "none",
-              color: "#73736f",
-              fontWeight: "bold",
-            }}
+          </NavLink>
+          <NavLink
+            to="/institutions"
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    textDecoration: "none",
+                    color: "rgba(0,0,255,1)",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid rgba(0,0,255,1)",
+                    paddingBottom: "3px",
+                  }
+                : {
+                    textDecoration: "none",
+                    color: "#73736f",
+                    fontWeight: "bold",
+                  }
+            }
           >
             INSTITUTIONS
-          </a>
-          <a
-            href="/about"
-            style={{
-              textDecoration: "none",
-              color: "#73736f",
-              fontWeight: "bold",
-            }}
+          </NavLink>
+          <NavLink
+            to="/about"
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    textDecoration: "none",
+                    color: "rgba(0,0,255,1)",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid rgba(0,0,255,1)",
+                    paddingBottom: "3px",
+                  }
+                : {
+                    textDecoration: "none",
+                    color: "#73736f",
+                    fontWeight: "bold",
+                  }
+            }
           >
             ABOUT US
-          </a>
-          <a
-            href="/contact"
-            style={{
-              textDecoration: "none",
-              color: "#73736f",
-              fontWeight: "bold",
-            }}
+          </NavLink>
+          <NavLink
+            to="/contact"
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    textDecoration: "none",
+                    color: "rgba(0,0,255,1)",
+                    fontWeight: "bold",
+                    borderBottom: "2px solid rgba(0,0,255,1)",
+                    paddingBottom: "3px",
+                  }
+                : {
+                    textDecoration: "none",
+                    color: "#73736f",
+                    fontWeight: "bold",
+                  }
+            }
           >
             CONTACT US
-          </a>
+          </NavLink>
         </div>
 
-        {/* Upload and User Icon Section */}
-        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <button
-            onClick={handleUploadClick} // Navigate when button is clicked
-            style={{
-              backgroundColor: "rgba(0,0,255,1)",
-              color: "white",
-              padding: "5px 30px",
-              borderRadius: "5px",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-            }}
-          >
-            Upload
-          </button>
-          <FiUser
-            style={{
-              fontSize: "24px",
-              color: "rgba(0,0,255,1)",
-              cursor: "pointer",
-            }}
-            onClick={togglePopup} // Show popup on click
-          />
-        </div>
+        {isAuthenticated ? (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+              <button
+                onClick={handleUploadClick} // Navigate when button is clicked
+                style={{
+                  backgroundColor: "rgba(0,0,255,1)",
+                  color: "white",
+                  padding: "5px 30px",
+                  borderRadius: "5px",
+                  border: "none",
+                  fontSize: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                Upload
+              </button>
+              <FiUser
+                style={{
+                  fontSize: "24px",
+                  color: "rgba(0,0,255,1)",
+                  cursor: "pointer",
+                }}
+                onClick={togglePopup} // Show popup on click
+              />
+            </div>{" "}
+          </>
+        ) : (
+          <>
+            <div style={{ gap: "10px", display: "flex" }}>
+              <a href="/login" className="uploadButton">
+                LOGIN
+              </a>
+              <a href="/signup" className="uploadButton">
+                REGISTER
+              </a>
+            </div>
+          </>
+        )}
       </nav>
 
       {/* Line image below the navbar */}

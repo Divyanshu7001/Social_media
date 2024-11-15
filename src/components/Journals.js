@@ -1,13 +1,13 @@
 import React from 'react'
-import Header from './Header'
 import Footer from './Footer'
+import Navbar from './Navbar';
 
 const Journals = () => {
   return (
     <div>
-        <Header/>
+        <Navbar/>
 
-        <div className='mt-[7vw] h-[2px] w-[95%] mx-auto bg-black opacity-20'></div>
+        {/* <div className='mt-[7vw] h-[2px] w-[95%] mx-auto bg-black opacity-20'></div> */}
 
         <div className="w-[90%] mx-auto mt-[2vw] flex justify-between">
 

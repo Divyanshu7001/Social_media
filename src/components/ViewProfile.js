@@ -3,14 +3,41 @@ import Navbar from "./Navbar";
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import EditIcon from "../assets/img/Vector.png";
+import EditIcon from "../assets/img/EditIconBlack.png";
+import EditIconBlack from "../assets/img/EditIconBlack.png";
+import Modal5 from "./modals/Modal5";
+import Modal4 from "./modals/Modal4";
+import Modal3 from "./modals/Modal3";
+import Modal2 from "./modals/Modal2";
+import Modal1 from "./modals/Modal1";
 
 const ViewProfile = () => {
+  const [button1Clicked, setbutton1Clicked] = useState(false);
+  const [button2Clicked, setbutton2Clicked] = useState(false);
+  const [button3Clicked, setbutton3Clicked] = useState(false);
+  const [button4Clicked, setbutton4Clicked] = useState(false);
+  const [button5Clicked, setbutton5Clicked] = useState(false);
+
   const [employmentOpen, setEmploymentOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
   const [activitiesOpen, setActivitiesOpen] = useState(false);
   const [fundingOpen, setFundingOpen] = useState(false);
+  const [workOpen, setWorkOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("uploads");
+  const [skills, setSkills] = useState([]);
+  const [input, setInput] = useState("");
+
+  const addSkill = (event) => {
+    // event.preventDefault();
+    if (input && !skills.includes(input)) {
+      setSkills([...skills, input]);
+      setInput("");
+    }
+  };
+
+  const removeSkill = (skillToRemove) => {
+    setSkills(skills.filter((skill) => skill !== skillToRemove));
+  };
 
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
@@ -27,6 +54,8 @@ const ViewProfile = () => {
       case "funding":
         setFundingOpen(!fundingOpen);
         break;
+      case "work":
+        setWorkOpen(!workOpen);
       default:
         break;
     }
@@ -35,6 +64,16 @@ const ViewProfile = () => {
   return (
     <div className="flex justify-center">
       <div className="h-[1300px] relative w-[1440px]">
+        {button1Clicked ? <Modal1 setbutton1Clicked={setbutton1Clicked} /> : ""}
+
+        {button2Clicked ? <Modal2 setbutton2Clicked={setbutton2Clicked} /> : ""}
+
+        {button3Clicked ? <Modal3 setbutton3Clicked={setbutton3Clicked} /> : ""}
+
+        {button4Clicked ? <Modal4 setbutton4Clicked={setbutton4Clicked} /> : ""}
+
+        {button5Clicked ? <Modal5 setbutton5Clicked={setbutton5Clicked} /> : ""}
+
         <Navbar />
         <div className="p-4">
           <div className="bg-white rounded-lg">
@@ -109,7 +148,12 @@ const ViewProfile = () => {
                         </div>
                       </div>
                       <div>
-                        <button className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full">
+                        <button
+                          onClick={() => {
+                            setbutton1Clicked((prev) => !prev);
+                          }}
+                          className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                        >
                           + Add
                         </button>
                       </div>
@@ -144,7 +188,12 @@ const ViewProfile = () => {
                         </div>
                       </div>
                       <div>
-                        <button className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full">
+                        <button
+                          onClick={() => {
+                            setbutton2Clicked((prev) => !prev);
+                          }}
+                          className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                        >
                           + Add
                         </button>
                       </div>
@@ -178,7 +227,12 @@ const ViewProfile = () => {
                         </div>
                       </div>
                       <div>
-                        <button className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full">
+                        <button
+                          onClick={() => {
+                            setbutton3Clicked((prev) => !prev);
+                          }}
+                          className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                        >
                           + Add
                         </button>
                       </div>
@@ -209,7 +263,12 @@ const ViewProfile = () => {
                         </div>
                       </div>
                       <div>
-                        <button className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full">
+                        <button
+                          onClick={() => {
+                            setbutton4Clicked((prev) => !prev);
+                          }}
+                          className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                        >
                           + Add
                         </button>
                       </div>
@@ -223,6 +282,86 @@ const ViewProfile = () => {
                       </div>
                     )}
                   </div>
+                  {/* Work Section */}
+                  <div>
+                    <div className="p-4 flex justify-between border-[1px] rounded-[10px] my-[18px] ml-[18px] mr-[45px]">
+                      <div>
+                        <div className="flex">
+                          <h3 className="text-lg font-medium pr-2">Work</h3>
+                          <button onClick={() => toggleSection("work")}>
+                            {workOpen ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => {
+                            setbutton5Clicked((prev) => !prev);
+                          }}
+                          className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                        >
+                          + Add
+                        </button>
+                      </div>
+                    </div>
+                    {workOpen && (
+                      <div className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10">
+                        <p>Work Title | Publication Date</p>
+                        <p>Journal Title</p>
+                        <p>Link</p>
+                        <p>Contributors </p>
+                        <p>Contributor 1</p>
+                        <p>Contributor 2</p>
+                        <p>Citation </p>
+                        <p>Identifier | Relationship</p>
+                        <p>Grant Link</p>
+                      </div>
+                    )}
+                  </div>
+                  {/* Skill Section */}
+                  <div className="w-[92%] pb-4 border-[1px] rounded-[10px] my-[18px] ml-[18px] mr-[50px] border-black">
+                    <div className="flex items-center mb-4 border-b-[1px] rounded-b-md border-black">
+                      <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Enter Skills"
+                        className="flex-1 px-4 py-4 border-none rounded-md focus:outline-none"
+                      />
+                      <button onClick={addSkill}>
+                        <img src={EditIconBlack} className="h-5 w-5 mr-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 p-4">
+                      {skills.length < 1 ? (
+                        <div className="flex justify-center text-center">
+                          <p>No skills yet</p>
+                        </div>
+                      ) : (
+                        <div>
+                          {skills.map((skill, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center px-3 py-1 border rounded-full"
+                            >
+                              <span className="mr-2">{skill}</span>
+                              <button
+                                onClick={() => removeSkill(skill)}
+                                className="text-gray-500 hover:text-red-500 focus:outline-none"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Section 2 */}
@@ -232,7 +371,7 @@ const ViewProfile = () => {
                     className="bg-[#0000ff] px-10 py-3 text-white flex items-center rounded-md"
                     style={{ maxWidth: "max-content" }}
                   >
-                    <img alt="edit" src={EditIcon} className="h-4 w-4" />
+                    <img src={EditIcon} className="h-4 w-4" />
                     <p className="pl-[17px]">Edit Profile</p>
                   </div>
                 </div>
