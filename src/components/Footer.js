@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import iconoir from "../assets/img/iconoir-facebook.svg";
 import devicon from "../assets/img/devicon-twitter.svg";
 import epback from "../assets/img/epback.png";
 import hugeicons from "../assets/img/hugeicons-instagram.svg";
 import { Link } from "react-router-dom";
 import "../style/Footer.css";
+import { Context } from "../index.js";
+
 
 function Footer() {
+  const { popup } = useContext(Context)
   return (
     <div
-      className="text-white py-8 px-8 relative"
-      style={{ backgroundColor: "rgb(0, 0, 255)" }}
+      className={popup ? " bg-black bg-opacity-50 py-8 px-8 relative" : "text-white py-8 px-8 relative bg-primary"}
+      // style={{ backgroundColor: "rgb(0, 0, 255)" }}
     >
       {/* Gray Overlay */}
       <div className="absolute inset-0 bg-gray-200 opacity-25 bg-cover"></div>
@@ -29,8 +32,8 @@ function Footer() {
               </h3>
               <img alt="arrow" className="mr-12" src={epback} style={{
                 height: "28px",
-                width:"72px",
-                marginTop:"8px"
+                width: "72px",
+                marginTop: "8px"
               }} >
               </img>
             </div>

@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import SignupPage from "./SignupPage";
+import { Context } from "../index.js";
+import LoginPage from "./LoginPage.js";
 // import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
 
 // Inline styles for the Landing Page
@@ -18,15 +21,22 @@ const sectionsStyle = {
   gap: "15px",
 };
 
+
+
 const LandingPage = () => {
+  const { popup, btn } = useContext(Context)
   return (
-    <div>
+    <>
       {/* Header/Navbar */}
       <Navbar />
-      
+      {popup && (btn === "signup") && <SignupPage />
+      }
+      {popup && (btn === "login") && <LoginPage />
+      }
+
 
       {/* Main Content */}
-      <div style={landingPageStyle}>
+      <div style={landingPageStyle} className={popup ? " bg-black bg-opacity-50" : "bg-white"}>
         <div style={contentStyle}>
           <h1>Welcome to Journal Network</h1>
           <div style={sectionsStyle}>
@@ -41,7 +51,7 @@ const LandingPage = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </>
   );
 };
 

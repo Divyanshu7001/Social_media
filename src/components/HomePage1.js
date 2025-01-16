@@ -10,46 +10,13 @@ import {
   faHeart as regularHeart,
   faBookmark as regularBookmark,
 } from "@fortawesome/free-regular-svg-icons";
-import rectangle60 from "../assets/img/Rectangle 60.svg";
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
 import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
-// import circummenukebab from "../assets/img/circummenukebab.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-// const articles = [
-//   {
-//     id: 1,
-//     title: "The Future of Quantum Computing: Transforming IT Landscapes",
-//     description:
-//       "Dive into the potential of quantum computing and its implications for solving complex problems in record time.",
-//     author: "John",
-//   },
-//   {
-//     id: 2,
-//     title: "AI in Cybersecurity: A Double-Edged Sword",
-//     description:
-//       "Discover how AI is revolutionizing cybersecurity, offering advanced protection while presenting new challenges.",
-//     author: "John",
-//   },
-//   {
-//     id: 3,
-//     title: "Machine Learning: The New Frontier",
-//     description:
-//       "Explore the latest trends in machine learning and its impact on various industries.",
-//     author: "Georgia",
-//   },
-//   {
-//     id: 4,
-//     title: "Machine Learning: The New Frontier",
-//     description:
-//       "Explore the latest trends in machine learning and its impact on various industries.",
-//     author: "Georgia",
-//   },
-// ];
-
-const PostCard = ({ name, location, description }) => {
+const PostCard = ({ name, location, description, image }) => {
   const [views, setViews] = useState(0);
   const [liked, setLiked] = useState(false);
 
@@ -60,54 +27,56 @@ const PostCard = ({ name, location, description }) => {
     handleView();
   }, []);
 
-  return (
-    <div style={styles.card}>
-      <div style={styles.cardContent}>
-        <img src={Ellipse4} alt="Profile" style={styles.profileImage} />
+  const backend = JSON.parse(localStorage.getItem("backend"))
 
-        <div style={styles.cardText}>
-          <div className="flex items-center justify-between">
-            <div style={styles.name}>{name}</div>
-            <div className="flex items-center">
-              <p className="text-[#0000ff] text-lg mr-4">Follow</p>
-              <MoreVertIcon />
-            </div>
+  return (
+    <div className="py-2 mt-8 border-2 rounded-lg h-1/2">
+      {/* head */}
+      <div className="flex justify-between items-center px-2 xl:px-2 lg:px-0">
+        <div className="flex px-6 py-4 items-center xl:px-6 lg:px-4">
+          <img src={Ellipse4} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
+          <div className="ml-4">
+            <div className="text-xl font-semibold">{name}</div>
+            <div className="text-sm text-gray-500">{location || "location"}</div>
           </div>
-          <div style={styles.location}>{location}</div>
-          <p style={styles.description}>{description}</p>
+        </div>
+        <div className="flex px-6 py-4 items-center xl:px-6 lg:px-4">
+          <p className="text-blue-600 text-base mr-4 xl:mr-4 lg:mr-2 ">Follow</p>
+          <MoreVertIcon />
         </div>
       </div>
-      <div style={styles.actionGroup}>
-        <div style={styles.actionItem} onClick={handleLike}>
+      {/* body */}
+      <div className="flex-col ">
+
+        <p className="mt-2 px-9 xl:px-9 lg:px-4 text-gray-700">{description}</p>
+        <img src={backend + image} alt={description} className="object-cover object-top mt-2 w-full h-96 me-auto"  />
+      </div>
+      <div className="flex justify-between mt-3 mb-2 items-center mx-9">
+        <div className="flex items-center space-x-2" onClick={handleLike}>
           <FontAwesomeIcon
             icon={liked ? solidHeart : regularHeart}
-            style={styles.actionIcon}
+            className="text-red-600"
           />
           <span>{liked ? "Liked" : "Like"}</span>
         </div>
-        <div style={styles.actionItem}>
-          <img src={weuieyesonfilled} alt="Views" style={styles.actionIcon} />
+        <div className="flex items-center space-x-2">
+          <img src={weuieyesonfilled} alt="Views" className="w-6 h-6" />
           <span>{views} Views</span>
         </div>
-        <div style={styles.actionItem}>
-          <img src={openmojishare} alt="Share" style={styles.actionIcon} />
+        <div className="flex items-center space-x-2">
+          <img src={openmojishare} alt="Share" className="w-6 h-6" />
           <span>Share</span>
         </div>
-        <div style={styles.actionItem}>
-          <img
-            src={iconamoonbookmarkthin}
-            alt="Save"
-            style={styles.actionIcon}
-          />
+        <div className="flex items-center space-x-2">
+          <img src={iconamoonbookmarkthin} alt="Save" className="w-6 h-6" />
           <span>Save</span>
         </div>
-        {/* <img src={circummenukebab} alt="More" style={styles.moreIcon} /> */}
       </div>
     </div>
   );
 };
 
-const ArticleCard = ({ title, description, author }) => {
+const ArticleCard = ({ title, description, author, image }) => {
   const [liked, setLiked] = useState(false);
   const [views, setViews] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -120,315 +89,76 @@ const ArticleCard = ({ title, description, author }) => {
     handleView();
   }, []);
 
-  return (
-    <div style={styles.card}>
-      <img src={rectangle60} alt="Article" style={styles.articleImage} />
-      <div style={styles.cardText}>
-        <h3 style={styles.title}>{title}</h3>
-        <div style={styles.author}>By {author}</div>
+  const backend = JSON.parse(localStorage.getItem("backend"))
 
-        <p style={styles.description}>{description}</p>
+  return (
+    <div className="bg-white shadow-lg  px-4 mb-2  py-2 mt-8 border-2 rounded-lg">
+      {/* <a href={backend + image}>
+      </a> */}
+      <div className="flex justify-between px-3">
+        <div className="pt-7">
+          <h3 className="text-2xl font-semibold pe-5">{title}</h3>
+        </div>
+        <div className="flex py-4 items-center">
+          <p className="text-blue-600 text-lg mr-4">Follow</p>
+          <MoreVertIcon />
+        </div>
       </div>
-      <div style={styles.actionGroup}>
-        <div style={styles.actionItem} onClick={handleLike}>
+      <div className="text-sm text-gray-500 mt-2 px-3">By {author}</div>
+      <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
+      <div className="flex justify-between mt-2 py-1 px-5">
+        <div className="flex items-center space-x-2" onClick={handleLike}>
           <FontAwesomeIcon
             icon={liked ? solidHeart : regularHeart}
-            style={styles.actionIcon}
+            className="text-red-600"
           />
           <span>{liked ? "Liked" : "Like"}</span>
         </div>
-        <div style={styles.actionItem}>
-          <FontAwesomeIcon icon={faEye} style={styles.actionIcon} />
-          <span>Views: {views}</span>
+        <div className="flex items-center space-x-2">
+          <FontAwesomeIcon icon={faEye} className="text-gray-600" />
+          <span>{views} Views</span>
         </div>
-        <div style={styles.actionItem}>
-          <FontAwesomeIcon icon={faShareAlt} style={styles.actionIcon} />
+        <div className="flex items-center space-x-2">
+          <FontAwesomeIcon icon={faShareAlt} className="text-gray-600" />
           <span>Share</span>
         </div>
-        <div style={styles.actionItem} onClick={handleSave}>
+        <div className="flex items-center space-x-2" onClick={handleSave}>
           <FontAwesomeIcon
             icon={saved ? solidBookmark : regularBookmark}
-            style={styles.actionIcon}
+            className="text-gray-600"
           />
           <span>{saved ? "Saved" : "Save"}</span>
         </div>
-        {/* <img src={circummenukebab} alt="More" style={styles.moreIcon} /> */}
       </div>
     </div>
   );
 };
 
-const ArticleList = (posts, articles) => (
-  <div style={styles.scrollableContent}>
+const HomePage1 = ({ posts, articles }) => (
+  <>
+    {console.log(articles)}
     {articles.length > 0 &&
       articles.map((article) => (
         <ArticleCard
           key={article.id}
           title={article.title}
           description={article.description}
-          author={article.author}
+          author={article.articleUsername}
+          image={article.image}
         />
       ))}
     {posts.length > 0 &&
       posts.map((post) => (
         <PostCard
-          name={post.name}
-          location={post.location}
-          description={post.description}
+          key={post.id}
+          name={post.PostUsername}
+          location={post.postUserLocation}
+          description={post.title}
+          image={post.image}
         />
       ))}
-    {/* <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    />
-    <PostCard
-      name="John"
-      location="Chennai, Tamil Nadu"
-      description="Join our vibrant community of Information Technology scholars and researchers."
-    />
-    <PostCard
-      name="Georgia"
-      location="Ahmedabad, Gujarat"
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
-    /> */}
-  </div>
+  </>
 );
 
-const styles = {
-  scrollableContainer: {
-    display: "flex",
-    justifyContent: "center",
-    width: "100%",
-    backgroundColor: "#f9f9f9",
-    padding: "20px 0",
-  },
-  scrollableContent: {
-    width: "100%",
-    maxWidth: "800px",
-    height: "150vh",
-    overflowY: "auto",
-    padding: "10px 2vw", // Using responsive padding
-    marginTop: "0",
-    marginLeft: "auto",
-    marginRight: "auto",
-    backgroundColor: "white",
-    scrollBehavior: "smooth",
-  },
+export default HomePage1;
 
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
-    marginBottom: "20px",
-  },
-  cardContent: {
-    display: "flex",
-    alignItems: "center",
-  },
-  profileImage: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-  },
-  cardText: {
-    flex: 1,
-    marginLeft: "20px",
-  },
-  name: {
-    fontSize: "18px",
-    fontWeight: "bold",
-  },
-  location: {
-    fontSize: "14px",
-    color: "#555",
-  },
-  description: {
-    marginTop: "10px",
-    fontSize: "14px",
-    color: "#333",
-  },
-  actionGroup: {
-    display: "flex",
-    justifyContent: "space-around",
-    marginTop: "20px",
-  },
-  actionItem: {
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-  },
-  actionIcon: {
-    fontSize: "20px",
-    marginRight: "8px",
-  },
-  moreIcon: {
-    fontSize: "20px",
-    cursor: "pointer",
-  },
-  articleImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: "10px",
-  },
-  title: {
-    fontSize: "20px",
-    fontWeight: "bold",
-  },
-  author: {
-    fontSize: "12px",
-    color: "#555",
-    marginTop: "5px",
-  },
-};
-
-export default ArticleList;

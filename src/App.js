@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "./index.js";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import LandingPage from "./components/LandindPage.js";
 import LoginPage from "./components/LoginPage.js";
 import SignupPage from "./components/SignupPage.js";
@@ -30,8 +30,7 @@ import OtherProfile from "./components/OtherProfile.js";
 //import Updates from './components/Updates';
 
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, user, setUser } =
-    useContext(Context);
+  const { setIsAuthenticated, setUser } = useContext(Context);
   useEffect(() => {
     const isAuthenticatedFromLocalStorage = JSON.parse(
       localStorage.getItem("isAuthenticated")
@@ -43,7 +42,7 @@ const App = () => {
   }, []);
   return (
     <>
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -65,7 +64,7 @@ const App = () => {
           <Route path="/profile" element={<OtherProfile />} />
         </Routes>
         <Toaster position="top-center" reverseOrder={false} />
-      </Router>
+      </BrowserRouter>
     </>
   );
 };

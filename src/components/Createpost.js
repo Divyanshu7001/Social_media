@@ -6,6 +6,7 @@ import materialsymbolslightclose from "../assets/img/materialsymbolslightclose.p
 import bytesizedownload from "../assets/img/bytesizedownload.png";
 import axios from "axios";
 import { Context } from "../index.js";
+import api from "./api.js";
 //import Homepage from "./HomePage";
 
 export const Box = () => {
@@ -39,8 +40,8 @@ export const Box = () => {
       data.append("user_id", user.id);
       console.log(data);
 
-      const response = await axios.post(
-        "http://92.118.56.227/api/uploadPost",
+      const response = await api.post(
+        "uploadPost",
         data,
         {
           withCredentials: true,

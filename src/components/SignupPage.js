@@ -1,26 +1,28 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FcGoogle } from "react-icons/fc";
 import {
   faEnvelope,
   faEye,
   faEyeSlash,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import signupImage from "../assets/img/aimscopefour-e70e3d5a-1.png"; // Update with your image path
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Context } from "../index.js";
+import api from "./api.js";
 
 const SignupPage = () => {
-  const { isAuthenticated, setIsAuthenticated, user, setUser } =
+  const { setIsAuthenticated, setUser, toggle, setBtn } =
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
@@ -28,22 +30,28 @@ const SignupPage = () => {
     e.preventDefault();
 
     // Basic validation
+    if (!name) {
+      setNameError("Please enter your name.");
+      return;
+    }
+    setNameError("");
+
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Please enter a valid email.");
       return;
     }
+
+    setEmailError("");
     if (!password || password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
       return;
     }
-
-    // Reset errors
-    setEmailError("");
     setPasswordError("");
+
     try {
-      await axios
+      await api
         .post(
-          "http://92.118.56.227/api/register",
+          "register",
           { name, email, password },
           {
             withCredentials: true,
@@ -59,15 +67,24 @@ const SignupPage = () => {
           navigate("/home");
         });
     } catch (error) {
-      toast.error(error.response.data.errors.email[0], {
-        style: {
-          borderRadius: "8px",
-          background: "#f8f9fa",
-          color: "#212529",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-          padding: "12px 20px",
-        },
-      });
+      if (error.code === 'ERR_NETWORK') {
+        toast.error('Network Error: Could not connect to the server. Please check your internet connection.');
+        console.error("Network Error: Could not connect to the server. Please check your internet connection.", error.message);
+        // Optionally, show a user-friendly error message in your UI
+      } else {
+        toast.error('An unexpected error occurred:');
+        console.error("An unexpected error occurred:", error.message)
+        // Handle other types of errors
+      }
+      // toast.error(error.response.data.errors.email[0], {
+      //   style: {
+      //     borderRadius: "8px",
+      //     background: "#f8f9fa",
+      //     color: "#212529",
+      //     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      //     padding: "12px 20px",
+      //   },
+      // });
       setUser({});
       setIsAuthenticated(false);
     }
@@ -85,208 +102,106 @@ const SignupPage = () => {
     }
   };
 
-  const handleClose = () => {
-    navigate("/");
-  };
-  // Responsive and styling
-  const containerStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "70%",
-    maxWidth: "700px",
-    padding: "30px",
-    background: "white",
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    zIndex: 1000,
-    overflow: "hidden",
-  };
 
-  const formStyle = {
-    width: "60%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-  };
-
-  const inputContainerStyle = {
-    width: "100%",
-    position: "relative",
-    marginBottom: "10px",
-  };
-
-  const inputStyle = {
-    width: "100%",
-    padding: "10px 40px",
-    boxSizing: "border-box",
-    borderRadius: "5px",
-    border: "1px solid #ddd",
-  };
-
-  const inputIconStyle = {
-    position: "absolute",
-    left: "10px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    color: "#888",
-  };
-
-  const socialSignupBtnContainerStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: "20px",
-  };
-
-  const socialSignupBtnStyle = {
-    flex: "1",
-    borderRadius: "50px",
-    margin: "0 5px",
-    padding: "10px",
-    background: "#f1f1f1",
-    border: "none",
-    cursor: "pointer",
-    textAlign: "center",
-  };
-
-  const buttonStyle = {
-    background: "blue",
-    width: "100%",
-    padding: "10px",
-    marginTop: "10px",
-    borderRadius: "5px",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    textAlign: "center",
-  };
-
-  const hrStyle = {
-    width: "100%",
-    border: "none",
-    borderTop: "1px solid #ddd",
-    margin: "20px 0",
-    textAlign: "center",
-    position: "relative",
-  };
-
-  const hrTextStyle = {
-    background: "white",
-    padding: "0 10px",
-    position: "absolute",
-    top: "-12px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    color: "#888",
-  };
-
-  const signupLinkStyle = {
-    textAlign: "center",
-    marginTop: "10px",
-  };
-
-  const imageStyle = {
-    position: "absolute",
-    bottom: "90px",
-    right: "20px",
-    width: "30%", // Adjust size as needed
-  };
-
-  const closeButtonStyle = {
-    position: "absolute",
-    top: "20px",
-    right: "10px",
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "25px",
-  };
 
   return (
-    <div style={containerStyle}>
-      <button onClick={handleClose} style={closeButtonStyle}>
-        <FontAwesomeIcon icon={faTimes} />
-      </button>
-      <form onSubmit={handleSignup} style={formStyle}>
-        <h2>Sign Up</h2>
-
-        <div style={socialSignupBtnContainerStyle}>
-          <button
-            style={socialSignupBtnStyle}
-            onClick={() => handleSocialSignup("Google")}
-          >
-            <FontAwesomeIcon icon={faGoogle} /> Sign Up with Google
-          </button>
-          <button
-            style={socialSignupBtnStyle}
-            onClick={() => handleSocialSignup("Facebook")}
-          >
-            <FontAwesomeIcon icon={faFacebook} /> Sign Up with Facebook
+    // <div className="">
+    <div className="bg-white border-2 w-full  mx-auto  lg:w-4/5  md:w-4/5 left-0 right-0 lg:top-20 md:top-30  max-h-[85vh] static md:fixed md:z-50" >
+      <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
+        <div className="flex justify-between">
+          <a href="#" className="text-4xl border-2">Logo</a>
+          <button onClick={toggle}>
+            <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
+        <form onSubmit={handleSignup} className="relative h-screen">
+          {/* <h2>Sign Up</h2> */}
 
-        <div style={inputContainerStyle}>
-          <input
-            type="text"
-            placeholder="Enter Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={inputStyle}
+          <div className="flex justify-between gap-5 w-full lg:w-2/3 xl:w-1/2">
+            <button
+              onClick={() => handleSocialSignup("Google")}
+              className="btn-primary w-1/2"
+            >
+              <FcGoogle size={26} />
+              <span className="btn-text"><span className="hidden sm:inline-block">Login with</span> Google</span>
+            </button>
+            <button
+              onClick={() => handleSocialSignup("Facebook")}
+              className="btn-primary w-1/2"
+            >
+              <FontAwesomeIcon icon={faFacebook} fontSize={26} /> <span className="btn-text"><span className="hidden sm:inline-block">Login with</span> Facebook</span>
+            </button>
+          </div>
+          <div className="mt-4 w-full md:w-full lg:w-1/2 xl:w-1/2 flex items-center">
+            <div className="border-t-2 w-full border-t-gray-400"></div>
+            <span className="mx-4 btn-text font-bold">or</span>
+            <div className="border-t-2 w-full border-t-gray-400"></div>
+          </div>
+
+          <div className="form-responsive mt-4">
+            <input
+              className="border-2 py-1 ps-5 pe-2 rounded w-full"
+              type="text"
+              placeholder="Enter Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+
+            // style={inputStyle}
+            />
+          </div>
+          {nameError && (
+            <div style={{ color: "red", textAlign: "left" }}>{nameError}</div>
+          )}
+
+          <div className="relative form-responsive">
+            <input
+              className="form-input mt-4"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <FontAwesomeIcon icon={faEnvelope} className="form-input-icon" />
+          </div>
+
+          {emailError && (
+            <div style={{ color: "red", textAlign: "left" }}>{emailError}</div>
+          )}
+
+          <div className="relative form-responsive">
+            <input
+              className="form-input mt-4"
+              type={passwordVisible ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <FontAwesomeIcon className="form-input-icon"
+              icon={passwordVisible ? faEye : faEyeSlash}
+              onClick={togglePasswordVisibility}
+            />
+          </div>
+          {passwordError && (
+            <div style={{ color: "red", textAlign: "left" }}>{passwordError}</div>
+          )}
+
+          <button type="submit"
+            className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/4 mt-4 bg-primary rounded-sm text-white text-sm py-1"
+          >
+            Sign Up
+          </button>
+          <div className="mt-1">
+            <p>
+              Already have an account? <button onClick={()=>setBtn("login")} className="text-blue-500 ">Login</button>
+            </p>
+          </div>
+
+          <img src={signupImage} alt="Signup"
+            className="hidden sm:hidden md:block lg:block md:absolute md:right-5 md:top-28 lg:top-20 sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 max-h-[55vh] object-contain"
           />
-        </div>
 
-        <div style={inputContainerStyle}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
-          />
-          <FontAwesomeIcon icon={faEnvelope} style={inputIconStyle} />
-        </div>
-        {emailError && (
-          <div style={{ color: "red", textAlign: "left" }}>{emailError}</div>
-        )}
-
-        <div style={inputContainerStyle}>
-          <input
-            type={passwordVisible ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
-          />
-          <FontAwesomeIcon
-            icon={passwordVisible ? faEye : faEyeSlash}
-            style={{
-              ...inputIconStyle,
-              right: "10px",
-              left: "auto",
-              cursor: "pointer",
-            }}
-            onClick={togglePasswordVisibility}
-          />
-        </div>
-        {passwordError && (
-          <div style={{ color: "red", textAlign: "left" }}>{passwordError}</div>
-        )}
-
-        <button type="submit" style={buttonStyle}>
-          Sign Up
-        </button>
-        <div style={signupLinkStyle}>
-          <p>
-            Already have an account? <a href="/login">Login</a>
-          </p>
-        </div>
-
-        <img src={signupImage} alt="Signup" style={imageStyle} />
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

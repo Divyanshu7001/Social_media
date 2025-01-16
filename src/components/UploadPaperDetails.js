@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Context } from "../index.js";
 import toast from "react-hot-toast";
+import api from "./api.js";
 export const UploadPaperDetails = () => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
@@ -55,8 +56,8 @@ export const UploadPaperDetails = () => {
     console.log(data);
 
     try {
-      const response = await axios.post(
-        "http://92.118.56.227/api/uploadJournal",
+      const response = await api.post(
+        "uploadJournal",
         data,
         {
           withCredentials: true,
