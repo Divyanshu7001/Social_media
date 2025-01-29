@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
+import { FiSearch, FiUser, FiX } from "react-icons/fi"; // Using react-icons for the search and user icons
 import { Link, NavLink, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation/ Ensure the correct path to the image
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import { Context } from "../index.js";
@@ -8,9 +8,25 @@ import { IoMdLogOut } from "react-icons/io";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { isAuthenticated, toggle, setBtn, setIsAuthenticated, setUser } = useContext(Context);
+  const { isAuthenticated, toggle, setBtn, setIsAuthenticated, setUser, setPopup } = useContext(Context);
   const [showPopup, setShowPopup] = useState(false);
   console.log(isAuthenticated);
+  const [search, setSeach] = useState(false)
+  const [searchitem, setSearchitem] = useState("")
+
+  const handleSeach = () => {
+    setSeach(true)
+  }
+
+  const handleInputBlur = () => {
+    if (searchitem === "") {
+      setSeach(false)
+    }
+  }
+
+  const handleChange = (e) => {
+    setSearchitem(e.target.value)
+  }
 
   const handleUploadClick = () => {
     navigate("/Upload");
@@ -27,10 +43,17 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", false);
-    localStorage.setItem("user", JSON.stringify({"user":"Data Not found"}));
+    localStorage.setItem("user", JSON.stringify({ "user": "Data Not found" }));
     setUser({});
     setIsAuthenticated(false);
+    setPopup(false)
+    setBtn(null)
+    navigate("/")
   }
+  const handleClearSearch = () => {
+    setSeach(false)
+    setSearchitem(""); // Clear the search input
+  };
 
 
   return (
@@ -41,25 +64,45 @@ const Navbar = () => {
           LOGO
         </div>
 
+        {/* Search Bar Section */}
+        <div
+          className="ml-5 w-1/2 md:w-1/3 items-center flex relative lg:hidden"
+        >
+          {!search ? <FiSearch
+            size={30}
+            onClick={handleSeach}
+          /> : <div className="flex ">
+            <FiSearch
+              size={20}
+              color="gray"
+              className="absolute top-3 left-3"
+            />
+            <input
+              type="text"
+              className="w-full p-2 border-2 border-gray-400 rounded-md ps-9 pe-3 text-lg"
+              onChange={handleChange}
+              onBlur={handleInputBlur}
+            />
+          </div>}
+          {search && (
+            <button
+              onClick={handleClearSearch} 
+              className="ps-2"
+            >
+              <FiX size={25} color="black" />
+            </button>)
+}
+
+
+        </div>
+
         <div className="lg:hidden flex items-center">
           <button onClick={handleMenuToggle} className="text-2xl">
             {isMenuOpen ? 'X' : '☰'}
           </button>
         </div>
 
-        {/* Search Bar Section */}
-        {/* <div
-          className="ml-5 w-1/3 border-2 border-gray-400 items-center"
-        >
-          <FiSearch
-            style={{ marginRight: "20px", fontSize: "28px", color: "gray" }}
-          />
-          <input
-            type="text"
-            placeholder="What are you looking for?"
-           
-          />
-        </div> */}
+
 
         {/* Links Section */}
         <div className={`flex gap-8 lg:flex items-center ml-auto me-10 lg:gap-8 xl:gap-10 ${isMenuOpen ? 'flex-col absolute text-center top-full left-0 w-full bg-white shadow-lg lg:static lg:flex-row lg:gap-10' : 'hidden lg:flex'}`}
@@ -97,17 +140,17 @@ const Navbar = () => {
           {isAuthenticated ?
             <>
               {/* <div style={{ display: "flex", alignItems: "center", gap: "15px" }}> */}
-              <button
+              <button className="bg-primary px-9 py-3 text-white w-30 mx-auto rounded hidden md:block"
                 onClick={handleUploadClick} // Navigate when button is clicked
-                style={{
-                  backgroundColor: "rgba(0,0,255,1)",
-                  color: "white",
-                  padding: "5px 30px",
-                  borderRadius: "5px",
-                  border: "none",
-                  fontSize: "20px",
-                  cursor: "pointer",
-                }}
+              // style={{
+              //   backgroundColor: "rgba(0,0,255,1)",
+              //   color: "white",
+              //   padding: "5px 30px",
+              //   borderRadius: "5px",
+              //   border: "none",
+              //   fontSize: "20px",
+              //   cursor: "pointer",
+              // }}
               >
                 Upload
               </button>
@@ -177,7 +220,7 @@ const Navbar = () => {
               backgroundColor: "white",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               borderRadius: "10px",
-              zIndex: 10,
+              zIndex: 100,
               padding: "20px",
               border: "1px solid #cfcfcf",
               fontFamily: "'Poppins', sans-serif",

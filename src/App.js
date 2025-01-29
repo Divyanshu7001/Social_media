@@ -2,8 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { Context } from "./index.js";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import LandingPage from "./components/LandindPage.js";
-import LoginPage from "./components/LoginPage.js";
-import SignupPage from "./components/SignupPage.js";
 import Homepage from "./components/HomePage.js";
 import UploadPage from "./components/UploadPage.js";
 import ProfileCard from "./components/ProfileCard.js";
@@ -17,36 +15,27 @@ import Journals from "./components/Journals.js";
 import { Toaster } from "react-hot-toast";
 import ViewProfile from "./components/ViewProfile.js";
 import OtherProfile from "./components/OtherProfile.js";
-//import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-//import { Homepage } from './components/HomePage';
-//import Institutions from './components/Institutions';
-//import Research from './components/Research';
-///import Terms from './components/Terms';
-//import Guidelines from './components/Guidelines';
-//import Help from './components/Help';
-//import Privacy from './components/Privacy';
-//import About from './components/About';
-//import Journals from './components/Journals';
-//import Updates from './components/Updates';
 
 const App = () => {
   const { setIsAuthenticated, setUser } = useContext(Context);
   useEffect(() => {
-    const isAuthenticatedFromLocalStorage = JSON.parse(
-      localStorage.getItem("isAuthenticated")
-    );
-    const userFromLocalStorage = JSON.parse(localStorage.getItem("user")); // Parse user as JSON
+    const auth = async () => {
+      const isAuthenticatedFromLocalStorage = await JSON.parse(
+        localStorage.getItem("isAuthenticated")
+      );
+      const userFromLocalStorage = await JSON.parse(localStorage.getItem("user")); // Parse user as JSON
 
-    setIsAuthenticated(isAuthenticatedFromLocalStorage);
-    setUser(userFromLocalStorage || {});
+      setIsAuthenticated(isAuthenticatedFromLocalStorage);
+      setUser(userFromLocalStorage || {});
+    }
+    auth()
   }, []);
+  
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
           <Route path="/home" element={<Homepage />} />
           <Route path="/journals" element={<JournalsPage />} />
           <Route
