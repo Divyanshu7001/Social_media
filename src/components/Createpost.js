@@ -1,26 +1,35 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import line8 from "../assets/img/Line8.png";
+import React, { useState, useContext, useEffect } from "react";
+// import line8 from "../assets/img/Line8.png";
 import Ellipse4 from "../assets/img/Ellipse4.png";
-import materialsymbolslightclose from "../assets/img/materialsymbolslightclose.png";
-import bytesizedownload from "../assets/img/bytesizedownload.png";
-import axios from "axios";
+// import materialsymbolslightclose from "../assets/img/materialsymbolslightclose.png";
+// import bytesizedownload from "../assets/img/bytesizedownload.png";
 import { Context } from "../index.js";
+import { IoCloudDownloadOutline } from "react-icons/io5";
 import api from "./api.js";
-//import Homepage from "./HomePage";
+import { MdOutlineClear } from "react-icons/md";
 
-export const Box = () => {
+const Box = ({ closePopup }) => {
   const { user } = useContext(Context);
-  const [showPopup, setShowPopup] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null); // State to hold the uploaded image
   const [uploadFile, setUploadFile] = useState(null);
-  const navigate = useNavigate();
+  const [ icon, SetIcons ] = useState(40)
 
-  const closePopup = () => {
-    setShowPopup(false);
-    navigate("/Home");
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 480) {
+        SetIcons(25)
+      } else if (window.innerWidth <= 768) {
+        SetIcons(30)
+      } else {
+        SetIcons(40)
+      }
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return window.removeEventListener('resize', handleResize)
+  }, []);
+
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -48,78 +57,80 @@ export const Box = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      closePopup()
       console.log(response);
     } catch (error) {
       console.log("Error while uploading Post:", error);
     }
   };
 
-  if (!showPopup) return null;
-
   return (
-    <div style={popupOverlayStyle}>
-      <div style={boxStyle}>
-        <img
-          src={materialsymbolslightclose}
-          alt="Close"
-          style={closeIconStyle}
-          onClick={closePopup}
-        />
-        <div style={contentStyle}>
-          <div style={textWrapper2Style}>Create Post</div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white w-full max-w-2xl h-3/5 md:h-3/5 lg:h-3/5 2xl:h-2/5  p-5 rounded-lg shadow-md relative">
+        <div className="flex justify-between items-center pb-3">
+          <div className="font-semibold text-xl text-black ">Create Post</div>
+          <MdOutlineClear onClick={closePopup} size={28} className="cursor-pointer" />
+        </div>
 
-          <img src={line8} alt="Line" style={lineStyle} />
 
-          <div style={headerStyle}>
-            <img src={Ellipse4} alt="Profile" style={profileImgStyle} />
-            <div style={textWrapper2Style}>John Paul</div>
+        <div className="text-left">
+          <p className="py-1 border-t-2" />
+          {/* <img src={line8} alt="Line" className="w-full h-px bg-blue-500 mb-5" /> */}
+          <div className="flex items-center mb-5">
+            <img src={Ellipse4} alt="Profile" className="w-12 h-12 rounded-full mr-4" />
+            <div className="font-semibold text-xl text-black">{user.name || "John Paul"}</div>
           </div>
 
-          <div style={inputContainerStyle}>
+          <div className="mb-1 md:mb-5">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Share your thoughts with other scholars..."
-              style={inputStyle}
+              className="md:w-2/3 p-2 text-sm border-b-2 border-gray-200 outline-none font-poppins bg-transparent w-full"
             />
           </div>
 
-          {/* Container to align upload section and buttons horizontally */}
-          <div style={horizontalAlignStyle}>
-            {/* Upload Section */}
-            <div style={uploadSectionStyle}>
+          <div className="flex justify-between items-center mt-5 md:mt-5 h-36">
+            <div className="border border-blue-500 rounded-lg p-3 text-center w-1/2 md:w-2/5 mx-auto relative">
               {uploadedImage ? (
                 <img
                   src={uploadedImage}
                   alt="Uploaded"
-                  style={uploadedImageStyle}
+                  className="max-w-full max-h-36 object-cover rounded-lg"
                 />
               ) : (
                 <>
-                  <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
-                    <img
+                  <label htmlFor="file-upload" className="cursor-pointer flex flex-col justify-center items-center">
+                    {/* <img
                       src={bytesizedownload}
                       alt="Upload"
-                      style={downloadIconStyle}
-                    />
-                    <div style={textWrapperStyle}>Upload Image</div>
+                      className="w-12 h-12"
+                    /> */}
+                    <IoCloudDownloadOutline size={icon} color="gray" />
+                    <div className="font-semibold text-base md:text-lg my-3 text-gray-500">Upload Image</div>
                   </label>
                   <input
                     id="file-upload"
                     type="file"
-                    style={{ display: "none" }}
+                    className="hidden"
                     onChange={handleFileUpload}
                   />
                 </>
               )}
             </div>
 
-            <div style={buttonWrapperStyle}>
-              <button style={cancelButtonStyle} onClick={closePopup}>
+            <div className="flex flex-col md:flex-row gap-2 justify-center items-center">
+              <button
+                className="bg-white text-blue-500 hidden md:block border border-blue-500 py-2 px-10 rounded-md cursor-pointer mt-14"
+                onClick={closePopup}
+              >
                 Cancel
               </button>
-              <button onClick={handlePostUpload} style={postButtonStyle}>
+              <button
+                className="bg-blue-500 text-white py-2 px-10 rounded-md cursor-pointer mt-14"
+                onClick={handlePostUpload}
+              >
                 Post
               </button>
             </div>
@@ -130,145 +141,5 @@ export const Box = () => {
   );
 };
 
-// Styles
-const popupOverlayStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 1000,
-};
-
-const boxStyle = {
-  backgroundColor: "#ffffff",
-  width: "100%",
-  maxWidth: "600px",
-  height: "60%",
-  padding: "20px",
-  borderRadius: "10px",
-  position: "relative",
-  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-};
-
-const contentStyle = {
-  textAlign: "left",
-};
-
-const closeIconStyle = {
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-  cursor: "pointer",
-  width: "24px",
-  height: "24px",
-};
-
-const headerStyle = {
-  display: "flex",
-  alignItems: "center",
-  marginBottom: "20px",
-};
-
-const profileImgStyle = {
-  width: "50px",
-  height: "50px",
-  borderRadius: "50%",
-  marginRight: "15px",
-};
-
-const textWrapper2Style = {
-  fontFamily: "'Poppins', sans-serif",
-  fontSize: "18px",
-  fontWeight: "600",
-  color: "#000",
-};
-
-const inputContainerStyle = {
-  marginBottom: "20px",
-};
-
-const inputStyle = {
-  width: "65%",
-  padding: "10px",
-  fontSize: "14px",
-  border: "none",
-  borderBottom: "2px solid rgb(235 234 234)",
-  outline: "none",
-  fontFamily: "'Poppins', sans-serif",
-  backgroundColor: "transparent",
-};
-
-const horizontalAlignStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  marginTop: "20px",
-};
-
-const uploadSectionStyle = {
-  border: "1px solid #0000ff",
-  borderRadius: "10px",
-  padding: "10px",
-  display: "inline-block",
-  width: "40%",
-  textAlign: "center",
-  marginLeft: "10%",
-  position: "relative",
-};
-
-const textWrapperStyle = {
-  fontFamily: "'Poppins', sans-serif",
-  fontSize: "16px",
-  color: "#000",
-  marginTop: "30px",
-};
-
-const downloadIconStyle = {
-  width: "50px",
-  height: "50px",
-};
-
-const uploadedImageStyle = {
-  maxWidth: "100%", // Ensures the image doesn't exceed the upload section width
-  maxHeight: "150px", // Sets a fixed max height
-  objectFit: "cover", // Ensures the image is contained and scaled properly
-  borderRadius: "10px",
-};
-
-const lineStyle = {
-  width: "100%",
-  height: "1px",
-  backgroundColor: "#0000ff",
-  margin: "20px 0",
-};
-
-const buttonWrapperStyle = {
-  display: "flex",
-  gap: "10px",
-};
-
-const cancelButtonStyle = {
-  backgroundColor: "#fff",
-  color: "#0000ff",
-  border: "1px solid #0000ff",
-  padding: "10px 40px",
-  borderRadius: "5px",
-  cursor: "pointer",
-  marginTop: "73px",
-};
-
-const postButtonStyle = {
-  backgroundColor: "#0000ff",
-  color: "#fff",
-  padding: "10px 40px",
-  borderRadius: "5px",
-  cursor: "pointer",
-  marginTop: "73px",
-};
-
 export default Box;
+

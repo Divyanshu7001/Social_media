@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import SignupPage from "./SignupPage";
 import { Context } from "../index.js";
 import LoginPage from "./LoginPage.js";
+import { useNavigate } from "react-router-dom";
 // import { FiSearch, FiUser } from "react-icons/fi"; // Using react-icons for the search and user icons
 
 // Inline styles for the Landing Page
@@ -22,9 +23,19 @@ const sectionsStyle = {
 };
 
 
-
 const LandingPage = () => {
-  const { popup, btn } = useContext(Context)
+  const { popup, btn, isAuthenticated } = useContext(Context)
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("home")
+      console.log("authtrue")
+    }
+    else {
+      console.log("authfalse")
+      navigate("/")
+    }
+  }, [isAuthenticated])
   return (
     <>
       {/* Header/Navbar */}
