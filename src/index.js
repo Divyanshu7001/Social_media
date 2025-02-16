@@ -8,7 +8,8 @@ export const Context = createContext({ isAuthenticated: false });
 const Appwrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({});
-  const [popup, setPopup] = useState(false)
+  const [profileData, setProfileData] = useState({});
+  const [popup, setPopup] = useState(false);
   const [btn, setBtn] = useState(null);
 
   const toggle = () => {
@@ -17,14 +18,23 @@ const Appwrapper = () => {
 
   return (
     <Context.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser, popup, setPopup, toggle, btn, setBtn }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        user,
+        setUser,
+        profileData,
+        setProfileData,
+        popup,
+        setPopup,
+        toggle,
+        btn,
+        setBtn,
+      }}
     >
       <App />
     </Context.Provider>
   );
 };
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-
-  <Appwrapper />
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<Appwrapper />);
