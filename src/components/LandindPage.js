@@ -40,9 +40,9 @@ const LandingPage = () => {
     <>
       {/* Header/Navbar */}
       <Navbar />
-      {popup && (btn === "signup") && <SignupPage />
+      {popup && (btn === "signup") && <SignupPage  />
       }
-      {popup && (btn === "login") && <LoginPage />
+      {popup && (btn === "login") && <LoginPage  />
       }
 
 

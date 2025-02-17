@@ -13,11 +13,11 @@ import {
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
-import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Context } from '../index.js'
 import api from "./api";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const PostCard = ({ name, location, description, image, user_id, follow, post_id, likecount, like, saved, profile_img }) => {
   const { user } = useContext(Context)
@@ -203,17 +203,19 @@ const ArticleCard = ({ title, description, author, image, user_id, follow, artic
 
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
-      <div className="flex justify-between items-center px-3 ">
-        <div className=" flex items-center">
-          <h3 className="text-2xl font-semibold pe-5">{title}</h3>
+      <Link to={`/ArticleDetails/${article_id}`}>
+        <div className="flex justify-between items-center px-3 ">
+          <div className=" flex items-center">
+            <h3 className="text-2xl font-semibold pe-5">{title}</h3>
+          </div>
+          <div className="flex py-4 items-center">
+            <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={() => handleFollow(follow ? "unfollow" : "follow")}>{follow ? "Unfollow" : "Follow"}</button>
+            <MoreVertIcon />
+          </div>
         </div>
-        <div className="flex py-4 items-center">
-          <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={() => handleFollow(follow ? "unfollow" : "follow")}>{follow ? "Unfollow" : "Follow"}</button>
-          <MoreVertIcon />
-        </div>
-      </div>
-      <div className="text-sm text-gray-500  px-3">By {author}</div>
-      <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
+        <div className="text-sm text-gray-500  px-3">By {author}</div>
+        <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
+      </Link>
       <div className="flex justify-between mt-2 py-1 px-5">
         <div className="flex items-center space-x-2 cursor-pointer" onClick={() => handleLike(like ? "unlike" : "like")}>
           <FontAwesomeIcon
