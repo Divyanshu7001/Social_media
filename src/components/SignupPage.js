@@ -15,7 +15,7 @@ import { Context } from "../index.js";
 import api from "./api.js";
 
 const SignupPage = () => {
-  const { setIsAuthenticated, setUser, toggle, setBtn } =
+  const { setIsAuthenticated, setUser, toggle, setBtn, setPopup } =
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,6 +64,7 @@ const SignupPage = () => {
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
+          setPopup(false)
           navigate("/home");
         });
     } catch (error) {
