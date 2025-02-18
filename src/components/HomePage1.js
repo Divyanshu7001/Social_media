@@ -61,6 +61,7 @@ const PostCard = ({ name, location, description, image, user_id, follow, post_id
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      window.location.reload()
     }
     catch (error) {
       console.log(`Errors while ${action} post user`, error)
@@ -77,6 +78,7 @@ const PostCard = ({ name, location, description, image, user_id, follow, post_id
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      window.location.reload()
     }
     catch (error) {
       console.log(`Errors while ${action} post user`, error)
@@ -178,6 +180,7 @@ const ArticleCard = ({ title, description, author, image, user_id, follow, artic
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      window.location.reload()
     }
     catch (error) {
       console.log(`Errors while ${action} post user`, error)
@@ -194,6 +197,7 @@ const ArticleCard = ({ title, description, author, image, user_id, follow, artic
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      window.location.reload()
     }
     catch (error) {
       console.log(`Errors while ${action} post user`, error)
@@ -203,16 +207,22 @@ const ArticleCard = ({ title, description, author, image, user_id, follow, artic
 
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
-      <Link to={`/ArticleDetails/${article_id}`}>
-        <div className="flex justify-between items-center px-3 ">
+
+      <div className="flex justify-between items-center px-3 ">
+        <Link to={`/ArticleDetails/${article_id}`}>
           <div className=" flex items-center">
             <h3 className="text-2xl font-semibold pe-5">{title}</h3>
           </div>
-          <div className="flex py-4 items-center">
-            <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={() => handleFollow(follow ? "unfollow" : "follow")}>{follow ? "Unfollow" : "Follow"}</button>
-            <MoreVertIcon />
-          </div>
+        </Link>
+        <div className="flex py-4 items-center">
+          <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={(e) => {
+            e.stopPropagation();
+            handleFollow(follow ? "unfollow" : "follow")
+          }}>{follow ? "Unfollow" : "Follow"}</button>
+          <MoreVertIcon />
         </div>
+      </div>
+      <Link to={`/ArticleDetails/${article_id}`}>
         <div className="text-sm text-gray-500  px-3">By {author}</div>
         <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
       </Link>
