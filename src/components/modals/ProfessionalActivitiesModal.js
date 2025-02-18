@@ -3,13 +3,16 @@ import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../index";
 import toast from "react-hot-toast";
 import api from "../api";
-import DatePicker from "react-datepicker";
+import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
 import { FaCalendarAlt } from "react-icons/fa";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 export const ProfessionalActivityAddModal = ({
   setbutton3Clicked,
   setPopup,
   setIsDataFetched,
+  setAddData,
 }) => {
   const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState("");
@@ -21,6 +24,10 @@ export const ProfessionalActivityAddModal = ({
   const [country, setCountry] = useState("");
   const [degree, setDegree] = useState("");
 
+  //Date Picker States
+  const [startYearPickerOpen, setStartYearPickerOpen] = useState(false);
+  const [degreeYearPickerOpen, setDegreeYearPickerOpen] = useState(false);
+
   const handleAddProfessionalActivity = async () => {
     try {
       const data = {
@@ -29,7 +36,7 @@ export const ProfessionalActivityAddModal = ({
         region,
         country,
         department,
-        degree,
+        degree: degree ? `${degree.getFullYear()}` : null,
         start_date: startDate ? startDate.getFullYear() : null,
         end_date: endDate,
         profile_id: user.id,
@@ -45,6 +52,7 @@ export const ProfessionalActivityAddModal = ({
           //console.log(res.data.message);
           setbutton3Clicked(false);
           setPopup(false);
+          setAddData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -59,6 +67,7 @@ export const ProfessionalActivityAddModal = ({
       onClick={() => {
         setbutton3Clicked(false);
         setPopup(false);
+        setAddData(false);
       }}
       className="backdrop-blur-sm z-50 h-auto justify-center items-center w-screen inset-0 fixed bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -119,15 +128,11 @@ export const ProfessionalActivityAddModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="India" key="">
-                  India
-                </option>
-                <option value="Pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="India">India</option>
+                <option value="Pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -146,22 +151,25 @@ export const ProfessionalActivityAddModal = ({
             <div className="flex flex-col w-[39%]  xss:w-full relative">
               <label className="font-medium">Start Date</label>
               <DatePicker
-                id="startYear-picker-input"
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                showYearPicker
-                dateFormat="yyyy"
-                placeholderText="Select Start Year"
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                value={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setStartYearPickerOpen(false);
+                }}
+                clearIcon={null}
+                calendarIcon={null}
+                yearPlaceholder="Select a Start Year"
+                view="decade"
+                maxDetail="decade"
+                isOpen={startYearPickerOpen}
+                onCalendarClose={() => setStartYearPickerOpen(false)}
+                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
               />
 
               {/* Calendar Icon */}
               <FaCalendarAlt
                 className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  document.querySelector("#startYear-picker-input").focus(); // Opens the picker
-                }}
+                onClick={() => setStartYearPickerOpen(!startYearPickerOpen)}
               />
             </div>
           </div>
@@ -170,21 +178,26 @@ export const ProfessionalActivityAddModal = ({
             <div className="flex flex-col w-[60%] xss:w-full relative">
               <label className="font-medium">Degree/Title</label>
               <DatePicker
-                id="degreeYear-picker-input"
-                selected={degree}
-                onChange={(date) => setDegree(date)}
-                showYearPicker
-                dateFormat="yyyy"
-                placeholderText="Select Degree Year"
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                value={degree}
+                onChange={(date) => {
+                  setDegree(date);
+                  setDegreeYearPickerOpen(false);
+                }}
+                yearPlaceholder="Select Degree Year"
+                format="yyyy"
+                view="decade"
+                maxDetail="decade"
+                clearIcon={null}
+                calendarIcon={null}
+                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                isOpen={degreeYearPickerOpen}
               />
 
               {/* Calendar Icon */}
               <FaCalendarAlt
                 className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  document.querySelector("#degreeYear-picker-input").focus(); // Opens the picker
+                onClick={() => {
+                  setDegreeYearPickerOpen(!degreeYearPickerOpen);
                 }}
               />
             </div>
@@ -215,7 +228,10 @@ export const ProfessionalActivityAddModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton3Clicked(false)}
+              onClick={() => {
+                setbutton3Clicked(false);
+                setAddData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
@@ -232,6 +248,7 @@ export const ProfessionalActivityEditModal = ({
   setPopup,
   setIsDataFetched,
   professionalActivityData,
+  setEditData,
 }) => {
   const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
@@ -249,6 +266,14 @@ export const ProfessionalActivityEditModal = ({
   const [country, setCountry] = useState(professionalActivityData.country);
   const [degree, setDegree] = useState(professionalActivityData.degree);
 
+  //Change States
+  const [isDegreeChanged, setIsDegreeChanged] = useState(false);
+  const [isStartYearChanged, setIsStartYearChanged] = useState(false);
+
+  //Date Picker States
+  const [startYearPickerOpen, setStartYearPickerOpen] = useState(false);
+  const [degreeYearPickerOpen, setDegreeYearPickerOpen] = useState(false);
+
   const handleEditProfessionalActivity = async () => {
     try {
       const data = {
@@ -257,8 +282,8 @@ export const ProfessionalActivityEditModal = ({
         region,
         country,
         department,
-        degree,
-        start_date: startDate ? startDate : null,
+        degree: isDegreeChanged ? `${degree.getFullYear()}` : degree,
+        start_date: isStartYearChanged ? startDate.getFullYear() : startDate,
         end_date: endDate,
         profile_id: user.id,
         type: "professional_activity",
@@ -273,6 +298,7 @@ export const ProfessionalActivityEditModal = ({
           //console.log(res.data.message);
           setbutton3Clicked(false);
           setPopup(false);
+          setEditData(false);
           setIsDataFetched(false);
           toast.success("Professional Activity Details Updated Successfully");
         });
@@ -287,6 +313,7 @@ export const ProfessionalActivityEditModal = ({
       onClick={() => {
         setbutton3Clicked(false);
         setPopup(false);
+        setEditData(false);
       }}
       className="backdrop-blur-sm z-50 h-auto justify-center items-center w-screen inset-0 fixed bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -347,15 +374,11 @@ export const ProfessionalActivityEditModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="India" key="">
-                  India
-                </option>
-                <option value="Pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="India">India</option>
+                <option value="Pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -374,22 +397,26 @@ export const ProfessionalActivityEditModal = ({
             <div className="flex flex-col w-[39%]  xss:w-full relative">
               <label className="font-medium">Start Date</label>
               <DatePicker
-                id="startYear-picker-input"
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                showYearPicker
-                dateFormat="yyyy"
-                placeholderText="Select Start Year"
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                value={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setIsStartYearChanged(true);
+                  setStartYearPickerOpen(false);
+                }}
+                clearIcon={null}
+                calendarIcon={null}
+                yearPlaceholder="Select a Start Year"
+                view="decade"
+                maxDetail="decade"
+                isOpen={startYearPickerOpen}
+                onCalendarClose={() => setStartYearPickerOpen(false)}
+                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
               />
 
               {/* Calendar Icon */}
               <FaCalendarAlt
                 className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  document.querySelector("#startYear-picker-input").focus(); // Opens the picker
-                }}
+                onClick={() => setStartYearPickerOpen(!startYearPickerOpen)}
               />
             </div>
           </div>
@@ -398,21 +425,27 @@ export const ProfessionalActivityEditModal = ({
             <div className="flex flex-col w-[60%] xss:w-full relative">
               <label className="font-medium">Degree/Title</label>
               <DatePicker
-                id="degreeYear-picker-input"
-                selected={degree}
-                onChange={(date) => setDegree(date)}
-                showYearPicker
-                dateFormat="yyyy"
-                placeholderText="Select Degree Year"
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                value={degree}
+                onChange={(date) => {
+                  setDegree(date);
+                  setIsDegreeChanged(true);
+                  setDegreeYearPickerOpen(false);
+                }}
+                yearPlaceholder="Select Degree Year"
+                format="yyyy"
+                view="decade"
+                maxDetail="decade"
+                clearIcon={null}
+                calendarIcon={null}
+                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
+                isOpen={degreeYearPickerOpen}
               />
 
               {/* Calendar Icon */}
               <FaCalendarAlt
                 className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  document.querySelector("#degreeYear-picker-input").focus(); // Opens the picker
+                onClick={() => {
+                  setDegreeYearPickerOpen(!degreeYearPickerOpen);
                 }}
               />
             </div>
@@ -443,7 +476,10 @@ export const ProfessionalActivityEditModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton3Clicked(false)}
+              onClick={() => {
+                setbutton3Clicked(false);
+                setEditData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
