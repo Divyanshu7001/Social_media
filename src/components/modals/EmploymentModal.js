@@ -8,6 +8,7 @@ export const EmploymentAddModal = ({
   setbutton1Clicked,
   setPopup,
   setIsDataFetched,
+  setAddData,
 }) => {
   const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState("");
@@ -43,6 +44,7 @@ export const EmploymentAddModal = ({
           //console.log(res.data.message);
           setbutton1Clicked(false);
           setPopup(false);
+          setAddData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -57,6 +59,7 @@ export const EmploymentAddModal = ({
       onClick={() => {
         setbutton1Clicked(false);
         setPopup(false);
+        setAddData(false);
       }}
       className="backdrop-blur-sm fixed inset-0 justify-center items-center z-50 h-full w-screen bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -117,15 +120,11 @@ export const EmploymentAddModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="india" key="">
-                  India
-                </option>
-                <option value="pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="india">India</option>
+                <option value="pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -184,7 +183,10 @@ export const EmploymentAddModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton1Clicked(false)}
+              onClick={() => {
+                setbutton1Clicked(false);
+                setAddData(false);
+              }}
               className=" rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
@@ -201,6 +203,7 @@ export const EmploymentEditModal = ({
   setPopup,
   setIsDataFetched,
   employeeData,
+  setEditData,
 }) => {
   //console.log("Employee Data: ", employeeData);
   const { user } = useContext(Context);
@@ -239,6 +242,7 @@ export const EmploymentEditModal = ({
           console.log(res.data.message);
           setbutton1Clicked(false);
           setPopup(false);
+          setEditData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -253,6 +257,7 @@ export const EmploymentEditModal = ({
       onClick={() => {
         setbutton1Clicked(false);
         setPopup(false);
+        setEditData(false);
       }}
       className="backdrop-blur-sm fixed inset-0 justify-center items-center z-50 h-full w-screen bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -313,15 +318,11 @@ export const EmploymentEditModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="india" key="">
-                  India
-                </option>
-                <option value="pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="india">India</option>
+                <option value="pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -380,7 +381,10 @@ export const EmploymentEditModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton1Clicked(false)}
+              onClick={() => {
+                setbutton1Clicked(false);
+                setEditData(false);
+              }}
               className=" rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel

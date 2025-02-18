@@ -167,19 +167,19 @@ const ViewProfile = () => {
     }
   };
 
-  console.log("isData Fetched value: ", isDataFetched);
+  // console.log("isData Fetched value: ", isDataFetched);
 
-  console.log("My Uploads Data: ", myUploads);
-  console.log("Saved Files Data: ", savedFiles);
+  // console.log("My Uploads Data: ", myUploads);
+  // console.log("Saved Files Data: ", savedFiles);
 
-  console.log("Profile Data: ", profileData);
-  console.log("Education Data: ", educationData);
-  console.log("Employee Data: ", employeeData);
-  console.log("Funding Details: ", fundingDetails);
-  console.log("Professional Activities: ", professionalActivityDetails);
-  console.log("Works: ", works);
-  console.log("Skills: ", skills);
-  console.log("Temp Skills: ", tempSkills);
+  // console.log("Profile Data: ", profileData);
+  // console.log("Education Data: ", educationData);
+  // console.log("Employee Data: ", employeeData);
+  // console.log("Funding Details: ", fundingDetails);
+  // console.log("Professional Activities: ", professionalActivityDetails);
+  // console.log("Works: ", works);
+  // console.log("Skills: ", skills);
+  // console.log("Temp Skills: ", tempSkills);
 
   const biography = profileData?.profile?.bio || "No Biography yet";
 
@@ -432,6 +432,7 @@ const ViewProfile = () => {
             setbutton1Clicked={setbutton1Clicked}
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
+            setAddData={setAddData}
           />
         ) : (
           ""
@@ -442,6 +443,7 @@ const ViewProfile = () => {
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
             employeeData={employeeToEdit}
+            setEditData={setEditData}
           />
         ) : (
           ""
@@ -451,6 +453,7 @@ const ViewProfile = () => {
             setbutton2Clicked={setbutton2Clicked}
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
+            setAddData={setAddData}
           />
         ) : (
           ""
@@ -462,6 +465,7 @@ const ViewProfile = () => {
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
             educationData={educationToEdit}
+            setEditData={setEditData}
           />
         ) : (
           ""
@@ -472,6 +476,7 @@ const ViewProfile = () => {
             setbutton3Clicked={setbutton3Clicked}
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
+            setAddData={setAddData}
           />
         ) : (
           ""
@@ -482,6 +487,7 @@ const ViewProfile = () => {
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
             professionalActivityData={ProfessionalActivityToEdit}
+            setEditData={setEditData}
           />
         ) : (
           ""
@@ -492,6 +498,7 @@ const ViewProfile = () => {
             setbutton4Clicked={setbutton4Clicked}
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
+            setAddData={setAddData}
           />
         ) : (
           ""
@@ -502,6 +509,7 @@ const ViewProfile = () => {
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
             fundingDetailsData={fundingDetailsToEdit}
+            setEditData={setEditData}
           />
         ) : (
           ""
@@ -512,6 +520,7 @@ const ViewProfile = () => {
             setbutton5Clicked={setbutton5Clicked}
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
+            setAddData={setAddData}
           />
         ) : (
           ""
@@ -522,6 +531,7 @@ const ViewProfile = () => {
             setPopup={setPopup}
             setIsDataFetched={setIsDataFetched}
             workData={workToEdit}
+            setEditData={setEditData}
           />
         ) : (
           ""

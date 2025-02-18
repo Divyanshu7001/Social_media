@@ -7,6 +7,7 @@ export const FundingDetailsAddModal = ({
   setbutton4Clicked,
   setPopup,
   setIsDataFetched,
+  setAddData,
 }) => {
   const { user } = useContext(Context);
   const [titleOfFundedProject, setTitleOfFundedProject] = useState("");
@@ -59,6 +60,7 @@ export const FundingDetailsAddModal = ({
           //console.log(res.data.message);
           setbutton4Clicked(false);
           setPopup(false);
+          setAddData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -73,6 +75,7 @@ export const FundingDetailsAddModal = ({
       onClick={() => {
         setbutton4Clicked(false);
         setPopup(false);
+        setAddData(false);
       }}
       className="backdrop-blur-sm z-50 h-full w-screen absolute justify-center items-center inset-0 bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -100,18 +103,12 @@ export const FundingDetailsAddModal = ({
                 type="text"
                 placeholder="Select Funding Type"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Funding Type
                 </option>
-                <option value="one" key="">
-                  One
-                </option>
-                <option value="two" key="">
-                  Two
-                </option>
-                <option value="three" key="">
-                  Three
-                </option>
+                <option value="one">One</option>
+                <option value="two">Two</option>
+                <option value="three">Three</option>
               </select>
             </div>
 
@@ -239,15 +236,11 @@ export const FundingDetailsAddModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="India" key="">
-                  India
-                </option>
-                <option value="Pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="India">India</option>
+                <option value="Pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -289,7 +282,7 @@ export const FundingDetailsAddModal = ({
                     value="self"
                     onChange={(e) => setRelationship(e.target.value)}
                   />
-                  <label for="self">Self</label>
+                  <label htmlFor="self">Self</label>
                 </div>
 
                 <p>The identifier applies to the funding award itself.</p>
@@ -304,7 +297,7 @@ export const FundingDetailsAddModal = ({
                     value="partof"
                     onChange={(e) => setRelationship(e.target.value)}
                   />
-                  <label for="partof">Part of</label>
+                  <label htmlFor="partof">Part of</label>
                 </div>
 
                 <p>
@@ -334,7 +327,10 @@ export const FundingDetailsAddModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton4Clicked(false)}
+              onClick={() => {
+                setbutton4Clicked(false);
+                setAddData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
@@ -350,6 +346,7 @@ export const FundingDetailsEditModal = ({
   setPopup,
   setIsDataFetched,
   fundingDetailsData,
+  setEditData,
 }) => {
   const { user } = useContext(Context);
   const [titleOfFundedProject, setTitleOfFundedProject] = useState(
@@ -419,6 +416,7 @@ export const FundingDetailsEditModal = ({
           //console.log(res.data.message);
           setbutton4Clicked(false);
           setPopup(false);
+          setEditData(false);
           setIsDataFetched(false);
           toast.success("Funding Details Updated Successfully");
         });
@@ -433,6 +431,7 @@ export const FundingDetailsEditModal = ({
       onClick={() => {
         setbutton4Clicked(false);
         setPopup(false);
+        setEditData(false);
       }}
       className="backdrop-blur-sm z-50 h-full w-screen absolute justify-center items-center inset-0 bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -460,18 +459,12 @@ export const FundingDetailsEditModal = ({
                 type="text"
                 placeholder="Select Funding Type"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Funding Type
                 </option>
-                <option value="one" key="">
-                  One
-                </option>
-                <option value="two" key="">
-                  Two
-                </option>
-                <option value="three" key="">
-                  Three
-                </option>
+                <option value="one">One</option>
+                <option value="two">Two</option>
+                <option value="three">Three</option>
               </select>
             </div>
 
@@ -599,15 +592,11 @@ export const FundingDetailsEditModal = ({
                 type="text"
                 placeholder="Enter City"
               >
-                <option disabled value="" key="">
+                <option disabled value="">
                   Select Country
                 </option>
-                <option value="India" key="">
-                  India
-                </option>
-                <option value="Pakistan" key="">
-                  Pakistan
-                </option>
+                <option value="India">India</option>
+                <option value="Pakistan">Pakistan</option>
               </select>
             </div>
           </div>
@@ -649,7 +638,7 @@ export const FundingDetailsEditModal = ({
                     value="self"
                     onChange={(e) => setRelationship(e.target.value)}
                   />
-                  <label for="self">Self</label>
+                  <label htmlFor="self">Self</label>
                 </div>
 
                 <p>The identifier applies to the funding award itself.</p>
@@ -664,7 +653,7 @@ export const FundingDetailsEditModal = ({
                     value="partof"
                     onChange={(e) => setRelationship(e.target.value)}
                   />
-                  <label for="partof">Part of</label>
+                  <label htmlFor="partof">Part of</label>
                 </div>
 
                 <p>
@@ -694,7 +683,10 @@ export const FundingDetailsEditModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton4Clicked(false)}
+              onClick={() => {
+                setbutton4Clicked(false);
+                setEditData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
