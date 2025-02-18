@@ -7,6 +7,7 @@ export const WorkAddModal = ({
   setbutton5Clicked,
   setPopup,
   setIsDataFetched,
+  setAddData,
 }) => {
   const { user } = useContext(Context);
   const [workType, setWorkType] = useState("");
@@ -37,6 +38,7 @@ export const WorkAddModal = ({
           //console.log(res.data.message);
           setbutton5Clicked(false);
           setPopup(false);
+          setAddData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -51,6 +53,7 @@ export const WorkAddModal = ({
       onClick={() => {
         setbutton5Clicked(false);
         setPopup(false);
+        setAddData(false);
       }}
       className="z-50 backdrop-blur-sm h-full w-screen fixed justify-center items-center bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -137,7 +140,10 @@ export const WorkAddModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton5Clicked(false)}
+              onClick={() => {
+                setbutton5Clicked(false);
+                setAddData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel
@@ -154,6 +160,7 @@ export const WorkEditModal = ({
   setPopup,
   setIsDataFetched,
   workData,
+  setEditData,
 }) => {
   const { user } = useContext(Context);
   const [workType, setWorkType] = useState(workData.work_type);
@@ -185,6 +192,7 @@ export const WorkEditModal = ({
           //console.log(res.data.message);
           setbutton5Clicked(false);
           setPopup(false);
+          setEditData(false);
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -199,6 +207,7 @@ export const WorkEditModal = ({
       onClick={() => {
         setbutton5Clicked(false);
         setPopup(false);
+        setEditData(false);
       }}
       className="z-50 backdrop-blur-sm h-full w-screen fixed justify-center items-center bg-black bg-opacity-60 overflow-y-auto"
     >
@@ -285,7 +294,10 @@ export const WorkEditModal = ({
               Save
             </button>
             <button
-              onClick={() => setbutton5Clicked(false)}
+              onClick={() => {
+                setbutton5Clicked(false);
+                setEditData(false);
+              }}
               className="rounded-md px-[6.5vw] py-2 text-[#0000FF]  font-medium bg-transparent border-[#0000FF] border-[1.5px]"
             >
               Cancel

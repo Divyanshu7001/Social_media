@@ -107,7 +107,7 @@
 }
 
 /*
-! tailwindcss v3.4.15 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -3331,8 +3331,16 @@ video {
     width: 16.666667%;
   }
 
-  .xl\:w-\[68\%\] {
-    width: 68%;
+  .xl\:w-5\/12 {
+    width: 41.666667%;
+  }
+
+  .xl\:w-4\/12 {
+    width: 33.333333%;
+  }
+
+  .xl\:w-2\/6 {
+    width: 33.333333%;
   }
 
   .xl\:flex-row {
