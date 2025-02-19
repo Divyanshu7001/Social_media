@@ -212,14 +212,6 @@ export const EducationAddModal = ({
               />
             </div>
           </div>
-          {/* 
-                <div className='flex justify-between mt-[1vw]'>
-                    <div className='flex flex-col w-[100%] '>
-                        <label className='font-medium'>Link</label>
-                        <input className='w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4'  type="text" placeholder='' />
-                    </div>
-               </div> */}
-
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button
               onClick={handleAddEducation}
@@ -285,7 +277,7 @@ export const EducationEditModal = ({
       };
 
       await api
-        .post("/profileAdd", data, {
+        .post(`/profileEdit/${educationData.id}`, data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
@@ -299,7 +291,7 @@ export const EducationEditModal = ({
         });
     } catch (error) {
       console.log(error);
-      toast.error("Error Adding Education:" + error);
+      toast.error("Error Updating Education:" + error);
     }
   };
 
