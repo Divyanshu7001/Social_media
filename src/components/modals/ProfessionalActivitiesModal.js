@@ -290,7 +290,7 @@ export const ProfessionalActivityEditModal = ({
       };
 
       await api
-        .post("/profileAdd", data, {
+        .post(`/profileEdit/${professionalActivityData.id}`, data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
@@ -304,7 +304,7 @@ export const ProfessionalActivityEditModal = ({
         });
     } catch (error) {
       //console.log(error);
-      toast.error("Error Adding Professional Acitivity:" + error);
+      toast.error("Error Updating Professional Acitivity:" + error);
     }
   };
 

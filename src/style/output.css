@@ -2126,16 +2126,8 @@ video {
   padding-right: 0.5rem;
 }
 
-.pr-4 {
-  padding-right: 1rem;
-}
-
 .ps-10 {
   padding-inline-start: 2.5rem;
-}
-
-.ps-2 {
-  padding-inline-start: 0.5rem;
 }
 
 .ps-5 {
@@ -2997,14 +2989,24 @@ video {
     width: 60%;
   }
 
-  .md\:w-auto {
-    width: auto;
   .md\:w-\[65\%\] {
     width: 65%;
   }
 
+  .md\:w-auto {
+    width: auto;
+  }
+
   .md\:w-full {
     width: 100%;
+  }
+
+  .md\:w-\[70\%\] {
+    width: 70%;
+  }
+
+  .md\:w-\[700\%\] {
+    width: 700%;
   }
 
   .md\:grid-cols-3 {
@@ -3095,12 +3097,12 @@ video {
     margin-inline-end: 1.25rem;
   }
 
+  .lg\:me-\[2\%\] {
+    margin-inline-end: 2%;
+  }
 
   .lg\:ml-2 {
     margin-left: 0.5rem;
-
-  .lg\:me-\[2\%\] {
-    margin-inline-end: 2%;
   }
 
   .lg\:ml-4 {
@@ -3179,19 +3181,24 @@ video {
     width: 80%;
   }
 
-
   .lg\:w-\[40\%\] {
     width: 40%;
   }
 
   .lg\:w-\[60\%\] {
-    width: 60%; 
+    width: 60%;
+  }
+
   .lg\:w-\[68\%\] {
     width: 68%;
   }
 
   .lg\:w-\[75\%\] {
     width: 75%;
+  }
+
+  .lg\:w-\[\] {
+    width: ;
   }
 
   .lg\:grid-cols-4 {
@@ -3332,15 +3339,24 @@ video {
     width: 20%;
   }
 
-
   .xl\:w-1\/6 {
     width: 16.666667%;
   }
 
+  .xl\:w-5\/12 {
+    width: 41.666667%;
+  }
+
+  .xl\:w-4\/12 {
+    width: 33.333333%;
+  }
+
+  .xl\:w-2\/6 {
+    width: 33.333333%;
+  }
+
   .xl\:flex-row {
     flex-direction: row;
-  .xl\:w-\[68\%\] {
-    width: 68%;
   }
 
   .xl\:gap-10 {
