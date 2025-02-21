@@ -632,6 +632,7 @@ export const FundingDetailsEditModal = ({
               <div>
                 <div className="flex gap-[0.5vw]">
                   <input
+                    checked={relationship === "self"}
                     type="radio"
                     id="self"
                     name="relationship"
@@ -647,6 +648,7 @@ export const FundingDetailsEditModal = ({
               <div>
                 <div className="flex gap-[0.5vw]">
                   <input
+                    checked={relationship === "partof"}
                     type="radio"
                     id="partof"
                     name="relationship"
