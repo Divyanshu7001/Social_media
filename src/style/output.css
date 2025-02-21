@@ -3001,6 +3001,14 @@ video {
     width: 100%;
   }
 
+  .md\:w-\[70\%\] {
+    width: 70%;
+  }
+
+  .md\:w-\[700\%\] {
+    width: 700%;
+  }
+
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3187,6 +3195,10 @@ video {
 
   .lg\:w-\[75\%\] {
     width: 75%;
+  }
+
+  .lg\:w-\[\] {
+    width: ;
   }
 
   .lg\:grid-cols-4 {

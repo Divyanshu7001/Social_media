@@ -12,11 +12,12 @@ export const ProfileModal = ({
   setIsDataFetched,
 }) => {
   const { user, profileData } = useContext(Context);
- // console.log("User: ", user);
+  // console.log("User: ", user);
 
   const [tempSelectedFile, setTempSelectedFile] = useState(null);
   const [image, setImage] = useState(profileData?.image || null);
-  //console.log(image);
+
+  console.log(image);
 
   const [name, setName] = useState(profileData?.name || "");
   const [email, setEmail] = useState(profileData?.email || "");
@@ -47,6 +48,8 @@ export const ProfileModal = ({
 
   const updateUser = async (event) => {
     event.preventDefault();
+    console.log(user);
+    console.log(tempSelectedFile);
 
     const formData = new FormData();
     formData.append("id", user.id);
@@ -57,7 +60,12 @@ export const ProfileModal = ({
     if (tempSelectedFile) {
       formData.append("image", tempSelectedFile);
     } else {
-      formData.append("image", user.image);
+      const response = await fetch(image, { mode: "no-cors" });
+      const blob = await response.blob();
+      const file = new File([blob], "profile.jpg", { type: blob.type });
+      console.log(file);
+
+      formData.append("image", file);
     }
     try {
       await api
@@ -73,7 +81,7 @@ export const ProfileModal = ({
           setbutton6Clicked(false);
         });
     } catch (error) {
-     // console.log(error.response.data.error);
+      // console.log(error.response.data.error);
       toast.error(error.response.data.error);
     }
   };
@@ -88,7 +96,7 @@ export const ProfileModal = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className=" h-auto xss:p-5 md:p-10 pb-12 bg-white rounded-xl xss:w-full  md:w-[40%] xss:my-6 md:mt-[5vw] mx-auto"
+        className=" h-auto xss:p-5 md:p-10 pb-12 bg-white rounded-xl xss:w-full  md:w-[70%] lg:w-[60%] xss:my-6 md:mt-[5vw] mx-auto"
       >
         <div className="bg-white">
           <div className="flex flex-row items-center justify-between">
