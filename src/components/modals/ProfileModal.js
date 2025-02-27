@@ -6,12 +6,13 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
 import api from "../api";
+import axios from "axios";
 export const ProfileModal = ({
   setbutton6Clicked,
   setPopup,
   setIsDataFetched,
 }) => {
-  const { user, profileData } = useContext(Context);
+  const { user, setUser, profileData } = useContext(Context);
   // console.log("User: ", user);
 
   const [tempSelectedFile, setTempSelectedFile] = useState(null);
@@ -59,13 +60,6 @@ export const ProfileModal = ({
     formData.append("phone_number", phone);
     if (tempSelectedFile) {
       formData.append("image", tempSelectedFile);
-    } else {
-      const response = await fetch(image, { mode: "no-cors" });
-      const blob = await response.blob();
-      const file = new File([blob], "profile.jpg", { type: blob.type });
-      console.log(file);
-
-      formData.append("image", file);
     }
     try {
       await api
@@ -75,7 +69,8 @@ export const ProfileModal = ({
           },
         })
         .then((res) => {
-          //console.log(res.data);
+          console.log(res.data);
+          setUser(res.data.user);
           toast.success(res.data.message);
           setIsDataFetched(false);
           setbutton6Clicked(false);
@@ -126,7 +121,10 @@ export const ProfileModal = ({
               >
                 Change Image
               </button>
-              <button className="rounded-md px-6 py-2 text-white bg-rose-600 font-medium">
+              <button
+                onClick={() => setImage(Ellipse4)}
+                className="rounded-md px-6 py-2 text-white bg-rose-600 font-medium"
+              >
                 Remove Image
               </button>
             </div>

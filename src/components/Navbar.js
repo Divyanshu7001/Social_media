@@ -1,18 +1,19 @@
 import React, { useState, useContext } from "react";
 import { FiUser, FiSearch } from "react-icons/fi"; // Using react-icons for the search and user icons
-import { Link, NavLink, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation/ Ensure the correct path to the image
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"; // Importing useNavigate for navigation/ Ensure the correct path to the image
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import { Context } from "../index.js";
 import { IoMdLogOut } from "react-icons/io";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const {
     isAuthenticated,
     toggle,
     setBtn,
     setIsAuthenticated,
+    user,
     setUser,
     setPopup,
   } = useContext(Context);
@@ -242,17 +243,16 @@ const Navbar = () => {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={Ellipse4} // Placeholder for user image
+                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4} // Placeholder for user image
                 alt="User"
                 style={{
                   borderRadius: "50%",
                   width: "70px",
                   height: "70px",
-                  marginRight: "10px",
                 }}
               />
-              <div style={{ marginLeft: "30px" }}>
-                <h3 style={{ margin: 0 }}>John Paul</h3>
+              <div style={{ marginLeft: "20px" }}>
+                <h3 style={{ margin: 0 }}>{user.name}</h3>
                 <p
                   style={{
                     margin: 0,
@@ -279,25 +279,48 @@ const Navbar = () => {
               &times;
             </button>
           </div>
-          <Link to="/profileView">
-            <button
-              onClick={setPopup(false)}
-              style={{
-                marginTop: "40px",
-                padding: "10px",
-                borderRadius: "9999px",
-                border: "1px solid rgba(0,0,255,1)",
-                backgroundColor: "transparent",
-                width: "89%",
-                cursor: "pointer",
-                fontSize: "18px",
-                color: "rgba(0,0,255,1)",
-                fontWeight: "500",
-              }}
-            >
-              View Profile
-            </button>
-          </Link>
+          {location.pathname === "/profileView" ? (
+            <Link to="/">
+              <button
+                onClick={setPopup(false)}
+                style={{
+                  marginTop: "20px",
+                  padding: "10px",
+                  borderRadius: "9999px",
+                  border: "1px solid rgba(0,0,255,1)",
+                  backgroundColor: "transparent",
+                  width: "89%",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  color: "rgba(0,0,255,1)",
+                  fontWeight: "500",
+                }}
+              >
+                View Home Feed
+              </button>
+            </Link>
+          ) : (
+            <Link to="/profileView">
+              <button
+                onClick={setPopup(false)}
+                style={{
+                  marginTop: "20px",
+                  padding: "10px",
+                  borderRadius: "9999px",
+                  border: "1px solid rgba(0,0,255,1)",
+                  backgroundColor: "transparent",
+                  width: "89%",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  color: "rgba(0,0,255,1)",
+                  fontWeight: "500",
+                }}
+              >
+                View Profile
+              </button>
+            </Link>
+          )}
+
           <div
             style={{ border: "1px solid #cfcfcf", margin: "30px 10px" }}
           ></div>

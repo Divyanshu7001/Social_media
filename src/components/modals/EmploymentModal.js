@@ -77,7 +77,7 @@ export const EmploymentAddModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex xss:flex-col sm:flex justify-between ">
+          <div className="flex xss:flex-col md:flex-row md:gap-4 justify-between ">
             <div className="flex flex-col xss:w-full w-[60%] ">
               <label className="font-medium">Organization Name</label>
               <input
@@ -100,7 +100,7 @@ export const EmploymentAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between xss:flex-col sm:flex mt-[1vw]">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4 mt-[1vw]">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -129,7 +129,7 @@ export const EmploymentAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Department</label>
               <input
@@ -152,7 +152,7 @@ export const EmploymentAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Role/Title</label>
               <input
@@ -275,7 +275,7 @@ export const EmploymentEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex xss:flex-col sm:flex justify-between ">
+          <div className="flex xss:flex-col md:flex-row md:gap-4 justify-between ">
             <div className="flex flex-col xss:w-full w-[60%] ">
               <label className="font-medium">Organization Name</label>
               <input
@@ -298,7 +298,7 @@ export const EmploymentEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between xss:flex-col sm:flex mt-[1vw]">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4 mt-[1vw]">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -327,7 +327,7 @@ export const EmploymentEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Department</label>
               <input
@@ -350,7 +350,7 @@ export const EmploymentEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Role/Title</label>
               <input
