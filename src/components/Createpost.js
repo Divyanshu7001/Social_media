@@ -66,7 +66,7 @@ const Box = ({ closePopup }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-2xl h-3/5 md:h-3/5 lg:h-3/5 2xl:h-2/5  p-5 rounded-lg shadow-md relative">
+      <div className="bg-white w-full max-w-2xl h-3/5 md:h-3/5 lg:h-3/5 xl:h-3/5 2xl:h-1/2  p-5 rounded-lg shadow-md relative">
         <div className="flex justify-between items-center pb-3">
           <div className="font-semibold text-xl text-black ">Create Post</div>
           <MdOutlineClear onClick={closePopup} size={28} className="cursor-pointer" />
