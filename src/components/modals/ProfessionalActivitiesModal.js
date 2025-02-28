@@ -85,7 +85,7 @@ export const ProfessionalActivityAddModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Organization Name</label>
               <input
@@ -108,7 +108,7 @@ export const ProfessionalActivityAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -137,7 +137,7 @@ export const ProfessionalActivityAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Department</label>
               <input
@@ -174,7 +174,7 @@ export const ProfessionalActivityAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full relative">
               <label className="font-medium">Degree/Title</label>
               <DatePicker
@@ -331,7 +331,7 @@ export const ProfessionalActivityEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Organization Name</label>
               <input
@@ -354,7 +354,7 @@ export const ProfessionalActivityEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -383,7 +383,7 @@ export const ProfessionalActivityEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Department</label>
               <input
@@ -421,7 +421,7 @@ export const ProfessionalActivityEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full relative">
               <label className="font-medium">Degree/Title</label>
               <DatePicker
