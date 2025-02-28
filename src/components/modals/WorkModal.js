@@ -71,7 +71,7 @@ export const WorkAddModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Work Type</label>
               <input
@@ -107,7 +107,7 @@ export const WorkAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Link</label>
               <input
@@ -225,7 +225,7 @@ export const WorkEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between xss:flex-col sm:flex md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Work Type</label>
               <input
@@ -261,7 +261,7 @@ export const WorkEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Link</label>
               <input

@@ -283,12 +283,33 @@ const ViewProfile = () => {
     }
   }, [user, isDataFetched]);
 
-  const handleEmployeeDelete = async (employee) => {
+  const handleDeleteData = async (data, sectionNo) => {
+    let type;
+    switch (sectionNo) {
+      case 1:
+        type = "employee";
+        break;
+      case 2:
+        type = "education";
+        break;
+      case 3:
+        type = "professional_activity";
+        break;
+      case 4:
+        type = "funding_details";
+        break;
+      case 5:
+        type = "works";
+        break;
+      default:
+        break;
+    }
+
     try {
       await api
         .post(
-          `profileDelete/${employee.id}`,
-          { type: "employee" },
+          `profileDelete/${data.id}`,
+          { type: type },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -300,108 +321,11 @@ const ViewProfile = () => {
           toast.success(res.data.message);
         });
     } catch (error) {
-      console.error("Error deleting employee: ", error.response.data.error);
-      toast.error("Error deleting employee: " + error.response.data.error);
+      console.error("Error deleting Data: ", error.response.data.error);
+      toast.error("Error deleting Data: " + error.response.data.error);
     }
   };
 
-  const handleEducationDelete = async (education) => {
-    try {
-      await api
-        .post(
-          `profileDelete/${education.id}`,
-          { type: "education" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          setIsDataFetched(false);
-          toast.success(res.data.message);
-        });
-    } catch (error) {
-      console.error("Error deleting Education: ", error.response.data.error);
-      toast.error("Error deleting Education: " + error.response.data.error);
-    }
-  };
-
-  const handleProfessionalActivityDelete = async (activity) => {
-    try {
-      await api
-        .post(
-          `profileDelete/${activity.id}`,
-          { type: "professional_activity" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          setIsDataFetched(false);
-          toast.success(res.data.message);
-        });
-    } catch (error) {
-      console.error(
-        "Error deleting Professional Activity: ",
-        error.response.data.error
-      );
-      toast.error(
-        "Error deleting Professional Activity: " + error.response.data.error
-      );
-    }
-  };
-
-  const handleFundingDetailsDelete = async (funding) => {
-    try {
-      await api
-        .post(
-          `profileDelete/${funding.id}`,
-          { type: "funding_details" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          setIsDataFetched(false);
-          toast.success(res.data.message);
-        });
-    } catch (error) {
-      console.error(
-        "Error deleting Funding Details: ",
-        error.response.data.error
-      );
-      toast.error(
-        "Error deleting Funding Details: " + error.response.data.error
-      );
-    }
-  };
-
-  const handleWorkDelete = async (work) => {
-    try {
-      await api
-        .post(
-          `profileDelete/${work.id}`,
-          { type: "works" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          setIsDataFetched(false);
-          toast.success(res.data.message);
-        });
-    } catch (error) {
-      console.error("Error deleting employee: ", error.response.data.error);
-      toast.error("Error deleting employee: " + error.response.data.error);
-    }
-  };
 
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
@@ -985,7 +909,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleEmployeeDelete(employee);
+                                handleDeleteData(employee, 1);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1053,7 +977,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleEducationDelete(education);
+                                handleDeleteData(education, 2);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1120,7 +1044,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleProfessionalActivityDelete(activity);
+                                handleDeleteData(activity, 3);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1183,7 +1107,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleFundingDetailsDelete(funding);
+                                handleDeleteData(funding, 4);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1247,7 +1171,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleWorkDelete(work);
+                                handleDeleteData(work, 5);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />

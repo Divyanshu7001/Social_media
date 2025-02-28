@@ -708,6 +708,11 @@ video {
   margin-right: 2.5rem;
 }
 
+.mx-14 {
+  margin-left: 3.5rem;
+  margin-right: 3.5rem;
+}
+
 .mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -716,6 +721,11 @@ video {
 .mx-4 {
   margin-left: 1rem;
   margin-right: 1rem;
+}
+
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
 }
 
 .mx-6 {
@@ -741,6 +751,11 @@ video {
 .my-10 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
+}
+
+.my-14 {
+  margin-top: 3.5rem;
+  margin-bottom: 3.5rem;
 }
 
 .my-2 {
@@ -878,10 +893,6 @@ video {
 
 .ml-\[20\%\] {
   margin-left: 20%;
-}
-
-.ml-\[5vw\] {
-  margin-left: 5vw;
 }
 
 .mr-1 {
@@ -1116,10 +1127,6 @@ video {
   height: 2px;
 }
 
-.h-\[3vw\] {
-  height: 3vw;
-}
-
 .h-\[4vw\] {
   height: 4vw;
 }
@@ -1270,10 +1277,6 @@ video {
 
 .w-\[39\%\] {
   width: 39%;
-}
-
-.w-\[3vw\] {
-  width: 3vw;
 }
 
 .w-\[40\%\] {
@@ -1443,6 +1446,10 @@ video {
   align-items: center;
 }
 
+.justify-start {
+  justify-content: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -1497,10 +1504,6 @@ video {
 
 .gap-\[0\.5vw\] {
   gap: 0.5vw;
-}
-
-.gap-\[0\.7vw\] {
-  gap: 0.7vw;
 }
 
 .gap-\[0\.8vw\] {
@@ -1595,6 +1598,12 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-7 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.75rem * var(--tw-space-y-reverse));
 }
 
 .overflow-hidden {
@@ -2989,6 +2998,9 @@ video {
     width: 60%;
   }
 
+  .md\:w-\[70\%\] {
+    width: 70%;
+
   .md\:w-\[65\%\] {
     width: 65%;
   }
@@ -3005,6 +3017,10 @@ video {
     width: 100%;
   }
 
+  .md\:flex-grow {
+    flex-grow: 1;
+  }
+
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3015,6 +3031,10 @@ video {
 
   .md\:flex-col {
     flex-direction: column;
+  }
+
+  .md\:gap-4 {
+    gap: 1rem;
   }
 
   .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
