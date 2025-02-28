@@ -93,7 +93,7 @@ export const FundingDetailsAddModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full ">
               <label className="font-medium">Funding Type</label>
               <select
@@ -124,7 +124,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Title of Funded Project</label>
               <input
@@ -147,7 +147,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Description</label>
               <input
@@ -170,7 +170,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full ">
               <label className="font-medium">Total Funding Amount</label>
               <input
@@ -193,7 +193,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Funding Agency Name</label>
               <input
@@ -216,7 +216,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -245,7 +245,7 @@ export const FundingDetailsAddModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">
                 Funding Identifier(1) Grant Number
@@ -449,7 +449,7 @@ export const FundingDetailsEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex">
+          <div className="flex justify-between md:gap-4 xss:flex-col md:flex-row">
             <div className="flex flex-col w-[60%] xss:w-full ">
               <label className="font-medium">Funding Type</label>
               <select
@@ -480,7 +480,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Title of Funded Project</label>
               <input
@@ -503,7 +503,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Description</label>
               <input
@@ -526,7 +526,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full ">
               <label className="font-medium">Total Funding Amount</label>
               <input
@@ -549,7 +549,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Funding Agency Name</label>
               <input
@@ -572,7 +572,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">Region or state</label>
               <input
@@ -601,7 +601,7 @@ export const FundingDetailsEditModal = ({
             </div>
           </div>
 
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
+          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
             <div className="flex flex-col w-[60%] xss:w-full">
               <label className="font-medium">
                 Funding Identifier(1) Grant Number
