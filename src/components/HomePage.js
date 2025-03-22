@@ -6,18 +6,8 @@ import HomePage1 from "./HomePage1.js";
 import api from "./api.js";
 import { Link } from "react-router-dom";
 import Ellipse4 from "../assets/img/Ellipse4.png";
-<<<<<<< HEAD
-// import fluentpeople24regular from "../assets/img/fluentpeople24regular.png";
-// import claritynotificationline from "../assets/img/claritynotificationline.png";
-// import materialsymbolslightchatoutline from "../assets/img/materialsymbolslightchatoutline.png";
-import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { FaRegBookmark } from "react-icons/fa";
-import { ReactComponent as Photo } from "../assets/svg/photo.svg";
-=======
 
 import { ReactComponent as Photo } from '../assets/svg/photo.svg';
->>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
 import { ReactComponent as Article } from "../assets/svg/notes.svg";
 import { LeftSidebar } from "./LeftSidebar.js";
 
@@ -76,94 +66,11 @@ export const Homepage = () => {
       <Navbar />
       <div className="flex min-h-screen bg-white">
         {/* left Sidebar */}
-<<<<<<< HEAD
-        <div className="  md:block fixed top-24  mb-2 left-0 w-1/5 xl:w-1/5 2xl:w-1/5 2xl:ms-10 lg:w-1/4 md:w-3/12  md:ms-5 lg:ms-5 xl:ms-10   ms-10  h-2/3 ">
-          <div className=" bg-white rounded border-2 h-4/5 hidden md:flex lg:flex flex-col w-full px-8 mt-0.5 md:mt-0.5 lg:mt-3.5  md:px-1 lg:px-8 py-5">
-            {/* User Info */}
-            <div className="flex  flex-col items-center s">
-              <img
-                src={user_data.profile_img || Ellipse4}
-                alt="Ellipse"
-                className="h-16 w-16 rounded-full object-cover"
-              />
-              <div className="text-xl font-semibold mt-1 text-center">
-                {user_data.name || "John Paul"}
-              </div>
-            </div>
-
-            {/* Sidebar Links */}
-            <div className="flex flex-col justify-around h-4/5  mb-2 px-0 md:px-2 lg:px-0">
-              <div className="flex items-center space-x-2">
-                <MdOutlinePeopleAlt size={28} />
-                {/* <img src={fluentpeople24regular} alt="Fluent People" className="h-6 w-6" /> */}
-                <Link
-                  to="/connection"
-                  onClick={() => setPopup(false)}
-                  className="font-semibold text-blue-600"
-                >
-                  My Connections
-                </Link>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <MdOutlineMessage size={25} />
-                {/* <img src={materialsymbolslightchatoutline} alt="Message" className="h-6 w-6" /> */}
-                <Link
-                  to="/Message"
-                  onClick={() => setPopup(false)}
-                  className="font-semibold text-blue-600"
-                >
-                  Message
-                </Link>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <IoMdNotificationsOutline size={28} />
-                {/* <img src={claritynotificationline} alt="Notification" className="h-6 w-6" /> */}
-                <Link
-                  to="/Notifications"
-                  onClick={() => setPopup(false)}
-                  className="font-semibold text-blue-600"
-                >
-                  Notifications
-                </Link>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <FaRegBookmark size={22} />
-                {/* <img src={iconamoonbookmarkthin} alt="Bookmark" className="h-6 w-6" /> */}
-                <Link
-                  to="/Saved"
-                  onClick={() => setPopup(false)}
-                  className="font-semibold text-blue-600"
-                >
-                  Saved Items
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Create Post Button */}
-          {/* hidden md:block lg:block fixed w-1/5 top-2/3 xl:top-2/3 lg:top-[70%] md:w-3/12 md:top-2/3 2xl:top-2/3 md:ms-5 lg:ms-5  xl:ms-10 left-0 ms-10  xl:w-1/5 lg:w-1/4 2xl:w-1/5 */}
-          <div className="mt-5 ">
-            <button
-              onClick={togglePopup}
-              className="bg-primary hidden md:block text-white rounded-lg py-2 px-6 hover:bg-blue-700 w-full"
-            >
-              Create Post
-            </button>
-
-            {/* Popup for Create Post */}
-            {showPopup && <Createpost closePopup={togglePopup} />}
-          </div>
-        </div>
-=======
         <LeftSidebar
           user_data={user_data}
           togglePopup={togglePopup}
           showPopup={showPopup}
           post={true} />
->>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
 
         {/* Main Content Area */}
         <div className="fixed left-0 top-15 h-8 w-full bg-white "></div>

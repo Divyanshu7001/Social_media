@@ -54,13 +54,10 @@ const App = () => {
           <Route path="/profileView" element={<ViewProfile />} />
           <Route path="/connection" element={<Profile />} />
           <Route path="/institutions" element={<Journals />} />
-<<<<<<< HEAD
           <Route path="/profile/:userId" element={<OtherProfile />} />
-=======
-          <Route path="/profile" element={<OtherProfile />} />
           <Route path="/saved" element={<SavedItems />} />
           <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
->>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
+
         </Routes>
         <Toaster position="top-center" reverseOrder={false} />
       </BrowserRouter>
