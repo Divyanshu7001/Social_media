@@ -43,14 +43,9 @@ const ViewProfile = () => {
   if (!isAuthenticated) {
     navigate("/");
   }
-
-  //Base States
   const [profileImage, setProfileImage] = useState(profileData?.image);
   const [isProfileDetailsAvailable, setIsProfileDetailsAvailable] =
     useState(false);
-  const [followers, setFollowers] = useState(0);
-  const [following, setFollowing] = useState(0);
-  const [views, setViews] = useState(0);
   const [myUploads, setMyUploads] = useState({});
   const [savedFiles, setSavedFiles] = useState({});
 
@@ -138,7 +133,7 @@ const ViewProfile = () => {
             }
           )
           .then((res) => {
-            console.log("Fetched User Data: ", res.data);
+            //console.log("Fetched User Data: ", res.data);
             setIsDataFetched(true);
             setProfileData(res.data.profile_data.user);
             setIsProfileDetailsAvailable(
@@ -161,9 +156,6 @@ const ViewProfile = () => {
               res.data.profile_data.user.profile.professional_activities
             );
             setWorks(res.data.profile_data.user.profile.works);
-            setFollowers(res.data.follower_count);
-            setFollowing(res.data.following_count);
-            setViews(res.data.public_views == null ? 0 : res.data.public_views);
           });
       } else {
         console.log("User is not defined yet");
@@ -230,10 +222,10 @@ const ViewProfile = () => {
 
   const editProfileDetails = async (e) => {
     e.preventDefault();
-    console.log(user.id);
+    //console.log(user.id);
     const updatedSkills = [...skills, ...tempSkills];
     setSkills(updatedSkills);
-    console.log("Skills in Update api: ", skills);
+    //console.log("Skills in Update api: ", skills);
     try {
       await api
         .post(
@@ -250,7 +242,7 @@ const ViewProfile = () => {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
           toast.success(res.data.message);
           setIsDataFetched(false);
           setTempBiography("");
@@ -283,33 +275,12 @@ const ViewProfile = () => {
     }
   }, [user, isDataFetched]);
 
-  const handleDeleteData = async (data, sectionNo) => {
-    let type;
-    switch (sectionNo) {
-      case 1:
-        type = "employee";
-        break;
-      case 2:
-        type = "education";
-        break;
-      case 3:
-        type = "professional_activity";
-        break;
-      case 4:
-        type = "funding_details";
-        break;
-      case 5:
-        type = "works";
-        break;
-      default:
-        break;
-    }
-
+  const handleEmployeeDelete = async (employee) => {
     try {
       await api
         .post(
-          `profileDelete/${data.id}`,
-          { type: type },
+          `profileDelete/${employee.id}`,
+          { type: "employee" },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -321,11 +292,108 @@ const ViewProfile = () => {
           toast.success(res.data.message);
         });
     } catch (error) {
-      console.error("Error deleting Data: ", error.response.data.error);
-      toast.error("Error deleting Data: " + error.response.data.error);
+      console.error("Error deleting employee: ", error.response.data.error);
+      toast.error("Error deleting employee: " + error.response.data.error);
     }
   };
 
+  const handleEducationDelete = async (education) => {
+    try {
+      await api
+        .post(
+          `profileDelete/${education.id}`,
+          { type: "education" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setIsDataFetched(false);
+          toast.success(res.data.message);
+        });
+    } catch (error) {
+      console.error("Error deleting Education: ", error.response.data.error);
+      toast.error("Error deleting Education: " + error.response.data.error);
+    }
+  };
+
+  const handleProfessionalActivityDelete = async (activity) => {
+    try {
+      await api
+        .post(
+          `profileDelete/${activity.id}`,
+          { type: "professional_activity" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setIsDataFetched(false);
+          toast.success(res.data.message);
+        });
+    } catch (error) {
+      console.error(
+        "Error deleting Professional Activity: ",
+        error.response.data.error
+      );
+      toast.error(
+        "Error deleting Professional Activity: " + error.response.data.error
+      );
+    }
+  };
+
+  const handleFundingDetailsDelete = async (funding) => {
+    try {
+      await api
+        .post(
+          `profileDelete/${funding.id}`,
+          { type: "funding_details" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setIsDataFetched(false);
+          toast.success(res.data.message);
+        });
+    } catch (error) {
+      console.error(
+        "Error deleting Funding Details: ",
+        error.response.data.error
+      );
+      toast.error(
+        "Error deleting Funding Details: " + error.response.data.error
+      );
+    }
+  };
+
+  const handleWorkDelete = async (work) => {
+    try {
+      await api
+        .post(
+          `profileDelete/${work.id}`,
+          { type: "works" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setIsDataFetched(false);
+          toast.success(res.data.message);
+        });
+    } catch (error) {
+      console.error("Error deleting employee: ", error.response.data.error);
+      toast.error("Error deleting employee: " + error.response.data.error);
+    }
+  };
 
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
@@ -347,144 +415,6 @@ const ViewProfile = () => {
         break;
       default:
         break;
-    }
-  };
-
-  const renderSavedFiles = () => {
-    if (savedFiles && (savedFiles.posts || savedFiles.articles)) {
-      return (
-        <>
-          {savedFiles.posts && savedFiles.posts.length > 0 && (
-            <>
-              {savedFiles.posts.map((post, i) => (
-                <div
-                  key={i}
-                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
-                >
-                  {/* Content for Saved Files */}
-                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                    <div className="xss:w-2/6 xs:w-2/6 h-auto md:w-2/6 xl:w-1/6">
-                      <img
-                        src={post.image}
-                        alt="Notebook"
-                        className="w-full xss:h-auto xss:w-auto xs:h-auto xs:w-auto md:h-auto md:w-auto"
-                      />
-                    </div>
-                    <div className="flex flex-col space-y-1">
-                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                        {post.title}
-                      </h4>
-                      <p className="sm:text-lg xss:text-md text-gray-600">
-                        By {post.PostUsername}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
-                    {post.abstract}
-                  </p>
-                  <div className="flex justify-between my-1 items-center sm:mx-9">
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon
-                        icon={solidHeart}
-                        className={`${
-                          post.am_i_liked ? "text-red-600" : "text-white"
-                        } sm:text-xl xss:text-lg`}
-                      />
-                      <span className="sm:text-lg xss:text-base">
-                        {post.likeCount} likes
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <img
-                        src={weuieyesonfilled}
-                        alt="Views"
-                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
-                      />
-                      <span className="text-lg xss:text-base">
-                        {post.viewsCount == null ? 0 : post.viewsCount} Views
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <img
-                        src={openmojishare}
-                        alt="Share"
-                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
-                      />
-                      <span className="text-lg xss:text-base">Share</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
-          {savedFiles.articles && savedFiles.articles.length > 0 && (
-            <>
-              {savedFiles.articles.map((post, i) => (
-                <div
-                  key={i}
-                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
-                >
-                  {/* Content for Saved Files */}
-                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                    <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
-                      <img
-                        src="./book.jpg"
-                        alt="Notebook"
-                        className="w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
-                      />
-                    </div>
-                    <div className="flex flex-col space-y-1">
-                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                        {post.paper_title}
-                      </h4>
-                      <p className="sm:text-lg xss:text-md text-gray-600">
-                        By {post.authors}
-                      </p>
-                      <p className="xs:block sm:text-lg text-gray-600">
-                        Publication Name: {post.publication_name}
-                      </p>
-                      <p className="xs:block sm:text-lg text-gray-600">
-                        Research Interest: {post.research_interest} | year:{" "}
-                        {post.year}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
-                    {post.abstract}
-                  </p>
-                  <div className="flex justify-between my-1 items-center sm:mx-9">
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon
-                        icon={solidHeart}
-                        className="text-red-600 sm:text-xl xss:text-lg"
-                      />
-                      <span className="sm:text-lg xss:text-base">1 likes</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <img
-                        src={weuieyesonfilled}
-                        alt="Views"
-                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
-                      />
-                      <span className="text-lg xss:text-base">2 Views</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <img
-                        src={openmojishare}
-                        alt="Share"
-                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
-                      />
-                      <span className="text-lg xss:text-base">Share</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
-        </>
-      );
-    } else {
-      return <p>No Posts or Articles Saved Yet</p>;
     }
   };
 
@@ -638,15 +568,15 @@ const ViewProfile = () => {
                     <div className="ml-4 xss:ml-2 lg:mt-9">
                       <div className="flex xss:py-1 sm:py-6 lg:gap-8 lg:py-1 ">
                         <div className="flex flex-col items-center text-gray-800 font-bold sm:px-5 xss:pr-1 lg:text-lg">
-                          <p>{followers}</p>
+                          <p>0</p>
                           <p>Followers</p>
                         </div>
                         <div className="flex flex-col items-center text-gray-800 font-bold sm:px-5 xss:px-1 lg:text-lg">
-                          <p>{following}</p>
+                          <p>0</p>
                           <p>Following</p>
                         </div>
                         <div className="flex flex-col items-center text-gray-800 font-bold sm:px-5 pl-1 lg:text-lg">
-                          <p>{views}</p>
+                          <p>0</p>
                           <p>Views</p>
                         </div>
                       </div>
@@ -909,7 +839,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleDeleteData(employee, 1);
+                                handleEmployeeDelete(employee);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -977,7 +907,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleDeleteData(education, 2);
+                                handleEducationDelete(education);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1044,7 +974,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleDeleteData(activity, 3);
+                                handleProfessionalActivityDelete(activity);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1107,7 +1037,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleDeleteData(funding, 4);
+                                handleFundingDetailsDelete(funding);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1171,7 +1101,7 @@ const ViewProfile = () => {
                             />
                             <RiDeleteBin2Line
                               onClick={() => {
-                                handleDeleteData(work, 5);
+                                handleWorkDelete(work);
                               }}
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
@@ -1247,8 +1177,15 @@ const ViewProfile = () => {
                             key={i}
                             className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                           >
-                            {/* Content for My Uploads */}
+                            {/* Content for Saved Files */}
                             <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
+                              {/* <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
+                                <img
+                                  src="./book.jpg"
+                                  alt="Notebook"
+                                  className="  w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
+                                />
+                              </div> */}
                               <div className="flex flex-col space-y-1">
                                 <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
                                   {post.paper_title}
@@ -1306,7 +1243,153 @@ const ViewProfile = () => {
                       )}
                     </>
                   ) : (
-                    renderSavedFiles()
+                    <>
+                      {savedFiles ? (
+                        <>
+                          {savedFiles?.posts?.map((post, i) => (
+                            <div
+                              key={i}
+                              className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                            >
+                              {/* Content for Saved Files */}
+                              <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
+                                <div className="xss:w-2/6 xs:w-2/6 h-auto md:w-2/6 xl:w-1/6">
+                                  <img
+                                    src={post.image}
+                                    alt="Notebook"
+                                    className="w-full xss:h-auto xss:w-auto xs:h-auto xs:w-auto md:h-auto md:w-auto"
+                                  />
+                                </div>
+                                <div className="flex flex-col space-y-1">
+                                  <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                    {post.title}
+                                  </h4>
+                                  <p className="sm:text-lg xss:text-md text-gray-600">
+                                    By {post.PostUsername}
+                                  </p>
+                                  {/* <p className="xs:block sm:text-lg text-gray-600">
+                                    Publication Name: {post.publication_name}
+                                  </p>
+                                  <p className="xs:block sm:text-lg text-gray-600">
+                                    Research Interest: {post.research_interest}{" "}
+                                    | year: {post.year}
+                                  </p> */}
+                                </div>
+                              </div>
+                              <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                {post.abstract}
+                              </p>
+                              <div className="flex justify-between my-1 items-center sm:mx-9">
+                                <div className="flex items-center space-x-2">
+                                  <FontAwesomeIcon
+                                    icon={solidHeart}
+                                    className={`${
+                                      post.am_i_liked
+                                        ? "text-red-600"
+                                        : "text-white"
+                                    } sm:text-xl xss:text-lg`}
+                                  />
+                                  <span className="sm:text-lg xss:text-base">
+                                    {post.likeCount} likes
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={weuieyesonfilled}
+                                    alt="Views"
+                                    className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                  />
+                                  <span className="text-lg xss:text-base">
+                                    {post.viewsCount == null
+                                      ? 0
+                                      : post.viewsCount}{" "}
+                                    Views
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={openmojishare}
+                                    alt="Share"
+                                    className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                  />
+                                  <span className="text-lg xss:text-base">
+                                    Share
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          {savedFiles?.articles?.map((post, i) => (
+                            <div
+                              key={i}
+                              className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                            >
+                              {/* Content for Saved Files */}
+                              <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
+                                <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
+                                  <img
+                                    src="./book.jpg"
+                                    alt="Notebook"
+                                    className="  w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
+                                  />
+                                </div>
+                                <div className="flex flex-col space-y-1">
+                                  <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                    {post.paper_title}
+                                  </h4>
+                                  <p className="sm:text-lg xss:text-md text-gray-600">
+                                    By {post.authors}
+                                  </p>
+                                  <p className="xs:block sm:text-lg text-gray-600">
+                                    Publication Name: {post.publication_name}
+                                  </p>
+                                  <p className="xs:block sm:text-lg text-gray-600">
+                                    Research Interest: {post.research_interest}{" "}
+                                    | year: {post.year}
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                {post.abstract}
+                              </p>
+                              <div className="flex justify-between my-1 items-center sm:mx-9">
+                                <div className="flex items-center space-x-2">
+                                  <FontAwesomeIcon
+                                    icon={solidHeart}
+                                    className="text-red-600 sm:text-xl xss:text-lg"
+                                  />
+                                  <span className="sm:text-lg xss:text-base">
+                                    1 likes
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={weuieyesonfilled}
+                                    alt="Views"
+                                    className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                  />
+                                  <span className="text-lg xss:text-base">
+                                    2 Views
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <img
+                                    src={openmojishare}
+                                    alt="Share"
+                                    className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                  />
+                                  <span className="text-lg xss:text-base">
+                                    Share
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <p>No Posts Saved Yet</p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

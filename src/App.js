@@ -23,14 +23,16 @@ const App = () => {
       const isAuthenticatedFromLocalStorage = await JSON.parse(
         localStorage.getItem("isAuthenticated")
       );
-      const userFromLocalStorage = await JSON.parse(localStorage.getItem("user")); // Parse user as JSON
+      const userFromLocalStorage = await JSON.parse(
+        localStorage.getItem("user")
+      ); // Parse user as JSON
 
       setIsAuthenticated(isAuthenticatedFromLocalStorage);
       setUser(userFromLocalStorage || {});
-    }
-    auth()
+    };
+    auth();
   }, []);
-  
+
   return (
     <>
       <BrowserRouter>
@@ -50,7 +52,7 @@ const App = () => {
           <Route path="/profileView" element={<ViewProfile />} />
           <Route path="/connection" element={<Profile />} />
           <Route path="/institutions" element={<Journals />} />
-          <Route path="/profile" element={<OtherProfile />} />
+          <Route path="/profile/:userId" element={<OtherProfile />} />
         </Routes>
         <Toaster position="top-center" reverseOrder={false} />
       </BrowserRouter>
