@@ -124,10 +124,10 @@ const ArticleCard = ({ title, description, author }) => {
 
 const ArticleList = () => (
   <div>
-    <PostCard 
-      name="Georgia" 
-      location="Ahmedabad, Gujarat" 
-      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform." 
+    <PostCard
+      name="Georgia"
+      location="Ahmedabad, Gujarat"
+      description="Collaborate, innovate, and publish groundbreaking research on our comprehensive networking platform."
     />
     {articles.map(article => (
       <ArticleCard
@@ -137,10 +137,10 @@ const ArticleList = () => (
         author={article.author}
       />
     ))}
-    <PostCard 
-      name="John" 
-      location="Chennai, Tamilnadu" 
-      description="Join our vibrant community of Information Technology scholars and researchers." 
+    <PostCard
+      name="John"
+      location="Chennai, Tamilnadu"
+      description="Join our vibrant community of Information Technology scholars and researchers."
     />
   </div>
 );

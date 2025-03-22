@@ -13,12 +13,15 @@ import {
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
-import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Context } from "../index.js";
 import api from "./api";
 import toast from "react-hot-toast";
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
+=======
+import { Link } from "react-router-dom";
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
 
 const PostCard = ({
   name,
@@ -70,9 +73,14 @@ const PostCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
       });
     } catch (error) {
       console.log(`Errors while ${action} post user`, error);
+=======
+      })
+      window.location.reload()
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
     }
   };
 
@@ -85,9 +93,14 @@ const PostCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
       });
     } catch (error) {
       console.log(`Errors while ${action} post user`, error);
+=======
+      })
+      window.location.reload()
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
     }
   };
 
@@ -225,9 +238,14 @@ const ArticleCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
       });
     } catch (error) {
       console.log(`Errors while ${action} post user`, error);
+=======
+      })
+      window.location.reload()
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
     }
   };
 
@@ -240,19 +258,28 @@ const ArticleCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
       });
     } catch (error) {
       console.log(`Errors while ${action} post user`, error);
+=======
+      })
+      window.location.reload()
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
     }
   };
 
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
+
       <div className="flex justify-between items-center px-3 ">
-        <div className=" flex items-center">
-          <h3 className="text-2xl font-semibold pe-5">{title}</h3>
-        </div>
+        <Link to={`/ArticleDetails/${article_id}`}>
+          <div className=" flex items-center">
+            <h3 className="text-2xl font-semibold pe-5">{title}</h3>
+          </div>
+        </Link>
         <div className="flex py-4 items-center">
+<<<<<<< HEAD
           <button
             className="text-primary text-base  lg:text-lg xl:text-xl mr-4"
             onClick={() => handleFollow(follow ? "unfollow" : "follow")}
@@ -266,6 +293,19 @@ const ArticleCard = ({
       <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">
         {description}
       </p>
+=======
+          <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={(e) => {
+            e.stopPropagation();
+            handleFollow(follow ? "unfollow" : "follow")
+          }}>{follow ? "Unfollow" : "Follow"}</button>
+          <MoreVertIcon />
+        </div>
+      </div>
+      <Link to={`/ArticleDetails/${article_id}`}>
+        <div className="text-sm text-gray-500  px-3">By {author}</div>
+        <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
+      </Link>
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
       <div className="flex justify-between mt-2 py-1 px-5">
         <div
           className="flex items-center space-x-2 cursor-pointer"

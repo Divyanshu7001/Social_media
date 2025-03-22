@@ -16,7 +16,7 @@ import api from "./api.js";
 import { FaApple } from "react-icons/fa";
 
 const LoginPage = () => {
-  const { setIsAuthenticated, setUser, toggle, setBtn } =
+  const { setIsAuthenticated, setUser, toggle, setBtn, setPopup } =
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,6 +61,7 @@ const LoginPage = () => {
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
+          setPopup(false)
           navigate("/home");
         });
 

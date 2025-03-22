@@ -3,11 +3,10 @@ import { Context } from "../index.js";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar.js";
 import HomePage1 from "./HomePage1.js";
-import Createpost from "./Createpost.js";
 import api from "./api.js";
 import { Link } from "react-router-dom";
-// import iconamoonbookmarkthin from "../assets/img/iconamoonbookmarkthin.png";
 import Ellipse4 from "../assets/img/Ellipse4.png";
+<<<<<<< HEAD
 // import fluentpeople24regular from "../assets/img/fluentpeople24regular.png";
 // import claritynotificationline from "../assets/img/claritynotificationline.png";
 // import materialsymbolslightchatoutline from "../assets/img/materialsymbolslightchatoutline.png";
@@ -15,7 +14,12 @@ import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaRegBookmark } from "react-icons/fa";
 import { ReactComponent as Photo } from "../assets/svg/photo.svg";
+=======
+
+import { ReactComponent as Photo } from '../assets/svg/photo.svg';
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
 import { ReactComponent as Article } from "../assets/svg/notes.svg";
+import { LeftSidebar } from "./LeftSidebar.js";
 
 // Main Component
 export const Homepage = () => {
@@ -72,6 +76,7 @@ export const Homepage = () => {
       <Navbar />
       <div className="flex min-h-screen bg-white">
         {/* left Sidebar */}
+<<<<<<< HEAD
         <div className="  md:block fixed top-24  mb-2 left-0 w-1/5 xl:w-1/5 2xl:w-1/5 2xl:ms-10 lg:w-1/4 md:w-3/12  md:ms-5 lg:ms-5 xl:ms-10   ms-10  h-2/3 ">
           <div className=" bg-white rounded border-2 h-4/5 hidden md:flex lg:flex flex-col w-full px-8 mt-0.5 md:mt-0.5 lg:mt-3.5  md:px-1 lg:px-8 py-5">
             {/* User Info */}
@@ -152,6 +157,13 @@ export const Homepage = () => {
             {showPopup && <Createpost closePopup={togglePopup} />}
           </div>
         </div>
+=======
+        <LeftSidebar
+          user_data={user_data}
+          togglePopup={togglePopup}
+          showPopup={showPopup}
+          post={true} />
+>>>>>>> 0e53841474101ec200501d71d4735627fe2b18b6
 
         {/* Main Content Area */}
         <div className="fixed left-0 top-15 h-8 w-full bg-white "></div>
