@@ -42,7 +42,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="p-3 flex justify-between items-center mx-10 xs:mx-6 w-max-[80%] sticky top-0 bg-white z-0  border-b-2 border-gray-300">
+      <nav className="py-3 px-3 flex justify-between items-center mx-0 md:mx-10 sticky top-0 bg-white z-0  border-b-2 border-gray-300">
         {/* Logo Section */}
         <div className="text-primary text-2xl mx-4 font-bold ">LOGO</div>
 
