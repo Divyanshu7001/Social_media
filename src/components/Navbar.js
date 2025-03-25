@@ -13,7 +13,7 @@ const Navbar = () => {
     toggle,
     setBtn,
     setIsAuthenticated,
-    user,
+    profileData,
     setUser,
     setPopup,
   } = useContext(Context);
@@ -243,7 +243,7 @@ const Navbar = () => {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4} // Placeholder for user image
+                src={`${profileData.image}` || Ellipse4} // Placeholder for user image
                 alt="User"
                 style={{
                   borderRadius: "50%",
@@ -252,7 +252,7 @@ const Navbar = () => {
                 }}
               />
               <div style={{ marginLeft: "20px" }}>
-                <h3 style={{ margin: 0 }}>{user.name}</h3>
+                <h3 style={{ margin: 0 }}>{profileData.name}</h3>
                 <p
                   style={{
                     margin: 0,

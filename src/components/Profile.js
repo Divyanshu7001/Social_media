@@ -1,63 +1,220 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { RiDeleteBin2Line } from "react-icons/ri";
-
+import api from "./api";
+import { Context } from "../index";
+import toast from "react-hot-toast";
+import { VscFeedback } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
+import { CgProfile } from "react-icons/cg";
 const Profile = () => {
+  const { user, profileData, isAuthenticated } = useContext(Context);
+  const navigate = useNavigate();
+
+  !isAuthenticated && navigate("/");
+
   const [activeTab, setActiveTab] = useState("followers");
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [suggestedFollowers, setSuggestedFollowers] = useState([]);
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
+
+  const [isDatafetched, setIsDataFetched] = useState(false);
+
+  const handleSuggestedFollowers = async (newData) => {
+    console.log("suggestions Data in api now: ", suggestedFollowers);
+
+    console.log("New Data: ", newData);
+    if (suggestedFollowers.length > 0) {
+      const updatedSuggestions = [...suggestedFollowers],
+        includedNames = [];
+      suggestedFollowers.forEach((suggestion) => {
+        includedNames.push(suggestion.name);
+      });
+      newData.forEach((newSuggestion) => {
+        if (!includedNames.includes(newSuggestion.name)) {
+          updatedSuggestions.push(newSuggestion);
+        }
+      });
+      setSuggestedFollowers(updatedSuggestions);
+    } else {
+      setSuggestedFollowers(...suggestedFollowers, newData);
+    }
+  };
+  const fetchFollowingData = async () => {
+    try {
+      await api
+        .post(
+          "/connection",
+          {
+            follow_id: user?.id,
+            type: "follow",
+          },
+          {
+            headers: {
+              withCredentials: true,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log("Following Data in response: ", res.data.suggestion);
+          setFollowing(res.data.follow);
+          handleSuggestedFollowers(
+            res.data.suggestion.length > 0 ? res.data.suggestion : []
+          );
+
+          setIsDataFetched(true);
+        });
+    } catch (error) {
+      console.log("Error fetching the Following Data: ", error);
+    }
+  };
+  const fetchFollowersData = async () => {
+    try {
+      await api
+        .post(
+          "/connection",
+          {
+            follow_id: user?.id,
+            type: "followers",
+          },
+          {
+            headers: {
+              withCredentials: true,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setFollowers(res.data.followers);
+          handleSuggestedFollowers(
+            res.data.suggestion.length > 0 ? res.data.suggestion : []
+          );
+          setIsDataFetched(true);
+        });
+    } catch (error) {
+      console.log("Error fetching the Followers Data: ", error);
+    }
+  };
+  const handleFollow = async (followId) => {
+    console.log("Id to be followed: ", followId);
+
+    try {
+      await api
+        .post(
+          `/follow`,
+          {
+            logged_id: user.id,
+            follow_id: followId,
+          },
+          {
+            headers: {
+              withCredentials: true,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          toast.success(res.data.message);
+          fetchFollowingData();
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error while following User");
+    }
+  };
+  useEffect(() => {
+    fetchFollowingData();
+    fetchFollowersData();
+  }, [user]);
+  // fetchFollowingData();
+  // fetchFollowersData();
+  console.log("Followers Data: ", followers);
+  console.log("Following Data: ", following);
+  console.log("Suggestions Data Global: ", suggestedFollowers);
+  console.log("profile Data: ", profileData);
+
   return (
     <div>
       <Navbar />
 
       <div className="w-full mx-auto flex justify-end">
-        <div className="my-[2vw] w-full flex mx-14">
-          <div className="w-[30%] border-[2px] border-opacity-85 rounded-xl">
-            <div className="flex flex-col items-center gap-[0.5vw] mt-[2vw]">
-              <div className="h-[5vw] w-[5vw]">
+        <div className="my-[2vw] w-full flex xss:flex-col xss:space-y-10 lg:space-y-0  lg:flex-row  xss:mx-6 sm:mx-11">
+          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col ">
+            <div className="flex flex-col mx-auto items-center justify-center gap-[0.5vw] mt-[2vw] xs:ml-auto xs:my-auto lg:mt-[2vw]">
+              <div className="xss:w-32 xss:h-auto">
                 <img
-                  src="images/johnpaul.png"
+                  src={`http://175.29.21.101/storage/${user.image}`}
                   alt="Avatar"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover rounded-full"
                 />
               </div>
-              <h2 className="font-semibold text-lg">John Paul</h2>
+              <h2 className="font-semibold text-lg">{user.name}</h2>
             </div>
 
-            <div className="w-[40%] flex flex-col justify-center mx-auto items-center space-y-7 my-14 ">
-              <div className="w-full flex gap-[1vw] justify-start font-semibold hover:cursor-pointer">
-                <img src="./images/connections.png" alt="" />
-                <p className="text-[#0000FF] text-lg">My Connections</p>
+            <div className="w-auto lg:w-[43%] flex flex-col mx-auto justify-center items-center space-y-5 md:space-y-9 my-4 md:my-14">
+              <div className="w-full flex items-center gap-2 justify-start font-semibold hover:cursor-pointer">
+                <VscFeedback className="w-5 h-5 ml-1" />
+                <p
+                  onClick={() => navigate("/home")}
+                  className={`text-lg text-black`}
+                >
+                  View Homefeed
+                </p>
               </div>
-
-              <div className="w-full flex gap-[1vw] justify-start font-semibold hover:cursor-pointer">
-                <img src="./images/chat.png" alt="" />
-                <p className="text-black text-lg">Message</p>
-              </div>
-
-              <div className="w-full flex gap-[1vw] font-semibold  justify-start hover:cursor-pointer">
-                <img src="./images/notifications.png" alt="" />
-                <p className="text-[#000] text-lg">Notifications</p>
-              </div>
-
-              <div className="w-full flex gap-[1vw] justify-start font-semibold">
-                <img src="./images/save.png" alt="" />
-                <p className="text-[#000] text-lg">Saved Items</p>
-              </div>
+              {[
+                {
+                  icon: "./images/connections.png",
+                  text: "My Connections",
+                  color: "text-[#0000FF]",
+                },
+                {
+                  icon: "./images/chat.png",
+                  text: "Message",
+                  color: "text-black",
+                },
+                {
+                  icon: "./images/notifications.png",
+                  text: "Notifications",
+                  color: "text-black",
+                },
+                {
+                  icon: "./images/save.png",
+                  text: "Saved Items",
+                  color: "text-black",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="w-full flex items-center gap-2 justify-start font-semibold hover:cursor-pointer"
+                >
+                  <img src={item.icon} alt={item.text} />
+                  <p className={`text-lg ${item.color}`}>{item.text}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="h-[20vw] w-[40%]">
-            <div className="w-[90%] flex  mx-auto h-[4vw]">
+          <div className="xss:h-auto lg:h-[20vw] xss:w-full lg:w-[40%]">
+            <div className="w-[90%] flex mx-auto h-[4vw]">
               <div
                 className={`${
                   activeTab === "followers" ? "border-b-4" : "border-b-2"
                 } w-[50%] flex justify-center items-center border-black cursor-pointer`}
               >
                 <p
-                  className="text-lg font-semibold"
+                  className={`${
+                    activeTab === "followers"
+                      ? "xss:text-lg lg:text-md"
+                      : "xss:text-lg lg:text-sm"
+                  } font-semibold xss:mb-6 lg:mb-0 `}
                   onClick={() => setActiveTab("followers")}
                 >
-                  1 Followers
+                  {followers?.length ? followers.length : 0} Followers
                 </p>
               </div>
               <div
@@ -66,69 +223,141 @@ const Profile = () => {
                 } w-[50%] flex justify-center items-center border-black cursor-pointer`}
               >
                 <p
-                  className="text-sm font-semibold"
+                  className={`${
+                    activeTab === "following"
+                      ? "xss:text-lg lg:text-md"
+                      : "xss:text-lg lg:text-sm"
+                  } font-semibold xss:mb-6 lg:mb-0`}
                   onClick={() => setActiveTab("following")}
                 >
-                  0 Following
+                  {following?.length ? following.length : 0} Following
                 </p>
               </div>
             </div>
 
             {activeTab === "followers" ? (
-              <div className="mx-5 mt-[2vw] flex justify-around items-center">
-                <div className="flex gap-6 items-center">
-                  <div className="h-[4vw] w-[4vw]">
-                    <img
-                      src="images/johnpaul.png"
-                      alt="Avatar"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <p className="text-[#000] text-lg font-semibold">Followers Name</p>
-                </div>
-                <RiDeleteBin2Line className="text-4xl text-black  rounded-xl p-1" />
+              <div>
+                {followers?.length > 0 ? (
+                  followers.map((follower) => (
+                    <div
+                      key={follower.id}
+                      className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
+                    >
+                      <div className="flex gap-3 items-center ml-3">
+                        <div className="w-12 h-16">
+                          {follower.image ? (
+                            <img
+                              src={`${follower.image}`}
+                              alt="Avatar"
+                              className="h-full w-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <CgProfile className="w-12 h-16" />
+                          )}
+                        </div>
+                        <p className="text-[#000] justify-start text-lg font-semibold">
+                          {follower.name}
+                        </p>
+                      </div>
+                      <RiDeleteBin2Line className="text-4xl text-black  rounded-xl p-1  mr-5 mb-2" />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-lg font-semibold mt-5">
+                    No Followers Found
+                  </p>
+                )}
               </div>
             ) : (
-              <div className="mx-5 mt-[2vw] flex justify-around items-center">
-                <div className="flex gap-6 items-center">
-                  <div className="h-[4vw] w-[4vw]">
-                    <img
-                      src="images/johnpaul.png"
-                      alt="Avatar"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <p className="text-[#000] text-lg font-semibold">Following Name</p>
-                </div>
-                <RiDeleteBin2Line className="text-4xl text-black  rounded-xl p-1" />
+              <div>
+                {following?.length > 0 ? (
+                  following.map((follow) => (
+                    <div
+                      key={follow.id}
+                      className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
+                    >
+                      <div className="flex gap-3 items-center ml-3">
+                        <div className="w-12 h-16">
+                          {follow.image ? (
+                            <img
+                              src={`${follow.image}`}
+                              alt="Avatar"
+                              className="h-full w-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <CgProfile className="w-12 h-16" />
+                          )}
+                        </div>
+                        <p className="text-[#000] text-lg font-semibold">
+                          {follow.name}
+                        </p>
+                      </div>
+                      <RiDeleteBin2Line className="text-4xl  text-black rounded-xl p-1  mr-5 mb-2" />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-lg font-semibold mt-5">
+                    Not Following Anyone yet.
+                  </p>
+                )}
               </div>
             )}
           </div>
 
-          {/* Third Columne */}
-          <div className="w-[30%] border-[2px] border-opacity-85 rounded-xl py-[2vw]">
+          {/* Third Column */}
+          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl py-[2vw]">
             <div className="w-[86%] mx-auto">
               <div className="flex justify-between items-center">
                 <h2 className="opacity-80 font-semibold text-lg">
                   Suggested for You
                 </h2>
-                <h2 className="opacity-80 text-md">View All</h2>
+                <h2
+                  className="opacity-80 text-md cursor-pointer"
+                  onClick={() => setShowAllSuggestions(!showAllSuggestions)}
+                >
+                  {showAllSuggestions ? "Show Less" : "View All"}
+                </h2>
               </div>
 
-              <div className="mt-[2vw] flex justify-between items-center">
-                <div className="flex gap-[0.8vw] items-center">
-                  <div className="h-[4vw] w-[4vw]">
-                    <img
-                      src="images/johnpaul.png"
-                      alt="Avatar"
-                      className="h-full w-full object-cover"
-                    />
+              {suggestedFollowers.length > 0 ? (
+                (showAllSuggestions
+                  ? suggestedFollowers
+                  : suggestedFollowers.slice(0, 5)
+                ).map((follow) => (
+                  <div
+                    key={follow.id}
+                    className="w-auto mx-1 mt-[2vw] flex justify-between items-center"
+                  >
+                    <div className="flex gap-[0.8vw] items-center">
+                      <div className="w-12 h-16">
+                        {follow.image ? (
+                          <img
+                            src={`${follow.image}`}
+                            alt="Avatar"
+                            className="h-full w-full object-cover rounded-full"
+                          />
+                        ) : (
+                          <CgProfile className="w-12 h-16" />
+                        )}
+                      </div>
+                      <p className="text-[#000] text-lg font-semibold">
+                        {follow.name}
+                      </p>
+                    </div>
+
+                    <p
+                      onClick={() => handleFollow(follow.id)}
+                      className="text-[#0000FF] text-md font-semibold cursor-pointer"
+                    >
+                      Follow
+                    </p>
                   </div>
-                  <p className="text-[#000] text-lg font-semibold">Name</p>
-                </div>
-
-                <p className="text-[#0000FF] text-md font-semibold">Follow</p>
-              </div>
+                ))
+              ) : (
+                <p className="text-[#000] text-lg font-semibold">
+                  No Suggestions
+                </p>
+              )}
             </div>
           </div>
         </div>
