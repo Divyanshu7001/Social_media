@@ -322,7 +322,7 @@ const Profile = () => {
               {suggestedFollowers.length > 0 ? (
                 (showAllSuggestions
                   ? suggestedFollowers
-                  : suggestedFollowers.slice(0, 5)
+                  : suggestedFollowers.slice(0, 4)
                 ).map((follow) => (
                   <div
                     key={follow.id}
@@ -354,7 +354,7 @@ const Profile = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-[#000] text-lg font-semibold">
+                <p className="text-[#000] text-lg font-semibold mt-5">
                   No Suggestions
                 </p>
               )}
