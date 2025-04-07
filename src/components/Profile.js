@@ -120,17 +120,54 @@ const Profile = () => {
         .then((res) => {
           console.log(res.data);
           toast.success(res.data.message);
-          fetchFollowingData();
+          setIsDataFetched(false);
+           filterSuggestions(followId);
         });
     } catch (error) {
       console.log(error);
       toast.error("Error while following User");
     }
   };
+  const handleUnfollow = async (unfollowId) => {
+    console.log("Id to be Unfollowed: ", unfollowId);
+
+    try {
+      await api
+        .post(
+          `/unfollow`,
+          {
+            logged_id: user.id,
+            follow_id: unfollowId,
+          },
+          {
+            headers: {
+              withCredentials: true,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          toast.success(res.data.message);
+          setIsDataFetched(false);
+         
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error while Unfollowing User");
+    }
+  };
+
+  const filterSuggestions = (followId) => {
+    const updatedSuggestions = suggestedFollowers.filter((suggestion) => {
+      return suggestion.id !== followId;
+    });
+    setSuggestedFollowers(updatedSuggestions);
+  };
   useEffect(() => {
     fetchFollowingData();
     fetchFollowersData();
-  }, [user]);
+  }, [isDatafetched, user]);
   // fetchFollowingData();
   // fetchFollowersData();
   console.log("Followers Data: ", followers);
@@ -150,10 +187,10 @@ const Profile = () => {
                 <img
                   src={`http://175.29.21.101/storage/${user.image}`}
                   alt="Avatar"
-                  className="h-full w-full object-cover rounded-full"
+                  className="h-40 w-32 object-cover rounded-full"
                 />
               </div>
-              <h2 className="font-semibold text-lg">{user.name}</h2>
+              <h2 className="font-semibold text-xl">{user.name}</h2>
             </div>
 
             <div className="w-auto lg:w-[43%] flex flex-col mx-auto justify-center items-center space-y-5 md:space-y-9 my-4 md:my-14">
@@ -244,7 +281,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-12 h-16">
+                        <div className="w-20 h-20">
                           {follower.image ? (
                             <img
                               src={`${follower.image}`}
@@ -252,10 +289,10 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-12 h-16" />
+                            <CgProfile className="w-20 h-20" />
                           )}
                         </div>
-                        <p className="text-[#000] justify-start text-lg font-semibold">
+                        <p className="text-[#000] justify-start text-xl font-semibold">
                           {follower.name}
                         </p>
                       </div>
@@ -277,7 +314,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-12 h-16">
+                        <div className="w-20 h-20">
                           {follow.image ? (
                             <img
                               src={`${follow.image}`}
@@ -285,14 +322,17 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-12 h-16" />
+                            <CgProfile className="w-20 h-20" />
                           )}
                         </div>
-                        <p className="text-[#000] text-lg font-semibold">
+                        <p className="text-[#000] text-xl font-semibold">
                           {follow.name}
                         </p>
                       </div>
-                      <RiDeleteBin2Line className="text-4xl  text-black rounded-xl p-1  mr-5 mb-2" />
+                      <RiDeleteBin2Line
+                        className="text-4xl  text-black rounded-xl p-1  mr-5 mb-2"
+                        onClick={() => handleUnfollow(follow.id)}
+                      />
                     </div>
                   ))
                 ) : (
@@ -329,7 +369,7 @@ const Profile = () => {
                     className="w-auto mx-1 mt-[2vw] flex justify-between items-center"
                   >
                     <div className="flex gap-[0.8vw] items-center">
-                      <div className="w-12 h-16">
+                      <div className="w-20 h-20">
                         {follow.image ? (
                           <img
                             src={`${follow.image}`}
@@ -340,7 +380,7 @@ const Profile = () => {
                           <CgProfile className="w-12 h-16" />
                         )}
                       </div>
-                      <p className="text-[#000] text-lg font-semibold">
+                      <p className="text-[#000] text-xl font-semibold">
                         {follow.name}
                       </p>
                     </div>
