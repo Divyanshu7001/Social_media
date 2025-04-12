@@ -8,7 +8,7 @@ import { FaHeart } from "react-icons/fa6";
 import { IoMdEye } from "react-icons/io";
 import { CiBookmark, CiShare2 } from "react-icons/ci";
 import { PiDotsThreeOutlineVertical } from "react-icons/pi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "./api";
 import { CgProfile } from "react-icons/cg";
 import toast from "react-hot-toast";
@@ -53,7 +53,7 @@ const OtherProfile = () => {
             }
           )
           .then((res) => {
-            // console.log("Fetched User Data: ", res.data);
+            console.log("Fetched User Data: ", res.data);
             // console.log(res.data.follower_count);
             // console.log(res.data.following_count);
 
@@ -301,9 +301,14 @@ const OtherProfile = () => {
                                             />
                                           </div> */}
                       <div className="flex flex-col space-y-1">
-                        <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                          {post.paper_title}
-                        </h4>
+                        <Link to={`/ArticleDetails/${post.id}`}>
+                          <div className=" flex items-center">
+                            <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                              {post.paper_title}
+                            </h4>
+                          </div>
+                        </Link>
+
                         <p className="sm:text-lg xss:text-md text-gray-600">
                           By {post.authors}
                         </p>

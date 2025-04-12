@@ -9,6 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
+    user,
     isAuthenticated,
     toggle,
     setBtn,
@@ -42,7 +43,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="py-3 px-3 flex justify-between items-center mx-0 md:mx-10 sticky top-0 bg-white z-0  border-b-2 border-gray-300">
+      <nav className="py-3 px-3 flex justify-between items-center mx-0 md:px-10 sticky top-0 bg-white z-20  border-b-2 border-gray-300">
         {/* Logo Section */}
         <div className="text-primary text-2xl mx-4 font-bold ">LOGO</div>
 
@@ -159,13 +160,18 @@ const Navbar = () => {
                 Upload
               </button>
               <FiUser
-                className=" mb-10 lg:mb-0"
+                className="mb-10 lg:mb-0"
                 style={{
                   fontSize: "24px",
                   color: "rgba(0,0,255,1)",
                   cursor: "pointer",
                 }}
-                onClick={togglePopup} // Show popup on click
+                onClick={() => {
+                  togglePopup();
+                  if (window.innerWidth < 768) {
+                    handleMenuToggle();
+                  }
+                }}
               />
               {/* </div>{" "} */}
             </>
@@ -222,13 +228,13 @@ const Navbar = () => {
         <div
           style={{
             position: "absolute",
-            top: "100px", // Adjust the position as per your requirement
-            right: "20px",
+            top: "80px", // Adjust the position as per your requirement
+            right: "10px",
             width: "300px",
             backgroundColor: "white",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
             borderRadius: "10px",
-            zIndex: 10,
+            zIndex: 50,
             padding: "20px",
             border: "1px solid #cfcfcf",
             fontFamily: "'Poppins', sans-serif",
@@ -243,7 +249,7 @@ const Navbar = () => {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={`${profileData.image}` || Ellipse4} // Placeholder for user image
+                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4} // Placeholder for user image
                 alt="User"
                 style={{
                   borderRadius: "50%",
@@ -252,7 +258,7 @@ const Navbar = () => {
                 }}
               />
               <div style={{ marginLeft: "20px" }}>
-                <h3 style={{ margin: 0 }}>{profileData.name}</h3>
+                <h3 style={{ margin: 0 }}>{user.name}</h3>
                 <p
                   style={{
                     margin: 0,
@@ -265,7 +271,10 @@ const Navbar = () => {
               </div>
             </div>
             <button
-              onClick={togglePopup}
+              onClick={() => {
+                togglePopup();
+                setIsMenuOpen(false);
+              }}
               style={{
                 border: "none",
                 background: "none",

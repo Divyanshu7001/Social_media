@@ -6,8 +6,8 @@ import HomePage1 from "./HomePage1.js";
 import api from "./api.js";
 import { Link } from "react-router-dom";
 import Ellipse4 from "../assets/img/Ellipse4.png";
-
-import { ReactComponent as Photo } from '../assets/svg/photo.svg';
+import Createpost from "./Createpost.js";
+import { ReactComponent as Photo } from "../assets/svg/photo.svg";
 import { ReactComponent as Article } from "../assets/svg/notes.svg";
 import { LeftSidebar } from "./LeftSidebar.js";
 
@@ -15,7 +15,7 @@ import { LeftSidebar } from "./LeftSidebar.js";
 export const Homepage = () => {
   const navigate = useNavigate();
 
-  const { isAuthenticated, user, setPopup } = useContext(Context);
+  const { isAuthenticated, user } = useContext(Context);
 
   // Declare state
   const [showPopup, setShowPopup] = useState(false);
@@ -64,25 +64,25 @@ export const Homepage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen bg-white">
-        {/* left Sidebar */}
+      {showPopup && <Createpost closePopup={togglePopup} />}
+      <div className={`${showPopup && "z-0"} min-h-screen bg-white`}>
+        {/* Popup for Create Post */}
         <LeftSidebar
           user_data={user_data}
           togglePopup={togglePopup}
           showPopup={showPopup}
-          post={true} />
-
-        {/* Main Content Area */}
-        <div className="fixed left-0 top-15 h-8 w-full bg-white "></div>
-        <div className="flex flex-col mx-auto w-full px-5 md:px-0 xl:w-1/2 lg:w-2/5 md:w-2/5 mt-9 md:mt-9 lg:mt-8">
+          post={true}
+        />
+        {/* Main Content Area */}\{" "}
+        <div className="flex flex-col mx-auto w-full px-5 md:px-0 xl:w-1/2 lg:w-2/5 md:w-2/5 mt-9 md:mt-9 lg:mt-4 xs:mt-0">
           {/* mobile upload and profile */}
           <div className="border-2 rounded-md mb-10 md:hidden">
             {/* mobile profile */}
             <div className="px-2 my-2 flex gap-2">
               <img
-                src={Ellipse4}
+                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4}
                 alt="Profile"
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-20 h-16 rounded-full object-cover"
               />
               <input
                 type="text"
@@ -109,11 +109,14 @@ export const Homepage = () => {
           {/* Main Content Components Here */}
           <HomePage1 posts={posts} articles={articles} />
         </div>
-
         {/* Suggestions Sidebar */}
         <>
-          <div className="fixed top-24 right-0 hidden mt-0.5 md:mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex  xl:w-1/5 lg:w-1/4 h-fit md:w-3/12 xl:h-fit lg:h-fit md:h-3/4  md:me-5 lg:me-5 xl:me-10  py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10">
-            <div className="space-y-1">
+          <div
+            className={`fixed top-24 right-0 hidden mt-0.5 md:mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex  xl:w-1/5 lg:w-1/4 h-fit md:w-3/12 xl:h-fit lg:h-fit md:h-3/4 md:me-5 lg:me-5 xl:me-10  py-3 rounded border-2 ${
+              showPopup ? "border-gray-500" : "border-gray-300"
+            }  me-10 px-4 md:px-4 lg:px-5 mb-10 `}
+          >
+            <div className="space-y-4 xl:my-3">
               <div className="flex-col justify-between items-center">
                 <div className="home-suggestion-title">Top Stories</div>
                 <p className="text-sm text-gray-600">
@@ -161,7 +164,7 @@ export const Homepage = () => {
                   </button>
                 )}
               </div>
-              <div className="space-y-3 overflow-y-auto h-[270px] xl:h-[230px] lg:h-[120px] md:h-[60px] py-1 lg:py-2 xl:py-0">
+              <div className="space-y-3 overflow-y-auto h-fit xl:h-fit lg:h-[120px] md:h-[60px] py-1 lg:py-2 xl:py-0">
                 {suggestions.length > 0 ? (
                   suggestions
                     .slice(0, expanded ? suggestions.length : 4)

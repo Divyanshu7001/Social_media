@@ -87,27 +87,27 @@ export const ProfileModal = ({
         setbutton6Clicked(false);
         setPopup(false);
       }}
-      className="backdrop-blur-sm fixed inset-0 justify-center items-center z-50 h-full w-screen bg-black bg-opacity-60 overflow-y-auto"
+      className="backdrop-blur-sm absolute inset-0 justify-center items-center z-50 h-full w-screen bg-black bg-opacity-60 overflow-y-auto"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className=" h-auto xss:p-5 md:p-10 pb-12 bg-white rounded-xl xss:w-full  md:w-[70%] lg:w-[60%] xss:my-6 md:mt-[5vw] mx-auto"
+        className="xss:absolute xss:top-10 sm:static h-auto xss:py-8 xss:px-10 md:p-10 pb-12 bg-white rounded-xl xss:w-[90%]  md:w-[90%] lg:w-[80%] xl:w-[60%] xss:my-6 sm:mt-10 md:mt-[5vw] xss:mx-5 sm:mx-auto"
       >
-        <div className="bg-white">
+        <div className="bg-white sm:mx-5">
           <div className="flex flex-row items-center justify-between">
-            <h2 className="text-2xl font-medium">PROFILE</h2>
+            <h2 className="xss:text-2xl sm:text-3xl font-semibold">PROFILE</h2>
             <RxCross2
               onClick={() => setbutton6Clicked(false)}
               className="text-2xl"
             />
           </div>
           {/* <hr className="my-[1vw]" /> */}
-          <div className="flex xss:flex-col md:flex-row gap-6 items-center justify-center">
-            <div className="xss:w-[40%] md:w-[30%]">
+          <div className="flex xss:flex-col xs:flex-row xs:gap-2 xl:gap-5 items-center justify-center xss:my-4 md:my-0">
+            <div className="xss:w-[40%] md:w-[30%] xl:w-auto">
               <img
                 src={image || tempSelectedFile || Ellipse4}
                 alt="profile"
-                className="rounded-full object-cover w-auto h-auto"
+                className="xss:rounded-full md:rounded-md object-cover md:w-52 md:h-64 xss:w-40 xss:h-44 xss:mb-3 xs:mb-0"
               />
             </div>
             <div className="flex flex-col space-y-2">
@@ -117,13 +117,13 @@ export const ProfileModal = ({
                   setbutton6Clicked(true);
                   setPopup(true);
                 }}
-                className="rounded-md px-6 py-2 bg-[#0000FF] font-medium text-white"
+                className="rounded-md px-6 py-2 bg-[#0000FF] font-semibold text-white"
               >
                 Change Image
               </button>
               <button
                 onClick={() => setImage(Ellipse4)}
-                className="rounded-md px-6 py-2 text-white bg-rose-600 font-medium"
+                className="rounded-md px-6 py-2 text-white bg-rose-600 font-semibold"
               >
                 Remove Image
               </button>
@@ -131,7 +131,7 @@ export const ProfileModal = ({
           </div>
           <div className="flex xss:flex-col sm:flex justify-between ">
             <div className="flex flex-col xss:w-full w-[60%] ">
-              <label className="font-medium">Name</label>
+              <label className="font-semibold">Name</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -143,7 +143,7 @@ export const ProfileModal = ({
 
             <div className="flex xss:flex-col md:flex-row gap-6">
               <div className="flex flex-col w-[39%] xss:w-full ">
-                <label className="font-medium">Email</label>
+                <label className="font-semibold">Email</label>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -153,7 +153,7 @@ export const ProfileModal = ({
                 />
               </div>
               <div className="flex flex-col w-[39%] xss:w-full ">
-                <label className="font-medium">Phone number</label>
+                <label className="font-semibold">Phone number</label>
                 <div className="w-full flex items-center border-[1.3px] border-black border-opacity-50 rounded-md bg-white px-2 pt-2 pb-1 mt-4 text-2xl">
                   <PhoneInput
                     country={country}
@@ -170,7 +170,7 @@ export const ProfileModal = ({
 
           <div className="flex justify-between xss:flex-col sm:flex my-[1vw]">
             <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Country</label>
+              <label className="font-semibold">Country</label>
               <input
                 value={country}
                 className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"

@@ -13,7 +13,7 @@ const Box = ({ closePopup }) => {
   const [inputValue, setInputValue] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null); // State to hold the uploaded image
   const [uploadFile, setUploadFile] = useState(null);
-  const [ icon, SetIcons ] = useState(40)
+  const [ icon, SetIcons ] = useState(60)
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,7 +22,7 @@ const Box = ({ closePopup }) => {
       } else if (window.innerWidth <= 768) {
         SetIcons(30)
       } else {
-        SetIcons(40)
+        SetIcons(60)
       }
     }
     handleResize()
@@ -65,50 +65,69 @@ const Box = ({ closePopup }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white w-full max-w-2xl h-3/5 md:h-3/5 lg:h-3/5 xl:h-3/5 2xl:h-1/2  p-5 rounded-lg shadow-md relative">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex h-screen justify-center items-center z-50">
+      <div className="bg-white w-full max-w-4xl h-3/5 md:h-3/5 lg:h-4/5 xl:h-4/5 2xl:h-2/3  p-5 rounded-lg shadow-md relative">
         <div className="flex justify-between items-center pb-3">
-          <div className="font-semibold text-xl text-black ">Create Post</div>
-          <MdOutlineClear onClick={closePopup} size={28} className="cursor-pointer" />
+          <div className="font-semibold text-2xl text-black ">Create Post</div>
+          <MdOutlineClear
+            onClick={closePopup}
+            size={28}
+            className="cursor-pointer"
+          />
         </div>
-
 
         <div className="text-left">
           <p className="py-1 border-t-2" />
           {/* <img src={line8} alt="Line" className="w-full h-px bg-blue-500 mb-5" /> */}
           <div className="flex items-center mb-5">
-            <img src={Ellipse4} alt="Profile" className="w-12 h-12 rounded-full mr-4" />
-            <div className="font-semibold text-xl text-black">{user.name || "John Paul"}</div>
+            <img
+              src={`http://175.29.21.101/storage/${user.image}` || Ellipse4}
+              alt="Profile"
+              className="w-24 h-24 rounded-full mr-4"
+            />
+            <div className="font-semibold text-xl text-black">
+              {user.name || "John Paul"}
+            </div>
           </div>
 
-          <div className="mb-1 md:mb-5">
-            <input
+          <div className="mb-1 md:mb-5 lg:mb-10">
+            <textarea
+              rows="4"
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Share your thoughts with other scholars..."
-              className="md:w-2/3 p-2 text-sm border-b-2 border-gray-200 outline-none font-poppins bg-transparent w-full"
+              className="md:w-full p-2 text-sm border-2 border-gray-200 text-md outline-none font-poppins bg-transparent w-full"
             />
           </div>
 
-          <div className="flex justify-between items-center mt-5 md:mt-5 h-36">
-            <div className="border border-blue-500 rounded-lg p-3 text-center w-1/2 md:w-2/5 mx-auto relative">
+          <div className=" mt-5 md:mt-5 lg:mt-10 h-44 w-full">
+            <div className="border border-primary rounded-lg p-3 text-center w-1/2 md:w-2/5 lg:w-3/5 lg:h-full relative">
               {uploadedImage ? (
                 <img
                   src={uploadedImage}
                   alt="Uploaded"
-                  className="max-w-full max-h-36 object-cover rounded-lg"
+                  className="max-w-full max-h-44 object-cover rounded-lg"
                 />
               ) : (
                 <>
-                  <label htmlFor="file-upload" className="cursor-pointer flex flex-col justify-center items-center">
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer flex flex-col justify-center items-center"
+                  >
                     {/* <img
                       src={bytesizedownload}
                       alt="Upload"
                       className="w-12 h-12"
                     /> */}
-                    <IoCloudDownloadOutline size={icon} color="gray" />
-                    <div className="font-semibold text-base md:text-lg my-3 text-gray-500">Upload Image</div>
+                    <IoCloudDownloadOutline
+                      size={icon}
+                      color="gray"
+                      className="mt-5"
+                    />
+                    <div className="font-semibold text-base md:text-lg lg:text-xl my-3 text-gray-500">
+                      Upload Image
+                    </div>
                   </label>
                   <input
                     id="file-upload"
@@ -120,15 +139,15 @@ const Box = ({ closePopup }) => {
               )}
             </div>
 
-            <div className="flex flex-col md:flex-row gap-2 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-2 justify-end mt-4">
               <button
-                className="bg-white text-blue-500 hidden md:block border border-blue-500 py-2 px-10 rounded-md cursor-pointer mt-14"
+                className="bg-white text-primary hidden md:block border text-lg font-semibold border-primary py-2 px-10 rounded-md cursor-pointer"
                 onClick={closePopup}
               >
                 Cancel
               </button>
               <button
-                className="bg-blue-500 text-white py-2 px-10 rounded-md cursor-pointer mt-14"
+                className="bg-primary text-white py-2 px-10 rounded-md text-lg font-semibold cursor-pointer "
                 onClick={handlePostUpload}
               >
                 Post
