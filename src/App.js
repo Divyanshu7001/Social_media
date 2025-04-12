@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "./index.js";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import LandingPage from "./components/LandindPage.js";
+import LandingPage from "./components/LandingPage.js";
 import Homepage from "./components/HomePage.js";
 import UploadPage from "./components/UploadPage.js";
 import ProfileCard from "./components/ProfileCard.js";
@@ -40,7 +40,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" exact element={<LandingPage />} />
-          <Route path="/home"  element={<Homepage />} />
+          <Route path="/home" element={<Homepage />} />
           <Route path="/journals" element={<JournalsPage />} />
           <Route
             path="/journals/journal-details"
@@ -57,7 +57,6 @@ const App = () => {
           <Route path="/profile/:userId" element={<OtherProfile />} />
           <Route path="/saved" element={<SavedItems />} />
           <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
-
         </Routes>
         <Toaster position="top-center" reverseOrder={false} />
       </BrowserRouter>

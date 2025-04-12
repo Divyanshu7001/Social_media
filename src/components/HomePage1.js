@@ -127,14 +127,15 @@ const PostCard = ({
         </div>
       </div>
       {/* body */}
-      <div className="flex-col ">
+      <div className="flex-col w-auto">
         <p className="mt-2 px-9 xl:px-9 lg:px-4 text-gray-700">{description}</p>
         <img
           src={image}
           alt={description}
-          className="object-cover object-top mt-2 w-full h-96 me-auto"
+          className="px-7 object-center mt-2 w-full h-96 me-auto"
         />
       </div>
+
       <div className="flex justify-between mt-3 mb-2 items-center mx-9">
         <div
           className="flex items-center space-x-2 cursor-pointer"

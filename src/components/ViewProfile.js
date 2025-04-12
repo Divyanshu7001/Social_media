@@ -553,14 +553,14 @@ const ViewProfile = () => {
             <div className="flex xss:justify-between xss:flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row">
               {/* Section 1 */}
               <div className="lg:w-[60%]">
-                <div className="flex xss:mb-4 xss:justify-evenly lg:justify-normal sm:px-8 w-auto">
-                  <div className="flex xss:w-[30%] sm:w-auto items-center sm:p-4  xss:mt-2 flex-col">
+                <div className="flex xss:mb-4 lg:mb-0 xl:mb-0 xss:justify-evenly lg:justify-normal sm:px-8 w-auto">
+                  <div className="flex xss:w-[30%] sm:w-auto items-center sm:p-4  xss:mt-2 lg:mt-0 lg:p-0 flex-col">
                     <img
                       src={profileImage || Ellipse4}
                       alt="profile"
-                      className="rounded-full w-[90px] h-[90px]"
+                      className="rounded-full object-cover xss:w-[90px] xss:h-[90px] md:w-[140px] md:h-[120px] lg:h-[90px] lg:w-[90px] xl:h-[120px] xl:w-[120px]"
                     />
-                    <h2 className="xss:text-base text-center sm:text-xl font-bold sm:mt-5  xss:mt-2 ">
+                    <h2 className="xss:text-base text-center sm:text-xl font-bold sm:mt-5  xss:mt-2 lg:mt-1">
                       {user.name}
                     </h2>
                   </div>
@@ -598,13 +598,13 @@ const ViewProfile = () => {
                               setbutton6Clicked((prev) => !prev);
                               setPopup((prev) => !prev);
                             }}
-                            className="bg-[#0000ff] px-4 py-3 xss:py-2 text-white flex items-center rounded-md "
+                            className="bg-[#0000ff] xss:px-2 px-4 py-3 xss:py-2 text-white flex items-center rounded-md "
                             style={{ maxWidth: "max-content" }}
                           >
                             <img
                               src={EditIcon}
                               alt="Edit Icon"
-                              className="h-5 w-5"
+                              className="h-5 w-5 xss:h-4 xss:w-4"
                             />
                             <p
                               onClick={() => {
@@ -628,20 +628,20 @@ const ViewProfile = () => {
                     <div className="flex justify-between border-b-2 rounded-md border-gray-300">
                       <h3 className="text-xl p-4 text-gray-300">Biography</h3>
                       {isBiographyEdited ? (
-                        <div className="flex gap-4 p-4">
+                        <div className="flex gap-4 p-4 xss:gap-2" >
                           <button
                             onClick={() => {
                               setIsBiographyEdited(false);
                               setTempBiography("");
                             }}
-                            className="text-gray-700 font-semibold text-md rounded-2xl border-black border-[1px] px-6 py-1"
+                            className="text-gray-700 font-semibold text-md rounded-2xl border-black border-[1px] xs:px-6 py-1 xss:px-3"
                           >
                             Cancel
                           </button>
                           {isProfileDetailsAvailable ? (
                             <button
                               onClick={editProfileDetails}
-                              className="text-white text-md rounded-2xl font-semibold bg-[#0000ff] px-6 py-1"
+                              className="text-white text-md rounded-2xl font-semibold bg-[#0000ff] xs:px-6 py-1 xss:px-4"
                             >
                               Save
                             </button>
@@ -730,7 +730,7 @@ const ViewProfile = () => {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-2 p-4">
+                    <div className="flex flex-wrap gap-2 p-4 break-words">
                       {skills === null || skills.length < 1 ? (
                         <div className="flex justify-center text-center gap-2">
                           {tempSkills.length < 1 ? (
@@ -741,9 +741,9 @@ const ViewProfile = () => {
                                 tempSkills.map((tempSkill, i) => (
                                   <div
                                     key={i}
-                                    className="flex items-center px-3 py-1 border rounded-full"
+                                    className="flex items-center px-2 py-1 border rounded-full w-auto"
                                   >
-                                    <span className="mr-2">{tempSkill}</span>
+                                    <span className="mr-1">{tempSkill}</span>
                                     <button
                                       onClick={() => removeSkill(tempSkill)}
                                       className="text-gray-500 hover:text-red-500 focus:outline-none"
@@ -756,13 +756,13 @@ const ViewProfile = () => {
                           )}
                         </div>
                       ) : (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap break-words">
                           {skills.map((skill, index) => (
                             <div
                               key={index}
-                              className="flex items-center px-3 py-1 border rounded-full"
+                              className="flex items-center text-wrap px-3 py-1 border rounded-full"
                             >
-                              <span className="mr-2">{skill}</span>
+                              <span className="mr-2 text-wrap">{skill}</span>
 
                               <button
                                 onClick={() => removeSkill(skill)}
@@ -827,7 +827,18 @@ const ViewProfile = () => {
                           key={index}
                           className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10 relative"
                         >
-                          <div className="flex gap-4 absolute top-9 right-6">
+                          <p>
+                            {employee.role} &nbsp;|&nbsp;
+                            {employee.department}
+                          </p>
+                          <p>
+                            {employee.organization}, {employee.city},{" "}
+                            {employee.region}
+                          </p>
+                          <p className="mb-4">
+                            {employee.start_date} - {employee.end_date}
+                          </p>
+                          <div className="flex gap-4 absolute bottom-2 right-4 ">
                             <BiSolidEditAlt
                               onClick={() => {
                                 setbutton1Clicked((prev) => !prev);
@@ -844,17 +855,6 @@ const ViewProfile = () => {
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
                           </div>
-                          <p>
-                            {employee.role} &nbsp;|&nbsp;
-                            {employee.department}
-                          </p>
-                          <p>
-                            {employee.organization}, {employee.city},{" "}
-                            {employee.region}
-                          </p>
-                          <p>
-                            {employee.start_date} - {employee.end_date}
-                          </p>
                         </div>
                       ))}
                   </div>
@@ -895,7 +895,17 @@ const ViewProfile = () => {
                           key={index}
                           className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10 relative"
                         >
-                          <div className="flex gap-4 absolute top-9 right-6">
+                          <p>Degree: {education.degree}</p>
+                          <p>Department: {education.department} </p>
+                          <p>
+                            University Name: {education.organization_name},
+                            {education.city}, {education.region},
+                            {education.country}
+                          </p>
+                          <p className="mb-4">
+                            {education.start_date} - {education.end_date}
+                          </p>
+                          <div className="flex gap-4 absolute bottom-2 right-4">
                             <BiSolidEditAlt
                               onClick={() => {
                                 setbutton2Clicked((prev) => !prev);
@@ -912,16 +922,6 @@ const ViewProfile = () => {
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
                           </div>
-                          <p>Degree: {education.degree}</p>
-                          <p>Department: {education.department} </p>
-                          <p>
-                            University Name: {education.organization_name},
-                            {education.city}, {education.region},
-                            {education.country}
-                          </p>
-                          <p>
-                            {education.start_date} - {education.end_date}
-                          </p>
                         </div>
                       ))}
                   </div>
@@ -959,9 +959,17 @@ const ViewProfile = () => {
                     {activitiesOpen &&
                       professionalActivityDetails.map((activity, index) => (
                         <div className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10 relative">
+                          <p>Organization Name: {activity.organization_name}</p>
+                          <p>Department: {activity.department}</p>
+                          <p>
+                            Location: {activity.city},{activity.country}
+                          </p>
+                          <p className="mb-4">
+                            Date: {activity.start_date}-{activity.end_date}
+                          </p>
                           <div
                             key={index}
-                            className="flex gap-4 absolute top-9 right-6"
+                            className="flex gap-4 absolute bottom-2 right-4"
                           >
                             <BiSolidEditAlt
                               onClick={() => {
@@ -979,14 +987,6 @@ const ViewProfile = () => {
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
                           </div>
-                          <p>Organization Name: {activity.organization_name}</p>
-                          <p>Department: {activity.department}</p>
-                          <p>
-                            Location: {activity.city},{activity.country}
-                          </p>
-                          <p>
-                            Date: {activity.start_date}-{activity.end_date}
-                          </p>
                         </div>
                       ))}
                   </div>
@@ -1025,7 +1025,19 @@ const ViewProfile = () => {
                           key={index}
                           className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10 relative"
                         >
-                          <div className="flex gap-4 absolute top-9 right-6">
+                          <p>
+                            Funding Organization:{funding.funding_agency_name} |
+                            Funding Type: {funding.funding_type}
+                          </p>
+                          <p>Project Name:{funding.title}</p>
+                          <p>Project Link:{funding.project_link}</p>
+                          <p>
+                            {funding.start_date} - {funding.end_date}
+                          </p>
+                          <p className="mb-4">
+                            Amount: ${funding.total_funding_amt}
+                          </p>
+                          <div className="flex gap-4 absolute bottom-2 right-6">
                             <BiSolidEditAlt
                               onClick={() => {
                                 setbutton4Clicked((prev) => !prev);
@@ -1042,16 +1054,6 @@ const ViewProfile = () => {
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
                           </div>
-                          <p>
-                            Funding Organization:{funding.funding_agency_name} |
-                            Funding Type: {funding.funding_type}
-                          </p>
-                          <p>Project Name:{funding.title}</p>
-                          <p>Project Link:{funding.project_link}</p>
-                          <p>
-                            {funding.start_date} - {funding.end_date}
-                          </p>
-                          <p>Amount: ${funding.total_funding_amt}</p>
                         </div>
                       ))}
                   </div>
@@ -1089,7 +1091,13 @@ const ViewProfile = () => {
                           key={index}
                           className="mt-2 border-[1px] rounded-[10px]  mr-10 ml-5 px-7 py-6 leading-10 relative"
                         >
-                          <div className="flex gap-4 absolute top-9 right-6">
+                          <p>
+                            {work.work_title} | {work.publication_date}
+                          </p>
+                          <p>Work Type: {work.work_type}</p>
+                          <p>{work.work_title}</p>
+                          <p className="mb-4">{work.link}</p>
+                          <div className="flex gap-4 absolute bottom-2 right-4">
                             <BiSolidEditAlt
                               onClick={() => {
                                 setbutton5Clicked((prev) => !prev);
@@ -1106,12 +1114,6 @@ const ViewProfile = () => {
                               className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
                             />
                           </div>
-                          <p>
-                            {work.work_title} | {work.publication_date}
-                          </p>
-                          <p>Work Type: {work.work_type}</p>
-                          <p>{work.work_title}</p>
-                          <p>{work.link}</p>
                         </div>
                       ))}
                   </div>
