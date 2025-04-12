@@ -20,13 +20,12 @@ const LoginPage = () => {
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
     // Basic validation
@@ -88,7 +87,7 @@ const LoginPage = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSocialSignup = (provider) => {
+  const handleSocialSignIn = (provider) => {
     if (provider === "Google") {
       window.location.href = "https://accounts.google.com/o/oauth2/auth";
     } else if (provider === "Facebook") {
@@ -101,100 +100,143 @@ const LoginPage = () => {
 
 
   return (
-    // <div className="">
-    <div className="bg-white border-2 w-full  mx-auto  lg:w-4/5  md:w-4/5 left-0 right-0 lg:top-20 md:top-30  max-h-[85vh] static md:fixed md:z-50" >
-      <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
-        <div className="flex justify-between">
-          <a href="#" className="text-4xl border-2">Logo</a>
-          <button onClick={toggle}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
+    <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm h-screen flex items-center justify-center">
+      <div className="bg-white border-2 mx-auto lg:w-3/5  md:w-3/5 max-h-[80vh] md:fixed md:z-50 h-screen relative">
+        <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
+          <div className="flex justify-between mt-7">
+            <a
+              href={" "}
+              className="text-4xl text-primary font-semibold"
+            >
+              Logo
+            </a>
+            <button onClick={toggle} className="text-3xl text-black">
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
+          <form onSubmit={handleSignIn}>
+            {/* <h2>Sign Up</h2> */}
+
+            <div className="flex justify-between gap-5 w-full lg:w-2/3 xl:w-2/3">
+              <button
+                onClick={() => handleSocialSignIn("Google")}
+                className="btn-primary w-1/2"
+              >
+                <FcGoogle size={30} />
+                <span className="btn-text">
+                  <span className="hidden sm:inline-block">Login with</span>{" "}
+                  Google
+                </span>
+              </button>
+              <button
+                onClick={() => handleSocialSignIn("Facebook")}
+                className="btn-primary w-1/2"
+              >
+                <FontAwesomeIcon icon={faFacebook} fontSize={26} />{" "}
+                <span className="btn-text">
+                  <span className="hidden sm:inline-block">Login with</span>{" "}
+                  Facebook
+                </span>
+              </button>
+            </div>
+            <div className="w-2/3">
+              <button
+                onClick={() => handleSocialSignIn("Apple")}
+                className="btn-primary w-full"
+              >
+                <FaApple size={26} />
+                <span className="btn-text">
+                  <span className="hidden sm:inline-block">Sign in With</span>{" "}
+                  Apple
+                </span>
+              </button>
+            </div>
+            <div className="mt-4 w-full md:w-full lg:w-1/2 xl:w-2/3 flex items-center">
+              <div className="border-t-2 w-full border-t-gray-400"></div>
+              <span className="mx-4 btn-text font-bold">or</span>
+              <div className="border-t-2 w-full border-t-gray-400"></div>
+            </div>
+
+            <div className="relative form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
+              <label htmlFor="email" className="text-lg text-black font-bold ">
+                Email
+              </label>
+              <input
+                className="form-input mt-1 mb-2 py-2 rounded-md border-2 border-gray-400 outline-none"
+                type="email"
+                placeholder="Email"
+                value={email}
+                id="email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <FontAwesomeIcon icon={faEnvelope} className="form-input-icon" />
+            </div>
+
+            {emailError && (
+              <div style={{ color: "red", textAlign: "left" }}>
+                {emailError}
+              </div>
+            )}
+
+            <div className="relative form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
+              <label htmlFor="email" className="text-lg text-black font-bold ">
+                Password
+              </label>
+              <input
+                className="form-input mt-1 mb-2 py-2 rounded-md border-2 border-gray-400 outline-none"
+                type={passwordVisible ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <FontAwesomeIcon
+                className="form-input-icon"
+                icon={passwordVisible ? faEye : faEyeSlash}
+                onClick={togglePasswordVisibility}
+              />
+            </div>
+            {passwordError && (
+              <div style={{ color: "red", textAlign: "left" }}>
+                {passwordError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-10"
+            >
+              Login
+            </button>
+            <div className="mt-3">
+              <p className="text-gray-400 text-lg font-semibold">
+                Forgot your password?{" "}
+                <button
+                  onClick={() => setBtn("forgetpassword")}
+                  className="text-blue-500"
+                >
+                  Forget Password
+                </button>
+              </p>
+            </div>
+            <div className="mt-10">
+              <p className="text-gray-400 text-xl font-semibold">
+                Don't have an account ?{" "}
+                <button
+                  onClick={() => setBtn("signup")}
+                  className="text-blue-500"
+                >
+                  Sign up
+                </button>
+              </p>
+            </div>
+
+            <img
+              src={signupImage}
+              alt="Login"
+              className="hidden sm:hidden md:block lg:block md:absolute md:right-8 md:bottom-14 sm:w-1/2 md:w-2/6 lg:w-1/2 xl:w-5/12 max-h-[55vh] object-cover"
+            />
+          </form>
         </div>
-        <form onSubmit={handleSignup} className="relative h-screen">
-          {/* <h2>Sign Up</h2> */}
-
-          <div className="flex justify-between gap-5 w-full lg:w-2/3 xl:w-1/2">
-            <button
-              onClick={() => handleSocialSignup("Google")}
-              className="btn-primary w-1/2"
-            >
-              <FcGoogle size={26} />
-              <span className="btn-text"><span className="hidden sm:inline-block">Login with</span> Google</span>
-            </button>
-            <button
-              onClick={() => handleSocialSignup("Facebook")}
-              className="btn-primary w-1/2"
-            >
-              <FontAwesomeIcon icon={faFacebook} fontSize={26} /> <span className="btn-text"><span className="hidden sm:inline-block">Login with</span> Facebook</span>
-            </button>
-          </div>
-          <div className="w-1/2">
-            <button
-              onClick={() => handleSocialSignup("Apple")}
-              className="btn-primary w-full"
-            >
-              <FaApple size={26} />
-              <span className="btn-text"><span className="hidden sm:inline-block">Sign in With</span> Apple</span>
-            </button>
-
-          </div>
-          <div className="mt-4 w-full md:w-full lg:w-1/2 xl:w-1/2 flex items-center">
-            <div className="border-t-2 w-full border-t-gray-400"></div>
-            <span className="mx-4 btn-text font-bold">or</span>
-            <div className="border-t-2 w-full border-t-gray-400"></div>
-          </div>
-
-          <div className="relative form-responsive mt-2">
-            <label htmlFor="email" >Email</label>
-            <input
-              className="form-input mt-1 mb-2"
-              type="email"
-              placeholder="Email"
-              value={email}
-              id="email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FontAwesomeIcon icon={faEnvelope} className="form-input-icon" />
-          </div>
-
-          {emailError && (
-            <div style={{ color: "red", textAlign: "left" }}>{emailError}</div>
-          )}
-
-          <div className="relative form-responsive">
-            <label htmlFor="email">Password</label>
-            <input
-              className="form-input mt-1 mb-2"
-              type={passwordVisible ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <FontAwesomeIcon className="form-input-icon"
-              icon={passwordVisible ? faEye : faEyeSlash}
-              onClick={togglePasswordVisibility}
-            />
-          </div>
-          {passwordError && (
-            <div style={{ color: "red", textAlign: "left" }}>{passwordError}</div>
-          )}
-
-          <button type="submit"
-            className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/4 mt-4 bg-primary rounded-sm text-white text-sm py-1"
-          >
-            Login
-          </button>
-          <div className="mt-1">
-            <p>
-              Don't have an account ? <button onClick={() => setBtn("signup")} className="text-blue-500">Sign up</button>
-            </p>
-          </div>
-
-          <img src={signupImage} alt="Signup"
-            className="hidden sm:hidden md:block lg:block md:absolute md:right-5 md:top-44 lg:top-20 sm:w-1/2 md:w-2/6 lg:w-1/2 xl:w-1/2 max-h-[55vh] object-contain"
-          />
-
-        </form>
       </div>
     </div>
   );
