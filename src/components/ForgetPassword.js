@@ -64,10 +64,10 @@ const ForgetPasswordPage = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm h-screen flex items-center justify-center">
-      <div className="bg-white border-2 mx-auto lg:w-3/5  md:w-3/5 max-h-[80vh] md:fixed md:z-50 h-screen relative">
-        <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
-          <div className="flex justify-between mt-7">
+    <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm min-h-screen flex items-center justify-center">
+      <div className="bg-white border-2 mx-auto md:w-3/5 md:h-fit lg:w-3/5 lg:max-h-[83vh] md:fixed md:z-50 relative">
+        <div className="xl:px-14 xl:py-10 p-8">
+          <div className="flex justify-between xl:mt-3">
             <a href={" "} className="text-4xl text-primary font-semibold">
               Logo
             </a>
@@ -75,10 +75,13 @@ const ForgetPasswordPage = () => {
               <FontAwesomeIcon icon={faTimes} />
             </button>
           </div>
-          <form onSubmit={handleForgetpassword} className="mt-[15vh]">
+          <form
+            onSubmit={handleForgetpassword}
+            className="mt-[7vh] lg:mt-[15vh]"
+          >
             {/* <h2>Sign Up</h2> */}
 
-            <div className="relative form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
+            <div className="w-auto relative form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Enter email address you signed up with
               </label>
@@ -120,7 +123,7 @@ const ForgetPasswordPage = () => {
             <img
               src={forgetpasswordImage}
               alt="Login"
-              className="hidden sm:hidden md:block lg:block md:absolute md:right-8 md:bottom-20 sm:w-1/2 md:w-2/6 lg:w-1/2 xl:w-5/12 max-h-[55vh] object-cover"
+              className="hidden lg:block lg:absolute lg:z-0 lg:right-8 lg:bottom-[14%] xl:bottom-[1%] lg:w-5/12 xl:w-5/12 max-h-[50vh] object-cover"
             />
           </form>
         </div>

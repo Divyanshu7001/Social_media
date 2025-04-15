@@ -17,7 +17,6 @@ import ViewProfile from "./components/ViewProfile.js";
 import OtherProfile from "./components/OtherProfile.js";
 import SavedItems from "./components/SavedItems.js";
 import ArticleDetails from "./components/ArticleDetails.js";
-
 const App = () => {
   const { setIsAuthenticated, setUser } = useContext(Context);
   useEffect(() => {
