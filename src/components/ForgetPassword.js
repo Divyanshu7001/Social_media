@@ -123,7 +123,7 @@ const ForgetPasswordPage = () => {
             <img
               src={forgetpasswordImage}
               alt="Login"
-              className="hidden lg:block lg:absolute lg:z-0 lg:right-8 lg:bottom-[14%] xl:bottom-[1%] lg:w-5/12 xl:w-5/12 max-h-[50vh] object-cover"
+              className="hidden lg:block lg:absolute lg:z-0 lg:right-8 xl:right-12 lg:bottom-[14%] xl:bottom-[1%] lg:w-5/12 xl:w-4/12 max-h-[40vh] object-cover"
             />
           </form>
         </div>

@@ -109,15 +109,11 @@ const SignupPage = () => {
   };
 
   return (
-
-    <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm h-screen flex items-center justify-center">
-      <div className="bg-white border-2 mx-auto lg:w-3/5  md:w-3/5 max-h-[90vh] md:fixed md:z-50 h-screen relative">
-        <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
-          <div className="flex justify-between mt-2">
-            <a
-              href={" "}
-              className="text-4xl text-primary font-semibold"
-            >
+    <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm min-h-screen flex items-center justify-center">
+      <div className="bg-white border-2 mx-auto md:w-3/5 md:h-fit lg:w-3/5 lg:max-h-[83vh] md:fixed md:z-50 relative">
+        <div className="xl:px-14 xl:py-10 p-8">
+          <div className="flex justify-between xl:mt-3">
+            <a href={" "} className="text-4xl text-primary font-semibold">
               Logo
             </a>
             <button onClick={toggle} className="text-3xl text-black">
@@ -167,7 +163,7 @@ const SignupPage = () => {
               <div className="border-t-2 w-full border-t-gray-400"></div>
             </div>
 
-            <div className="relative form-responsive mt-0 xl:w-1/2 lg:w-1/2 space-y-2">
+            <div className="w-auto relative form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Name
               </label>
@@ -184,8 +180,7 @@ const SignupPage = () => {
             {nameError && (
               <div style={{ color: "red", textAlign: "left" }}>{nameError}</div>
             )}
-            <div className="relative form-responsive mt-2 xl:w-1/2 lg:w-1/2 space-y-2">
-
+            <div className="relative w-auto form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Email
               </label>
@@ -206,7 +201,7 @@ const SignupPage = () => {
               </div>
             )}
 
-            <div className="relative form-responsive mt-2 xl:w-1/2 lg:w-1/2 space-y-2">
+            <div className="relative w-auto form-responsive mt-5 xl:w-1/2 lg:w-1/2 space-y-4">
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Password
               </label>
@@ -229,18 +224,15 @@ const SignupPage = () => {
               </div>
             )}
             <div className="flex justify-center items-center xl:block">
-            <button
-              type="submit"
-              className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-3"
-            >
-              Sign Up
-            </button>
-             
+              <button
+                type="submit"
+                className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-10"
+              >
+                Sign Up
+              </button>
             </div>
 
-
-           
-            <div className="mt-4">
+            <div className="mt-10">
               <p className="text-gray-400 text-xl font-semibold">
                 Already have an account ?{" "}
                 <button
@@ -255,7 +247,7 @@ const SignupPage = () => {
             <img
               src={signupImage}
               alt="Signup"
-              className="hidden sm:hidden md:block lg:block md:absolute md:right-8 md:bottom-14 sm:w-1/2 md:w-2/6 lg:w-1/2 xl:w-[40%] max-h-[55vh] object-cover"
+              className="hidden lg:block lg:absolute lg:right-8 lg:bottom-[22%] xl:bottom-[16%] lg:w-5/12 xl:w-5/12 max-h-[55vh] object-cover"
             />
           </form>
         </div>
