@@ -50,12 +50,31 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
-      console.log(response);
-      window.location.reload();
+      console.log(response)
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      }
+      // window.location.reload();
     } catch (error) {
       if (error.code === "ERR_BAD_REQUEST") {
-        toast.error(error.response.data.message);
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(error.response.data.error, {
+            position: "top-right"
+          });
+        }
       }
+
       console.log(`Errors while ${action} user `, error);
     }
   };
@@ -70,9 +89,30 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
-      window.location.reload();
-    } catch (err) {
+
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+
+      }
+      // window.location.reload();
+    }
+    catch (err) {
       console.log(err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(err.response.data.error, {
+            position: "top-right"
+          });
+        }
+      }
+
     }
   };
 
@@ -86,9 +126,31 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
-      window.location.reload()
-    }catch(err){
-      console.log(err) 
+      console.log(response)
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(error.response.data.error, {
+            position: "top-right"
+          });
+        }
+      }
+      console.log(error)
     }
   };
 
@@ -208,12 +270,32 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
+      console.log(response)
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      }
       // console.log(response)
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       if (error.code === "ERR_BAD_REQUEST") {
-        toast.error(error.response.data.message);
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(error.response.data.error, {
+            position: "top-right"
+          });
+        }
       }
+
       console.log(`Errors while ${action} user `, error);
     }
   };
@@ -228,9 +310,31 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
-      window.location.reload()
-    }catch(err){
-      console.log(err) 
+      // window.location.reload()
+      console.log(response)
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      }
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(error.response.data.error, {
+            position: "top-right"
+          });
+        }
+      }
+      console.log(error)
     }
   };
 
@@ -244,9 +348,33 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
-      window.location.reload()
-    }catch(err){
-      console.log(err) 
+
+      console.log(response)
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right"
+        });
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right"
+          });
+        }
+        else {
+          toast.error(error.response.data.error, {
+            position: "top-right"
+          });
+        }
+      }
+      console.log(error)
     }
   };
 

@@ -969,6 +969,10 @@ video {
   margin-inline-start: auto;
 }
 
+.mt-0 {
+  margin-top: 0px;
+}
+
 .mt-0\.5 {
   margin-top: 0.125rem;
 }
@@ -1055,10 +1059,6 @@ video {
 
 .mt-\[7vw\] {
   margin-top: 7vw;
-}
-
-.mt-0 {
-  margin-top: 0px;
 }
 
 .block {
@@ -4101,12 +4101,20 @@ video {
     width: 66.666667%;
   }
 
+  .xl\:w-4\/12 {
+    width: 33.333333%;
+  }
+
   .xl\:w-5\/12 {
     width: 41.666667%;
   }
 
   .xl\:w-\[120px\] {
     width: 120px;
+  }
+
+  .xl\:w-\[40\%\] {
+    width: 40%;
   }
 
   .xl\:w-\[60\%\] {
@@ -4119,14 +4127,6 @@ video {
 
   .xl\:w-auto {
     width: auto;
-  }
-
-  .xl\:w-4\/12 {
-    width: 33.333333%;
-  }
-
-  .xl\:w-\[40\%\] {
-    width: 40%;
   }
 
   .xl\:flex-row {
