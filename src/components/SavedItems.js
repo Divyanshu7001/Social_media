@@ -73,8 +73,8 @@ const SavedItems = () => {
           <h2 className="font-bold mb-[1vw] text-lg ">SAVED ITEMS</h2>
 
           <div className='flex gap-5 w-full justify-center rounded'>
-            <button className='bg-primary px-3 py-1 mb-2 w-1/2 text-white rounded' onClick={() => setBtn("article")}>Articles</button>
-            <button className='bg-primary px-3 py-1 mb-2 w-1/2 text-white rounded' onClick={() => setBtn("post")}>Post</button>
+            <button className={`px-3 py-1 mb-2 w-1/2 text-white rounded ${btn === "article" ? "bg-gray-500" : "bg-primary"}`} onClick={() => setBtn("article")}>Articles</button>
+            <button className={`px-3 py-1 mb-2 w-1/2 text-white rounded ${btn === "post" ? "bg-gray-500" : "bg-primary"}`} onClick={() => setBtn("post")}>Post</button>
           </div>
 
           {btn === "article" && (articles.length > 0 ? articles.map((art) => (

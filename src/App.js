@@ -57,7 +57,12 @@ const App = () => {
           <Route path="/saved" element={<SavedItems />} />
           <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
         </Routes>
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster position="top-center" toastOptions={{
+          style: {
+            marginTop: '60px',
+            width: '300px',
+          },
+        }} reverseOrder={false} />
       </BrowserRouter>
     </>
   );

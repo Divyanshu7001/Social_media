@@ -105,6 +105,7 @@ const LoginPage = () => {
               href={" "}
               className="text-4xl text-primary font-semibold"
             >
+              </a>
             <button onClick={toggle} className="text-3xl text-black">
               <FontAwesomeIcon icon={faTimes} />
             </button>
