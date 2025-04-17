@@ -229,21 +229,17 @@ const SignupPage = () => {
               </div>
             )}
             <div className="flex justify-center items-center xl:block">
-              <button
-                type="submit"
-                className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-10"
-              >
-                Sign Up
-              </button>
-            </div>
-
-
             <button
               type="submit"
               className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-3"
             >
               Sign Up
             </button>
+             
+            </div>
+
+
+           
             <div className="mt-4">
               <p className="text-gray-400 text-xl font-semibold">
                 Already have an account ?{" "}
