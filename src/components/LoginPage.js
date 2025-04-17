@@ -60,23 +60,22 @@ const LoginPage = () => {
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          setPopup(false)
+          setPopup(false);
           navigate("/home");
         });
-
     } catch (error) {
-      console.log(error)
-      if (error.code === 'ERR_NETWORK') {
-        toast.error('Network Error: Could not connect to the server. Please check your internet connection.');
+      console.log(error);
+      if (error.code === "ERR_NETWORK") {
+        toast.error(
+          "Network Error: Could not connect to the server. Please check your internet connection."
+        );
         console.error(error.message);
         // Optionally, show a user-friendly error message in your UI
-      }
-      else if (error.code === "ERR_BAD_REQUEST") {
-        toast.error(error.response.data.error)
-      }
-      else {
-        toast.error('An unexpected error occurred:');
-        console.error(error.message)
+      } else if (error.code === "ERR_BAD_REQUEST") {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("An unexpected error occurred:");
+        console.error(error.message);
       }
       setUser({});
       setIsAuthenticated(false);
@@ -93,11 +92,9 @@ const LoginPage = () => {
     } else if (provider === "Facebook") {
       window.location.href = "https://www.facebook.com/v11.0/dialog/oauth";
     } else if (provider === "Apple") {
-      window.location.href = "https://appleid.apple.com/auth/authorize"
+      window.location.href = "https://appleid.apple.com/auth/authorize";
     }
   };
-
-
 
   return (
     <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm h-screen flex items-center justify-center">
@@ -108,8 +105,6 @@ const LoginPage = () => {
               href={" "}
               className="text-4xl text-primary font-semibold"
             >
-              Logo
-            </a>
             <button onClick={toggle} className="text-3xl text-black">
               <FontAwesomeIcon icon={faTimes} />
             </button>
@@ -139,7 +134,7 @@ const LoginPage = () => {
                 </span>
               </button>
             </div>
-            <div className="w-2/3">
+            <div className="w-auto lg:w-2/3">
               <button
                 onClick={() => handleSocialSignIn("Apple")}
                 className="btn-primary w-full"
@@ -178,6 +173,7 @@ const LoginPage = () => {
               </div>
             )}
 
+
             <div className="relative form-responsive mt-4 xl:w-1/2 lg:w-1/2 space-y-2">
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Password
@@ -207,7 +203,7 @@ const LoginPage = () => {
             >
               Login
             </button>
-            <div className="mt-4">
+            <div className="mt-8 lg:mt-3">
               <p className="text-gray-400 text-lg font-semibold">
                 Forgot your password?{" "}
                 <button
@@ -218,7 +214,7 @@ const LoginPage = () => {
                 </button>
               </p>
             </div>
-            <div className="mt-4">
+            <div className="mt-5 lg:mt-10">
               <p className="text-gray-400 text-xl font-semibold">
                 Don't have an account ?{" "}
                 <button
@@ -232,8 +228,10 @@ const LoginPage = () => {
 
             <img
               src={signupImage}
+              zz
               alt="Login"
               className="hidden sm:hidden md:block lg:block md:absolute md:right-8 md:bottom-14 sm:w-1/2 md:w-2/6 lg:w-1/2 xl:w-4/12 max-h-[55vh] object-cover"
+
             />
           </form>
         </div>

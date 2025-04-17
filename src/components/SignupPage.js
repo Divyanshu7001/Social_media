@@ -109,6 +109,7 @@ const SignupPage = () => {
   };
 
   return (
+
     <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm h-screen flex items-center justify-center">
       <div className="bg-white border-2 mx-auto lg:w-3/5  md:w-3/5 max-h-[90vh] md:fixed md:z-50 h-screen relative">
         <div className="xl:px-20 xl:py-10 lg:px-10 lg:py-10 px-10 py-10">
@@ -148,7 +149,7 @@ const SignupPage = () => {
                 </span>
               </button>
             </div>
-            <div className="w-2/3">
+            <div className="w-auto lg:w-2/3">
               <button
                 onClick={() => handleSocialSignup("Apple")}
                 className="btn-primary w-full"
@@ -184,6 +185,7 @@ const SignupPage = () => {
               <div style={{ color: "red", textAlign: "left" }}>{nameError}</div>
             )}
             <div className="relative form-responsive mt-2 xl:w-1/2 lg:w-1/2 space-y-2">
+
               <label htmlFor="email" className="text-lg text-black font-bold ">
                 Email
               </label>
@@ -226,6 +228,15 @@ const SignupPage = () => {
                 {passwordError}
               </div>
             )}
+            <div className="flex justify-center items-center xl:block">
+              <button
+                type="submit"
+                className="border-2 w-full lg:w-1/3 md:w-2/5 xl:w-1/3 bg-primary rounded-md text-white text-xl font-semibold shadow-md py-3 mt-10"
+              >
+                Sign Up
+              </button>
+            </div>
+
 
             <button
               type="submit"
@@ -256,6 +267,5 @@ const SignupPage = () => {
     </div>
   );
 };
-
 
 export default SignupPage;

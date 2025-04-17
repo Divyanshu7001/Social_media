@@ -46,13 +46,26 @@ const LandingPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const responsiveImageRender = ({ Component }) => {
-    if (windowWidth < 768) {
-      return <Component width={350} height={350} />;
-    } else if (windowWidth < 1280) {
-      return <Component width={450} height={550} />;
+  const responsiveImageRender = ({ ComponentName, Component }) => {
+    console.log("Component: ", Component);
+    console.log("Component Name: ", ComponentName);
+    
+    if (ComponentName === "Global") {
+      if (windowWidth <= 768) {
+        return <Component width={350} height={350} />;
+      } else if (windowWidth > 768 && windowWidth < 1250) {
+        return <Component width={460} height={480} />;
+      } else {
+        return <Component width={670} height={550} />;
+      }
     } else {
-      return <Component width={750} height={550} />;
+      if (windowWidth <= 768) {
+        return <Component width={350} height={350} />;
+      } else if (windowWidth > 768 && windowWidth < 1200) {
+        return <Component width={400} height={550} />;
+      } else {
+        return <Component width={610} height={550} />;
+      }
     }
   };
 
@@ -65,7 +78,7 @@ const LandingPage = () => {
       {popup && btn === "forgetpassword" && <ForgetPasswordPage />}
 
       {/* Main Content */}
-      <div className={!popup && "bg-white overflow-hidden"}>
+      <div className={!popup && "bg-white"}>
         {/* part -1 */}
         <div className="w-auto h-full items-center mx-2 md:mx-10 md:grid md:grid-cols-2">
           <div className="px-5 my-5 w-full grid-cols-1">
@@ -134,7 +147,7 @@ const LandingPage = () => {
         {/* part - 3 */}
         <div
           style={{ backgroundColor: "#393AF9", scrollbarWidth: "none" }}
-          className="text-white w-full xss:mt-10 sm:mt-32 mb-5 pb-10 rounded-tr-none rounded-bl-none lg:rounded-tr-[250px] lg:rounded-bl-[250px] relative z-0"
+          className="text-white w-full xss:mt-10 sm:mt-10 lg:mt-32 mb-5 pb-10 rounded-tr-none rounded-bl-none lg:rounded-tr-[250px] lg:rounded-bl-[250px] relative z-0"
         >
           <div className="absolute inset-0 bg-gray-300 opacity-25 bg-cover lg:rounded-tr-[250px] lg:rounded-bl-[250px]"></div>
           <div className="relative z-10">
@@ -222,9 +235,12 @@ const LandingPage = () => {
           <h1 className="text-center xss:text-3xl sm:text-4xl font-bold">
             Discover Our Mission
           </h1>
-          <div className="flex-col flex md:flex-row md:mx-7 lg:mx-auto xl:mx-10 xss:mx-3 xs:mx-6 justify-center items-center lg:justify-normal md:gap-10">
+          <div className="flex-col flex md:flex-row lg:mx-auto xl:mx-10 xss:mx-3 xs:mx-6 md:mx-auto justify-center items-center lg:justify-normal md:gap-10">
             <div className="md:w-1/2 xss:w-auto">
-              {responsiveImageRender({ Component: Innovate })}
+              {responsiveImageRender({
+                ComponentName: "Innovate",
+                Component: Innovate,
+              })}
             </div>
             <div className="w-full">
               <h4 className="xss:text-3xl sm:text-4xl font-bold">
@@ -239,7 +255,7 @@ const LandingPage = () => {
               </p>
             </div>
           </div>
-          <div className="flex-col-reverse flex md:flex-row mt-5 md:mt-0 xss:mx-3 xs:mx-6 md:mx-7 lg:mx-auto xl:mx-10 justify-center items-center gap-10">
+          <div className="flex-col-reverse flex md:flex-row mt-5 md:mt-0 xss:mx-3 xs:mx-6 md:mx-auto lg:mx-auto xl:mx-10 justify-center items-center gap-10">
             <div className="w-full">
               {windowWidth < 1024 ? (
                 <h4 className="xss:text-3xl sm:text-4xl font-bold">
@@ -260,7 +276,10 @@ const LandingPage = () => {
               </p>
             </div>
             <div className="md:w-1/2 xss:w-auto">
-              {responsiveImageRender({ Component: Research })}
+              {responsiveImageRender({
+                ComponentName: "Research",
+                Component: Research,
+              })}
             </div>
           </div>
         </div>
@@ -281,11 +300,11 @@ const LandingPage = () => {
         </div>
         {/* part 5 */}
         <div
-          className="flex-col flex lg:flex-row  items-center xss:px-2 sm:px-20 xss:pb-4 sm:py-2"
+          className="flex-col flex md:flex-row  items-center xss:px-2 md:px-6 xl:px-16 xss:pb-4 sm:py-2"
           style={{ backgroundColor: "#0000FF1A" }}
         >
-          <div className="w-[100%] text-center lg:text-start lg:w-1/2 sm:mt-5 order-2 lg:order-none xss:space-y-4 sm:space-y-7">
-            <h1 className="font-bold xss:text-3xl sm:text-5xl">
+          <div className="w-[100%] text-center md:text-start md:w-2/3 lg:w-1/2 sm:mt-5 order-2 md:order-none xss:space-y-4 sm:space-y-7">
+            <h1 className="font-bold xss:text-3xl md:text-4xl lg:text-5xl">
               Be Part of a Global Research Network!
             </h1>
             <p className="mt-5">
@@ -302,12 +321,11 @@ const LandingPage = () => {
               Create Your Profile
             </button>
           </div>
-          <div className="lg:w-1/2 xss:w-auto">
-            {windowWidth < 768 ? (
-              <Global width={400} height={350} />
-            ) : (
-              <Global width={800} height={550} />
-            )}
+          <div className="w-auto md:w-1/2 lg:w-auto">
+            {responsiveImageRender({
+              ComponentName: "Global",
+              Component: Global,
+            })}
           </div>
         </div>
         {/* part 6 */}
