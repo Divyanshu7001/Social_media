@@ -22,6 +22,7 @@ export const Homepage = () => {
   const [homeFeed, setHomeFeed] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [userList, setUserList] = useState([]);
+  const [dataFetch, setDataFetch] = useState(false);
 
   // Toggle popup state
   const togglePopup = () => setShowPopup(!showPopup);
@@ -30,6 +31,7 @@ export const Homepage = () => {
   useEffect(() => {
     const fetchHomeFeed = async () => {
       if (user && user.id) {
+        console.log('homeFeed');
         try {
           const response = await api.post(
             "homeFeed",
@@ -42,13 +44,14 @@ export const Homepage = () => {
 
           setHomeFeed(response.data.homeFeed);
           setUserList(response.data.userDetails);
+          setDataFetch(false);
         } catch (error) {
           console.error("Error fetching home feed:", error);
         }
       }
     };
     if (user && user.id) fetchHomeFeed();
-  }, [user, isAuthenticated]);
+  }, [user, isAuthenticated, dataFetch]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -107,7 +110,7 @@ export const Homepage = () => {
             </div>
           </div>
           {/* Main Content Components Here */}
-          <HomePage1 posts={posts} articles={articles} />
+          <HomePage1 posts={posts} articles={articles} dataFetch={setDataFetch} />
         </div>
         {/* Suggestions Sidebar */}
         <>

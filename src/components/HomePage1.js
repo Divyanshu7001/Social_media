@@ -31,6 +31,7 @@ const PostCard = ({
   like,
   saved,
   profile_img,
+  dataFetch
 }) => {
   const { user } = useContext(Context);
   const [views, setViews] = useState(0);
@@ -50,6 +51,7 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
+      dataFetch(true);
       console.log(response)
       if (response.status === 201) {
         toast.success(response.data.message, {
@@ -89,6 +91,7 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
+      dataFetch(true);
 
       if (response.status === 201) {
         toast.success(response.data.message, {
@@ -126,6 +129,7 @@ const PostCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      dataFetch(true);
       console.log(response)
       if (response.status === 201) {
         toast.success(response.data.message, {
@@ -178,12 +182,13 @@ const PostCard = ({
           </div>
         </div>
         <div className="flex px-0 py-4 items-center md:px-0 xl:px-2 lg:px-0 ">
-          <button
-            className="text-primary text-base lg:text-lg xl:text-xl mr-1 xl:mr-4 lg:mr-2 md:mr-1"
-            onClick={() => handleFollow(follow ? "unfollow" : "follow")}
-          >
-            {follow ? "Unfollow" : "Follow"}
-          </button>
+          {user.id !== user_id && (
+            <button
+              className="text-primary text-base lg:text-lg xl:text-xl mr-1 xl:mr-4 lg:mr-2 md:mr-1"
+              onClick={() => handleFollow(follow ? "unfollow" : "follow")}
+            >
+              {follow ? "Unfollow" : "Follow"}
+            </button>)}
 
           <MoreVertIcon />
         </div>
@@ -248,6 +253,7 @@ const ArticleCard = ({
   likecount,
   like,
   saved,
+  dataFetch
 }) => {
   // user_id => user follow user_id
   // follow => already follow or not check
@@ -270,6 +276,7 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
+      dataFetch(true);
       console.log(response)
       if (response.status === 201) {
         toast.success(response.data.message, {
@@ -310,6 +317,7 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
+      dataFetch(true);
       // window.location.reload()
       console.log(response)
       if (response.status === 201) {
@@ -348,7 +356,7 @@ const ArticleCard = ({
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       })
-
+      dataFetch(true);
       console.log(response)
       if (response.status === 201) {
         toast.success(response.data.message, {
@@ -388,10 +396,12 @@ const ArticleCard = ({
           </div>
         </Link>
         <div className="flex py-4 items-center">
-          <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={(e) => {
-            e.stopPropagation();
-            handleFollow(follow ? "unfollow" : "follow")
-          }}>{follow ? "Unfollow" : "Follow"}</button>
+
+          {user.id !== user_id && (
+            <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={(e) => {
+              e.stopPropagation();
+              handleFollow(follow ? "unfollow" : "follow")
+            }}>{follow ? "Unfollow" : "Follow"}</button>)}
           <MoreVertIcon />
         </div>
       </div>
@@ -437,7 +447,7 @@ const ArticleCard = ({
   );
 };
 
-const HomePage1 = ({ posts, articles }) => (
+const HomePage1 = ({ posts, articles, dataFetch }) => (
   <>
     {articles.length > 0 &&
       articles.map((article) => (
@@ -453,6 +463,7 @@ const HomePage1 = ({ posts, articles }) => (
           likecount={article.likeCount}
           like={article.am_i_liked}
           saved={article.isSaved}
+          dataFetch={dataFetch}
         />
       ))}
     {posts.length > 0 &&
@@ -470,6 +481,7 @@ const HomePage1 = ({ posts, articles }) => (
           like={post.am_i_liked}
           saved={post.isSaved}
           profile_img={post.profile_img}
+          dataFetch={dataFetch}
         />
       ))}
   </>
