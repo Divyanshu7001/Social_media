@@ -47,8 +47,8 @@ const LandingPage = () => {
   }, []);
 
   const responsiveImageRender = ({ ComponentName, Component }) => {
-    console.log("Component: ", Component);
-    console.log("Component Name: ", ComponentName);
+    // console.log("Component: ", Component);
+    // console.log("Component Name: ", ComponentName);
     
     if (ComponentName === "Global") {
       if (windowWidth <= 768) {
