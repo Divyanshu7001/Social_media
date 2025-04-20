@@ -115,7 +115,7 @@ const OtherProfile = () => {
     }
   };
 
-  // console.log("Profile Data: ", otherProfileData);
+  console.log("Profile Data: ", otherProfileData);
   // console.log("Followers Count: ", profileCounts.followersCount);
   // console.log("Following Count: ", profileCounts.followingCount);
 

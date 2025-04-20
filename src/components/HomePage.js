@@ -10,6 +10,8 @@ import Createpost from "./Createpost.js";
 import { ReactComponent as Photo } from "../assets/svg/photo.svg";
 import { ReactComponent as Article } from "../assets/svg/notes.svg";
 import { LeftSidebar } from "./LeftSidebar.js";
+import { HomepageSuggestionsbar } from "./Suggestionsbar.js";
+
 
 // Main Component
 export const Homepage = () => {
@@ -20,18 +22,19 @@ export const Homepage = () => {
   // Declare state
   const [showPopup, setShowPopup] = useState(false);
   const [homeFeed, setHomeFeed] = useState({});
-  const [expanded, setExpanded] = useState(false);
+
   const [userList, setUserList] = useState([]);
   const [dataFetch, setDataFetch] = useState(false);
 
   // Toggle popup state
   const togglePopup = () => setShowPopup(!showPopup);
-
+  console.log(userList);
+  
   // Fetch Home Feed
   useEffect(() => {
     const fetchHomeFeed = async () => {
       if (user && user.id) {
-        console.log('homeFeed');
+        console.log("homeFeed");
         try {
           const response = await api.post(
             "homeFeed",
@@ -64,20 +67,28 @@ export const Homepage = () => {
   const suggestions = homeFeed.suggestions || [];
   const user_data = userList[0] || [];
 
+  console.log("Suggestions:", suggestions);
+
   return (
     <>
       <Navbar />
       {showPopup && <Createpost closePopup={togglePopup} />}
       <div className={`${showPopup && "z-0"} min-h-screen bg-white`}>
         {/* Popup for Create Post */}
-        <LeftSidebar
-          user_data={user_data}
-          togglePopup={togglePopup}
-          showPopup={showPopup}
-          post={true}
-        />
-        {/* Main Content Area */}\{" "}
-        <div className="flex flex-col mx-auto w-full px-5 md:px-0 xl:w-1/2 lg:w-2/5 md:w-2/5 mt-9 md:mt-9 lg:mt-4 xs:mt-0">
+        <div className="flex flex-col overflow-y-scroll">
+          <LeftSidebar
+            user_data={user_data}
+            togglePopup={togglePopup}
+            showPopup={showPopup}
+            post={true}
+          />
+          <HomepageSuggestionsbar
+            showPopup={showPopup}
+            suggestions={suggestions}
+          />
+        </div>
+        {/* Main Content Area */}{" "}
+        <div className="flex flex-col mx-auto md:ml-auto md:mr-10 lg:mx-auto md:mx-0 w-full px-5 md:px-0 xl:w-1/2 lg:w-2/5 md:w-3/5 xl:mt-9 md:mt-9 lg:mt-9 xs:mt-0">
           {/* mobile upload and profile */}
           <div className="border-2 rounded-md mb-10 md:hidden">
             {/* mobile profile */}
@@ -110,89 +121,13 @@ export const Homepage = () => {
             </div>
           </div>
           {/* Main Content Components Here */}
-          <HomePage1 posts={posts} articles={articles} dataFetch={setDataFetch} />
+          <HomePage1
+            posts={posts}
+            articles={articles}
+            dataFetch={setDataFetch}
+          />
         </div>
         {/* Suggestions Sidebar */}
-        <>
-          <div
-            className={`fixed top-24 right-0 hidden mt-0.5 md:mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex  xl:w-1/5 lg:w-1/4 h-fit md:w-3/12 xl:h-fit lg:h-fit md:h-3/4 md:me-5 lg:me-5 xl:me-10  py-3 rounded border-2 ${
-              showPopup ? "border-gray-500" : "border-gray-300"
-            }  me-10 px-4 md:px-4 lg:px-5 mb-10 `}
-          >
-            <div className="space-y-4 xl:my-3">
-              <div className="flex-col justify-between items-center">
-                <div className="home-suggestion-title">Top Stories</div>
-                <p className="text-sm text-gray-600">
-                  Join our vibrant community of Information Technology scholars
-                  and researchers.
-                </p>
-              </div>
-              <div className="flex-col justify-between items-center">
-                <div className="home-suggestion-title">Top Journals</div>
-                <p className="text-sm text-gray-600">
-                  IEEE Transactions on Computers
-                  <br />
-                  Journal of the ACM (JACM)
-                </p>
-              </div>
-              <div className="flex-col justify-between items-center">
-                <div className="home-suggestion-title">Top Articles</div>
-                <p className="text-sm text-gray-600">
-                  Dive into the potential of quantum computing and its
-                  implications for solving complex problems in record time.
-                </p>
-              </div>
-
-              {/* Suggestions */}
-              <div className="flex justify-between">
-                <Link
-                  to="/WhotoFollow"
-                  className="text-gray-600 font-bold text-sm md:text-sm lg:text-base"
-                >
-                  Suggestions
-                </Link>
-                {!expanded && suggestions.length > 4 ? (
-                  <button
-                    onClick={() => setExpanded(true)}
-                    className="text-gray-600 hover:underline font-bold text-sm md:text-sm lg:text-base"
-                  >
-                    View all
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setExpanded(false)}
-                    className="text-gray-600 hover:underline font-bold text-sm md:text-sm lg:text-base"
-                  >
-                    View Less
-                  </button>
-                )}
-              </div>
-              <div className="space-y-3 overflow-y-auto h-fit xl:h-fit lg:h-[120px] md:h-[60px] py-1 lg:py-2 xl:py-0">
-                {suggestions.length > 0 ? (
-                  suggestions
-                    .slice(0, expanded ? suggestions.length : 4)
-                    .map((suggestion) => (
-                      <div
-                        key={suggestion.userId}
-                        className="flex items-center space-x-2"
-                      >
-                        <img
-                          src={suggestion.profile_img || "images/johnpaul.png"}
-                          alt="Avatar"
-                          className="h-12 w-12 rounded-full object-cover"
-                        />
-                        <h2 className="font-semibold text-base">
-                          {suggestion.name}
-                        </h2>
-                      </div>
-                    ))
-                ) : (
-                  <p>No suggestions available.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </>
       </div>
     </>
   );
