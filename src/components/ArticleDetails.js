@@ -97,7 +97,7 @@ const ArticleDetails = () => {
                     <div className="flex items-center">
                       <img
                         src={art.user.image}
-                        alt={art.paper_title}
+                        alt="User"
                         className="w-16 h-16 rounded-full object-cover object-top"
                       />
                       <div className="ml-5">
@@ -151,7 +151,7 @@ const ArticleDetails = () => {
                     <div className="flex items-center">
                       <img
                         src={art.user.image}
-                        alt={art.paper_title}
+                        alt="User"
                         className="w-16 h-16 rounded-full object-cover object-top"
                       />
                       <div className="ml-5">
