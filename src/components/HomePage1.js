@@ -31,16 +31,35 @@ const PostCard = ({
   like,
   saved,
   profile_img,
-  dataFetch
+  dataFetch,
 }) => {
   const { user } = useContext(Context);
   const [views, setViews] = useState(0);
   const navigate = useNavigate();
   const handleView = () => setViews(views + 1);
-
+  const [isPortrait, setIsPortrait] = useState(false);
   useEffect(() => {
     handleView();
+    isImagePortrait(image);
   }, []);
+
+  const isImagePortrait = (image) => {
+    console.log("Image: ", image);
+    if (!image) return;
+    const img = new Image();
+    img.src = image;
+    img.onload = () => {
+      const { height, width } = img;
+      console.log("Image dimensions: ", height, width);
+
+      height > width || height == width
+        ? setIsPortrait(true)
+        : setIsPortrait(false);
+    };
+    img.onerror = () => {
+      console.error("Failed to load image.");
+    };
+  };
 
   const handleFollow = async (action) => {
     try {
@@ -52,14 +71,14 @@ const PostCard = ({
         headers: { "Content-Type": "application/json" },
       });
       dataFetch(true);
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       } else if (response.status === 200) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       }
       // window.location.reload();
@@ -67,12 +86,11 @@ const PostCard = ({
       if (error.code === "ERR_BAD_REQUEST") {
         if (error.response.data.message) {
           toast.error(error.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(error.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
@@ -95,27 +113,23 @@ const PostCard = ({
 
       if (response.status === 201) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
-
       }
       // window.location.reload();
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       if (err.code === "ERR_BAD_REQUEST") {
         if (err.response.data.message) {
           toast.error(err.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(err.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
-
     }
   };
 
@@ -128,16 +142,16 @@ const PostCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-      })
+      });
       dataFetch(true);
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       } else if (response.status === 200) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       }
       // window.location.reload()
@@ -145,16 +159,15 @@ const PostCard = ({
       if (error.code === "ERR_BAD_REQUEST") {
         if (error.response.data.message) {
           toast.error(error.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(error.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -188,19 +201,28 @@ const PostCard = ({
               onClick={() => handleFollow(follow ? "unfollow" : "follow")}
             >
               {follow ? "Unfollow" : "Follow"}
-            </button>)}
+            </button>
+          )}
 
           <MoreVertIcon />
         </div>
       </div>
       {/* body */}
-      <div className="flex-col w-auto">
+      <div className="flex-col w-auto border-b-gray-200 border-b-2 pb-1">
         <p className="mt-2 px-9 xl:px-9 lg:px-4 text-gray-700">{description}</p>
-        <img
-          src={image}
-          alt={description}
-          className="px-7 object-center mt-2 w-full h-96 me-auto"
-        />
+        {isPortrait ? (
+          <img
+            src={image}
+            alt="Post"
+            className="px-3 object-contain mt-2 w-full h-96"
+          />
+        ) : (
+          <img
+            src={image}
+            alt="Post"
+            className="xss:px-3 sm:px-6 xss:object-contain xl:object-fill mt-2 w-full h-96 me-auto"
+          />
+        )}
       </div>
 
       <div className="flex justify-between mt-3 mb-2 items-center mx-9">
@@ -246,14 +268,13 @@ const ArticleCard = ({
   title,
   description,
   author,
-  image,
   user_id,
   follow,
   article_id,
   likecount,
   like,
   saved,
-  dataFetch
+  dataFetch,
 }) => {
   // user_id => user follow user_id
   // follow => already follow or not check
@@ -277,14 +298,14 @@ const ArticleCard = ({
         headers: { "Content-Type": "application/json" },
       });
       dataFetch(true);
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       } else if (response.status === 200) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       }
       // console.log(response)
@@ -293,12 +314,11 @@ const ArticleCard = ({
       if (error.code === "ERR_BAD_REQUEST") {
         if (error.response.data.message) {
           toast.error(error.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(error.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
@@ -316,33 +336,32 @@ const ArticleCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-      })
+      });
       dataFetch(true);
       // window.location.reload()
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       } else if (response.status === 200) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       }
     } catch (error) {
       if (error.code === "ERR_BAD_REQUEST") {
         if (error.response.data.message) {
           toast.error(error.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(error.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -355,17 +374,16 @@ const ArticleCard = ({
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-      })
+      });
       dataFetch(true);
-      console.log(response)
+      console.log(response);
       if (response.status === 201) {
         toast.success(response.data.message, {
           position: "top-right",
-
         });
       } else if (response.status === 200) {
         toast.success(response.data.message, {
-          position: "top-right"
+          position: "top-right",
         });
       }
       // window.location.reload()
@@ -373,41 +391,47 @@ const ArticleCard = ({
       if (error.code === "ERR_BAD_REQUEST") {
         if (error.response.data.message) {
           toast.error(error.response.data.message, {
-            position: "top-right"
+            position: "top-right",
           });
-        }
-        else {
+        } else {
           toast.error(error.response.data.error, {
-            position: "top-right"
+            position: "top-right",
           });
         }
       }
-      console.log(error)
+      console.log(error);
     }
   };
 
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
-
-      <div className="flex justify-between items-center px-3 ">
+      <div className="xss:flex-col md:flex md:flex-row justify-between xss:items-start md:items-center px-3 ">
         <Link to={`/ArticleDetails/${article_id}`}>
           <div className=" flex items-center">
             <h3 className="text-2xl font-semibold pe-5">{title}</h3>
           </div>
         </Link>
-        <div className="flex py-4 items-center">
-
+        <div className="flex xss:py-1 md:py-4 xss:justify-end md:justify-normal items-center">
           {user.id !== user_id && (
-            <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4" onClick={(e) => {
-              e.stopPropagation();
-              handleFollow(follow ? "unfollow" : "follow")
-            }}>{follow ? "Unfollow" : "Follow"}</button>)}
+            <button
+              className="text-primary text-base  lg:text-lg xl:text-xl mr-4"
+
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFollow(follow ? "unfollow" : "follow");
+              }}
+            >
+              {follow ? "Unfollow" : "Follow"}
+            </button>
+          )}
           <MoreVertIcon />
         </div>
       </div>
       <Link to={`/ArticleDetails/${article_id}`}>
         <div className="text-sm text-gray-500  px-3">By {author}</div>
-        <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">{description}</p>
+        <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">
+          {description}
+        </p>
       </Link>
       <div className="flex justify-between mt-2 py-1 px-5">
         <div

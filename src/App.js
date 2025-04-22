@@ -13,7 +13,7 @@ import UploadPaperDetails from "./components/UploadPaperDetails.js";
 import Profile from "./components/Profile.js";
 import Journals from "./components/Journals.js";
 import { Toaster } from "react-hot-toast";
-import ViewProfile from "./components/ViewProfile.js";
+import ViewProfile from "./components/ViewProfile.js";                                                                                                    
 import OtherProfile from "./components/OtherProfile.js";
 import SavedItems from "./components/SavedItems.js";
 import ArticleDetails from "./components/ArticleDetails.js";

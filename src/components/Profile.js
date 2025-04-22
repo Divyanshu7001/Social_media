@@ -281,7 +281,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-20 h-20">
+                        <div className="w-12 h-14">
                           {follower.image ? (
                             <img
                               src={`${follower.image}`}
@@ -289,7 +289,7 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-20 h-20" />
+                            <CgProfile className="w-12 h-14" />
                           )}
                         </div>
                         <p className="text-[#000] justify-start text-xl font-semibold">
@@ -314,7 +314,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-20 h-20">
+                        <div className="w-12 h-14">
                           {follow.image ? (
                             <img
                               src={`${follow.image}`}
@@ -322,7 +322,7 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-20 h-20" />
+                            <CgProfile className="w-12 h-14" />
                           )}
                         </div>
                         <p className="text-[#000] text-xl font-semibold">
@@ -369,7 +369,7 @@ const Profile = () => {
                     className="w-auto mx-1 mt-[2vw] flex justify-between items-center"
                   >
                     <div className="flex gap-[0.8vw] items-center">
-                      <div className="w-20 h-20">
+                      <div className="w-12 h-14">
                         {follow.image ? (
                           <img
                             src={`${follow.image}`}
