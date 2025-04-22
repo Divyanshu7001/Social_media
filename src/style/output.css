@@ -1211,8 +1211,6 @@ video {
 
 .max-h-\[40vh\] {
   max-height: 40vh;
-.max-h-\[40vh\] {
-  max-height: 40vh;
 }
 
 .max-h-\[55vh\] {
@@ -3355,8 +3353,6 @@ video {
     bottom: 18%;
   }
 
-  .md\:right-3 {
-    right: 0.75rem;
   .md\:right-3 {
     right: 0.75rem;
   }
