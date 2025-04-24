@@ -59,7 +59,7 @@ const LoginPage = () => {
           // //console.log(user);
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", true);
-          localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("userId", JSON.stringify(res.data.user.id));
           setPopup(false);
           navigate("/home");
         });

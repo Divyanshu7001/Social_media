@@ -1,91 +1,108 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useMediaQuery } from "@react-hook/media-query";
 
-export const HomepageSuggestionsbar = ({ showPopup, suggestions }) => {
-  const [expanded, setExpanded] = useState(false);
-  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+import { CgProfile } from "react-icons/cg";
+import { useNavigate } from "react-router-dom";
 
+export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
+  //console.log("Suggested Followers: ", suggestedFollowers);
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        scrollbarWidth: "none",
-      }}
-      className={`fixed lg:top-24 ${
-        isLargeScreen ? "right-3" : "left-5"
-      } md:bottom-[16%] hidden mt-0.5  md:mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-1/5 lg:w-1/4 h-fit md:w-[32vw] xl:h-fit lg:h-fit md:h-fit md:me-5 lg:me-5 xl:me-10 py-3 rounded border-2 overflow-scroll ${
-        showPopup ? "border-gray-400" : "border-gray-200"
-      }  me-10 px-4 md:px-4 lg:px-5 mb-10 `}
-    >
-      <div className="md:space-y-2 lg:space-y-4 xl:my-3">
-        <div className="flex-col justify-between items-center">
-          <div className="home-suggestion-title">Top Stories</div>
-          <p className="text-sm text-gray-600">
-            Join our vibrant community of Information Technology scholars and
-            researchers.
-          </p>
-        </div>
-        <div className="flex-col justify-between items-center">
-          <div className="home-suggestion-title">Top Journals</div>
-          <p className="text-sm text-gray-600">
-            IEEE Transactions on Computers
-            <br />
-            Journal of the ACM (JACM)
-          </p>
-        </div>
-        <div className="flex-col justify-between items-center">
-          <div className="home-suggestion-title">Top Articles</div>
-          <p className="text-sm text-gray-600">
-            Dive into the potential of quantum computing and its implications
-            for solving complex problems in record time.
-          </p>
-        </div>
-
-        {/* Suggestions */}
-        <div className="flex justify-between">
-          <Link
-            to="/WhotoFollow"
-            className="text-gray-600 font-bold text-sm md:text-sm lg:text-base"
+    <div className="mx-auto xss:space-y-2 lg:space-y-4 grow">
+      <div className="flex-col justify-between items-center">
+        <div className="home-suggestion-title">Top Stories</div>
+        <p className="text-sm text-gray-600">
+          Join our vibrant community of Information Technology scholars and
+          researchers.
+        </p>
+      </div>
+      <div className="flex-col justify-between items-center">
+        <div className="home-suggestion-title">Top Journals</div>
+        <p className="text-sm text-gray-600">
+          IEEE Transactions on Computers
+          <br />
+          Journal of the ACM (JACM)
+        </p>
+      </div>
+      <div className="flex-col justify-between items-center">
+        <div className="home-suggestion-title">Top Articles</div>
+        <p className="text-sm text-gray-600">
+          Dive into the potential of quantum computing and its implications for
+          solving complex problems in record time.
+        </p>
+      </div>
+      <div className="flex justify-between items-center">
+        <h2 className="opacity-80 font-semibold text-md md:text-lg text-gray-600">
+          Suggested for You
+        </h2>
+        {suggestedFollowers.length > 4 ? (
+          <h2
+            className="opacity-80 text-md cursor-pointer text-gray-600"
+            onClick={() => setShowAllSuggestions(!showAllSuggestions)}
           >
-            Suggestions
-          </Link>
-          {!expanded && suggestions.length > 4 ? (
-            <button
-              onClick={() => setExpanded(true)}
-              className="text-gray-600 hover:underline font-bold text-sm md:text-sm lg:text-base"
+            {showAllSuggestions ? "View Less" : "View All"}
+          </h2>
+        ) : (
+          <></>
+        )}
+      </div>
+
+      <div
+        className={`overflow-y-scroll md:h-auto h-fit xl:h-fit lg:h-auto py-1 lg:py-2 xl:py-0`}
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {suggestedFollowers.length > 0 ? (
+          (showAllSuggestions
+            ? suggestedFollowers
+            : suggestedFollowers.slice(0, 3)
+          ).map((follow) => (
+            <div
+              key={follow.id ? follow.id : follow.userId}
+              className="w-auto mx-1 mb-1 flex justify-between items-center"
             >
-              View all
-            </button>
-          ) : (
-            <button
-              onClick={() => setExpanded(false)}
-              className="text-gray-600 hover:underline font-bold text-sm md:text-sm lg:text-base"
-            >
-              View Less
-            </button>
-          )}
-        </div>
-        <div className="space-y-3 overflow-y-scroll h-fit xl:h-fit lg:h-auto md:h-[200px] py-1 lg:py-2 xl:py-0">
-          {suggestions.length > 0 ? (
-            suggestions
-              .slice(0, expanded ? suggestions.length : 4)
-              .map((suggestion) => (
-                <div
-                  key={suggestion.userId}
-                  className="flex items-center space-x-2"
-                >
-                  <img
-                    src={suggestion.profile_img || "images/johnpaul.png"}
-                    alt="Avatar"
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                  <h2 className="font-semibold text-base">{suggestion.name}</h2>
+              <div className="flex gap-[0.8vw] items-center">
+                <div className="w-12 h-14">
+                  {follow.image ? (
+                    <img
+                      src={`${follow.image}`}
+                      onClick={() =>
+                        navigate(
+                          `/profile/${follow.id ? follow.id : follow.userId}`
+                        )
+                      }
+                      alt="Avatar"
+                      className="h-full w-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <CgProfile
+                      onClick={() =>
+                        navigate(
+                          `/profile/${follow.id ? follow.id : follow.userId}`
+                        )
+                      }
+                      className="xss:w-10 xss:h-14 xs:w-12 xs:h-16"
+                    />
+                  )}
                 </div>
-              ))
-          ) : (
-            <p>No suggestions available.</p>
-          )}
-        </div>
+                <p className="text-[#000] sm:text-lg xl:text-xl font-semibold">
+                  {follow.name}
+                </p>
+              </div>
+              <p
+                onClick={() =>
+                  handleFollow(follow.id ? follow.id : follow.userId)
+                }
+                className="text-[#0000FF] text-md font-semibold cursor-pointer"
+              >
+                Follow
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-[#000] text-lg font-semibold mt-5">
+            No Suggestions
+          </p>
+        )}
       </div>
     </div>
   );

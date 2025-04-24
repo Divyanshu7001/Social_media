@@ -81,7 +81,7 @@ const Box = ({ closePopup }) => {
           {/* <img src={line8} alt="Line" className="w-full h-px bg-blue-500 mb-5" /> */}
           <div className="flex items-center mb-5">
             <img
-              src={`http://175.29.21.101/storage/${user.image}` || Ellipse4}
+              src={`${user.image}` || Ellipse4}
               alt="Profile"
               className="w-24 h-24 rounded-full mr-4"
             />

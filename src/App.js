@@ -13,10 +13,11 @@ import UploadPaperDetails from "./components/UploadPaperDetails.js";
 import Profile from "./components/Profile.js";
 import Journals from "./components/Journals.js";
 import { Toaster } from "react-hot-toast";
-import ViewProfile from "./components/ViewProfile.js";                                                                                                    
+import ViewProfile from "./components/ViewProfile.js";
 import OtherProfile from "./components/OtherProfile.js";
 import SavedItems from "./components/SavedItems.js";
 import ArticleDetails from "./components/ArticleDetails.js";
+import api from "./components/api.js";
 const App = () => {
   const { setIsAuthenticated, setUser } = useContext(Context);
   useEffect(() => {
@@ -24,12 +25,40 @@ const App = () => {
       const isAuthenticatedFromLocalStorage = await JSON.parse(
         localStorage.getItem("isAuthenticated")
       );
-      const userFromLocalStorage = await JSON.parse(
-        localStorage.getItem("user")
-      ); // Parse user as JSON
-
+      if (setIsAuthenticated) {
+        const userIdFromLocal = await JSON.parse(
+          localStorage.getItem("userId")
+        );
+        // Fetch user data securely from your backend API
+        try {
+          if (userIdFromLocal) {
+            //console.log(user.id, "in fetch call");
+            await api
+              .post(
+                `fetchProfile`,
+                {
+                  user_id: userIdFromLocal,
+                },
+                {
+                  withCredentials: true,
+                  headers: { "Content-Type": "application/json" },
+                }
+              )
+              .then((res) => {
+                console.log("Fetched User Data: ", res.data);
+                setUser(res.data.profile_data.user);
+              });
+          } else {
+            console.log("User is not defined yet");
+            setUser({});
+          }
+        } catch (error) {
+          console.error("Error fetching profile data:", error);
+          setUser({});
+        }
+      }
       setIsAuthenticated(isAuthenticatedFromLocalStorage);
-      setUser(userFromLocalStorage || {});
+
     };
     auth();
   }, []);
@@ -57,12 +86,16 @@ const App = () => {
           <Route path="/saved" element={<SavedItems />} />
           <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
         </Routes>
-        <Toaster position="top-center" toastOptions={{
-          style: {
-            marginTop: '60px',
-            width: '300px',
-          },
-        }} reverseOrder={false} />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              marginTop: "60px",
+              width: "300px",
+            },
+          }}
+          reverseOrder={false}
+        />
       </BrowserRouter>
     </>
   );

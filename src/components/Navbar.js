@@ -249,7 +249,7 @@ const Navbar = () => {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4} // Placeholder for user image
+                src={`${user.image}` || Ellipse4} // Placeholder for user image
                 alt="User"
                 style={{
                   borderRadius: "50%",

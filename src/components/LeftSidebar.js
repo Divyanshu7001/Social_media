@@ -6,17 +6,19 @@ import { Link } from "react-router-dom";
 import Ellipse4 from "../assets/img/Ellipse4.png";
 
 export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
+  //console.log(user_data, "user_data in left sidebar");
+  
   return (
     <div
       className={`${
         showPopup && "z-0"
-      } md:block fixed top-24 mb-2 left-0 w-1/5 xl:w-1/5 2xl:w-1/5 2xl:ms-10 lg:w-1/4 md:w-[32vw]  md:ms-5 lg:ms-5 xl:ms-10 ms-10 h-fit`}
+      } md:block fixed md:top-16 lg:top-24 mb-2 left-0 w-1/5 xl:w-1/5 2xl:w-1/5 2xl:ms-10 lg:w-1/4 md:w-[32vw]  md:ms-5 lg:ms-5 xl:ms-10 ms-10 h-fit`}
     >
       <div className=" bg-white rounded border-2 h-4/5 hidden md:flex lg:flex flex-col w-full px-8 mt-0.5 md:mt-0.5 lg:mt-3.5  md:px-1 lg:px-8 py-5">
         {/* User Info */}
         <div className="flex  flex-col items-center s">
           <img
-            src={user_data.image || Ellipse4}
+            src={user_data.profile_img || Ellipse4}
             alt="Ellipse"
             className="h-24 w-24 rounded-full object-cover"
           />

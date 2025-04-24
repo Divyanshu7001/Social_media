@@ -18,6 +18,7 @@ import { Context } from "../index.js";
 import api from "./api";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { CgProfile } from "react-icons/cg";
 
 const PostCard = ({
   name,
@@ -44,13 +45,13 @@ const PostCard = ({
   }, []);
 
   const isImagePortrait = (image) => {
-    console.log("Image: ", image);
+    //console.log("Image: ", image);
     if (!image) return;
     const img = new Image();
     img.src = image;
     img.onload = () => {
       const { height, width } = img;
-      console.log("Image dimensions: ", height, width);
+      //console.log("Image dimensions: ", height, width);
 
       height > width || height == width
         ? setIsPortrait(true)
@@ -176,12 +177,17 @@ const PostCard = ({
       {/* head */}
       <div className="flex justify-between items-center px-2 xl:px-2 lg:px-0">
         <div className="flex px-1 md:px-1 py-4 items-center xl:px-6 lg:px-4">
-          <img
-            src={profile_img ? profile_img : Ellipse4}
-            alt="Profile"
-            onClick={() => navigate(`/profile/${user_id}`)}
-            className="w-12 h-12 rounded-full object-cover object-top"
-          />
+          {profile_img ? (
+            <img
+              src={profile_img}
+              alt="Profile"
+              onClick={() => navigate(`/profile/${user_id}`)}
+              className="w-12 h-12 rounded-full object-cover object-top"
+            />
+          ) : (
+            <CgProfile className="w-12 h-12" />
+          )}
+
           <div className="ml-2 lg:ml-4 md:ml-2">
             <div
               className="md:text-lg lg:text-xl font-semibold"

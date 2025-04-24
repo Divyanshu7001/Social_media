@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { VscFeedback } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import { Suggestionsbar } from "./Suggestionsbar";
 const Profile = () => {
   const { user, profileData, isAuthenticated } = useContext(Context);
   const navigate = useNavigate();
@@ -23,9 +24,9 @@ const Profile = () => {
   const [isDatafetched, setIsDataFetched] = useState(false);
 
   const handleSuggestedFollowers = async (newData) => {
-    console.log("suggestions Data in api now: ", suggestedFollowers);
+    //console.log("suggestions Data in api now: ", suggestedFollowers);
 
-    console.log("New Data: ", newData);
+    //console.log("New Data: ", newData);
     if (suggestedFollowers.length > 0) {
       const updatedSuggestions = [...suggestedFollowers],
         includedNames = [];
@@ -99,9 +100,9 @@ const Profile = () => {
       console.log("Error fetching the Followers Data: ", error);
     }
   };
-  const handleFollow = async (followId) => {
-    console.log("Id to be followed: ", followId);
 
+  const handleFollow = async (followId) => {
+    //console.log("Id to be followed: ", followId);
     try {
       await api
         .post(
@@ -121,15 +122,16 @@ const Profile = () => {
           console.log(res.data);
           toast.success(res.data.message);
           setIsDataFetched(false);
-           filterSuggestions(followId);
+          filterSuggestions(followId);
         });
     } catch (error) {
       console.log(error);
       toast.error("Error while following User");
     }
   };
+
   const handleUnfollow = async (unfollowId) => {
-    console.log("Id to be Unfollowed: ", unfollowId);
+    //console.log("Id to be Unfollowed: ", unfollowId);
 
     try {
       await api
@@ -150,7 +152,6 @@ const Profile = () => {
           console.log(res.data);
           toast.success(res.data.message);
           setIsDataFetched(false);
-         
         });
     } catch (error) {
       console.log(error);
@@ -164,16 +165,16 @@ const Profile = () => {
     });
     setSuggestedFollowers(updatedSuggestions);
   };
+
   useEffect(() => {
     fetchFollowingData();
     fetchFollowersData();
   }, [isDatafetched, user]);
-  // fetchFollowingData();
-  // fetchFollowersData();
-  console.log("Followers Data: ", followers);
-  console.log("Following Data: ", following);
-  console.log("Suggestions Data Global: ", suggestedFollowers);
-  console.log("profile Data: ", profileData);
+
+  // console.log("Followers Data: ", followers);
+  // console.log("Following Data: ", following);
+  // console.log("Suggestions Data Global: ", suggestedFollowers);
+  // console.log("profile Data: ", profileData);
 
   return (
     <div>
@@ -181,28 +182,20 @@ const Profile = () => {
 
       <div className="w-full mx-auto flex justify-end">
         <div className="my-[2vw] w-full flex xss:flex-col xss:space-y-10 lg:space-y-0  lg:flex-row  xss:mx-6 sm:mx-11">
-          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col ">
+          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col max-h-[40vh]">
             <div className="flex flex-col mx-auto items-center justify-center gap-[0.5vw] mt-[2vw] xs:ml-auto xs:my-auto lg:mt-[2vw]">
               <div className="xss:w-32 xss:h-auto">
                 <img
-                  src={`http://175.29.21.101/storage/${user.image}`}
+                  src={`${user.image}`}
                   alt="Avatar"
-                  className="h-40 w-32 object-cover rounded-full"
+                  className="h-32 w-32 object-cover rounded-full"
                 />
               </div>
               <h2 className="font-semibold text-xl">{user.name}</h2>
             </div>
 
-            <div className="w-auto lg:w-[43%] flex flex-col mx-auto justify-center items-center space-y-5 md:space-y-9 my-4 md:my-14">
-              <div className="w-full flex items-center gap-2 justify-start font-semibold hover:cursor-pointer">
-                <VscFeedback className="w-5 h-5 ml-1" />
-                <p
-                  onClick={() => navigate("/home")}
-                  className={`text-lg text-black`}
-                >
-                  View Homefeed
-                </p>
-              </div>
+            <div className="w-auto lg:w-[60%] xl:w-auto flex flex-col mx-auto justify-center items-center space-y-5 md:space-y-9 lg:space-y-5 my-4 lg:my-5 md:my-14">
+              
               {[
                 {
                   icon: "./images/connections.png",
@@ -281,7 +274,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-12 h-14">
+                        <div className="xss:w-10 xss:h-12 sm:w-12 sm:h-14">
                           {follower.image ? (
                             <img
                               src={`${follower.image}`}
@@ -289,14 +282,14 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-12 h-14" />
+                            <CgProfile className="xss:w-10 xss:h-12 sm:w-12 sm:h-14" />
                           )}
                         </div>
-                        <p className="text-[#000] justify-start text-xl font-semibold">
+                        <p className="text-[#000] justify-start sm:text-xl font-semibold">
                           {follower.name}
                         </p>
                       </div>
-                      <RiDeleteBin2Line className="text-4xl text-black  rounded-xl p-1  mr-5 mb-2" />
+                      <RiDeleteBin2Line className="xss:text-3xl sm:text-4xl text-black  rounded-xl p-1  mr-5 mb-2" />
                     </div>
                   ))
                 ) : (
@@ -314,7 +307,7 @@ const Profile = () => {
                       className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
-                        <div className="w-12 h-14">
+                        <div className="xss:w-10 xss:h-12 sm:w-12 sm:h-14">
                           {follow.image ? (
                             <img
                               src={`${follow.image}`}
@@ -322,15 +315,15 @@ const Profile = () => {
                               className="h-full w-full object-cover rounded-full"
                             />
                           ) : (
-                            <CgProfile className="w-12 h-14" />
+                            <CgProfile className="xss:w-10 xss:h-12 sm:w-12 sm:h-14" />
                           )}
                         </div>
-                        <p className="text-[#000] text-xl font-semibold">
+                        <p className="text-[#000] sm:text-xl font-semibold">
                           {follow.name}
                         </p>
                       </div>
                       <RiDeleteBin2Line
-                        className="text-4xl  text-black rounded-xl p-1  mr-5 mb-2"
+                        className="xss:text-3xl sm:text-4xl  text-black rounded-xl p-1  mr-5 mb-2"
                         onClick={() => handleUnfollow(follow.id)}
                       />
                     </div>
@@ -345,60 +338,11 @@ const Profile = () => {
           </div>
 
           {/* Third Column */}
-          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl py-[2vw]">
-            <div className="w-[86%] mx-auto">
-              <div className="flex justify-between items-center">
-                <h2 className="opacity-80 font-semibold text-lg">
-                  Suggested for You
-                </h2>
-                <h2
-                  className="opacity-80 text-md cursor-pointer"
-                  onClick={() => setShowAllSuggestions(!showAllSuggestions)}
-                >
-                  {showAllSuggestions ? "Show Less" : "View All"}
-                </h2>
-              </div>
-
-              {suggestedFollowers.length > 0 ? (
-                (showAllSuggestions
-                  ? suggestedFollowers
-                  : suggestedFollowers.slice(0, 4)
-                ).map((follow) => (
-                  <div
-                    key={follow.id}
-                    className="w-auto mx-1 mt-[2vw] flex justify-between items-center"
-                  >
-                    <div className="flex gap-[0.8vw] items-center">
-                      <div className="w-12 h-14">
-                        {follow.image ? (
-                          <img
-                            src={`${follow.image}`}
-                            alt="Avatar"
-                            className="h-full w-full object-cover rounded-full"
-                          />
-                        ) : (
-                          <CgProfile className="w-12 h-16" />
-                        )}
-                      </div>
-                      <p className="text-[#000] text-xl font-semibold">
-                        {follow.name}
-                      </p>
-                    </div>
-
-                    <p
-                      onClick={() => handleFollow(follow.id)}
-                      className="text-[#0000FF] text-md font-semibold cursor-pointer"
-                    >
-                      Follow
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-[#000] text-lg font-semibold mt-5">
-                  No Suggestions
-                </p>
-              )}
-            </div>
+          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl py-5 px-4 lg:px-5">
+            <Suggestionsbar
+              suggestedFollowers={suggestedFollowers}
+              handleFollow={handleFollow}
+            />
           </div>
         </div>
       </div>

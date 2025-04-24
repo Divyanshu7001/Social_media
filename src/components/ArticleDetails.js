@@ -16,6 +16,7 @@ import {
 import { PiEyeFill, PiFilesDuotone } from "react-icons/pi";
 import { LiaDownloadSolid } from "react-icons/lia";
 import { Context } from "../index";
+import { CgProfile } from "react-icons/cg";
 
 const ArticleDetails = () => {
   const { id } = useParams();
@@ -49,6 +50,8 @@ const ArticleDetails = () => {
     };
     fetchArticle();
   }, []);
+
+  console.log(article, "article");
 
   const downloadpdf = async () => {
     try {
@@ -95,11 +98,16 @@ const ArticleDetails = () => {
                   <h1 className="text-3xl">{art.paper_title}</h1>
                   <div className="flex mt-5 justify-between">
                     <div className="flex items-center">
-                      <img
-                        src={art.user.image}
-                        alt="User"
-                        className="w-16 h-16 rounded-full object-cover object-top"
-                      />
+                      {art.user.image ? (
+                        <img
+                          src={art.user.image}
+                          alt="User"
+                          className="w-16 h-16 rounded-full object-cover object-top"
+                        />
+                      ) : (
+                        <CgProfile className="w-16 h-16" />
+                      )}
+
                       <div className="ml-5">
                         <h1 className="text-lg">{art.user.name}</h1>
                       </div>
@@ -149,11 +157,15 @@ const ArticleDetails = () => {
                   </h1>
                   <div className="flex mt-5 justify-between">
                     <div className="flex items-center">
-                      <img
-                        src={art.user.image}
-                        alt="User"
-                        className="w-16 h-16 rounded-full object-cover object-top"
-                      />
+                      {art.user.image ? (
+                        <img
+                          src={art.user.image}
+                          alt="User"
+                          className="w-16 h-16 rounded-full object-cover object-top"
+                        />
+                      ) : (
+                        <CgProfile className="w-16 h-16" />
+                      )}
                       <div className="ml-5">
                         <h1 className="text-lg">{art.user.name}</h1>
                         <p className="text-sm text-gray-500">
