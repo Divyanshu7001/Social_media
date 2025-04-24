@@ -8,7 +8,7 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
   //console.log("Suggested Followers: ", suggestedFollowers);
   const navigate = useNavigate();
   return (
-    <div className="mx-auto xss:space-y-2 lg:space-y-4 grow">
+    <div className="mx-auto xss:space-y-2 lg:space-y-2 xl:space-y-4 h-auto">
       <div className="flex-col justify-between items-center">
         <div className="home-suggestion-title">Top Stories</div>
         <p className="text-sm text-gray-600">
@@ -32,12 +32,12 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
         </p>
       </div>
       <div className="flex justify-between items-center">
-        <h2 className="opacity-80 font-semibold text-md md:text-lg text-gray-600">
+        <h2 className="opacity-80 font-semibold text-md lg:text-lg text-gray-600">
           Suggested for You
         </h2>
         {suggestedFollowers.length > 4 ? (
           <h2
-            className="opacity-80 text-md cursor-pointer text-gray-600"
+            className="opacity-80 text-sm lg:text-md cursor-pointer text-gray-600"
             onClick={() => setShowAllSuggestions(!showAllSuggestions)}
           >
             {showAllSuggestions ? "View Less" : "View All"}
@@ -48,7 +48,7 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
       </div>
 
       <div
-        className={`overflow-y-scroll md:h-auto h-fit xl:h-fit lg:h-auto py-1 lg:py-2 xl:py-0`}
+        className={`overflow-y-scroll md:h-[16vh] h-fit xl:h-fit lg:h-auto`}
         style={{ scrollbarWidth: "thin" }}
       >
         {suggestedFollowers.length > 0 ? (
@@ -58,7 +58,7 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
           ).map((follow) => (
             <div
               key={follow.id ? follow.id : follow.userId}
-              className="w-auto mx-1 mb-1 flex justify-between items-center"
+              className="w-auto  mb-1 flex justify-between items-center"
             >
               <div className="flex gap-[0.8vw] items-center">
                 <div className="w-12 h-14">
@@ -84,15 +84,25 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
                     />
                   )}
                 </div>
-                <p className="text-[#000] sm:text-lg xl:text-xl font-semibold">
-                  {follow.name}
-                </p>
+                <div className="flex flex-col">
+                  <p className="text-[#000] sm:text-lg xl:text-xl font-semibold">
+                    {follow.name}
+                  </p>
+                  <p
+                    onClick={() =>
+                      handleFollow(follow.id ? follow.id : follow.userId)
+                    }
+                    className="text-[#0000FF] text-md font-semibold cursor-pointer md:block xl:hidden"
+                  >
+                    Follow
+                  </p>
+                </div>
               </div>
               <p
                 onClick={() =>
                   handleFollow(follow.id ? follow.id : follow.userId)
                 }
-                className="text-[#0000FF] text-md font-semibold cursor-pointer"
+                className="text-[#0000FF] text-md font-semibold cursor-pointer hidden xl:block"
               >
                 Follow
               </p>

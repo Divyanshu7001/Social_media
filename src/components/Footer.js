@@ -7,12 +7,15 @@ import { Link } from "react-router-dom";
 import "../style/Footer.css";
 import { Context } from "../index.js";
 
-
 function Footer() {
-  const { popup } = useContext(Context)
+  const { popup } = useContext(Context);
   return (
     <div
-      className={popup ? " bg-black bg-opacity-50 py-8 px-8 relative" : "text-white xss:py-4 xss:px-3 xs:py-8 xs:px-8 relative bg-primary"}
+      className={
+        popup
+          ? " bg-black bg-opacity-50 xss:py-4 xss:px-3 xs:py-8 xs:px-8 relative"
+          : "text-white xss:py-4 xss:px-3 xs:py-8 xs:px-8 relative bg-primary"
+      }
       // style={{ backgroundColor: "rgb(0, 0, 255)" }}
     >
       {/* Gray Overlay */}
@@ -22,7 +25,7 @@ function Footer() {
         {/* Newsletter Section */}
         <div className="w-full text-center xss:mb-4 md:mb-6 lg:mb-16 py-6 border-b border-gray-50 border-opacity-20 md:grid md:grid-cols-5 lg:grid-cols-5">
           <div className="col-span-2 text-center md:text-left lg:ml-12 space-y-2">
-            <p className="p">News Letter</p> 
+            <p className="p">News Letter</p>
             <h3 className="head text-3xl lg:text-4xl">Get Monthly Updates</h3>
           </div>
           <div className="col-span-3 max-w-4xl">
@@ -30,11 +33,15 @@ function Footer() {
               <h5 className="mt-4 p">
                 Enter your Email address and get updates directly to your email
               </h5>
-              <img alt="arrow" className="xss:mt-7 md:mt-5 lg:mt-[12px] mt-[8px] md:mr-12" src={epback} style={{
-                height: "28px",
-                width: "72px",
-              }} >
-              </img>
+              <img
+                alt="arrow"
+                className="xss:mt-7 md:mt-5 lg:mt-[12px] mt-[8px] md:mr-12"
+                src={epback}
+                style={{
+                  height: "28px",
+                  width: "72px",
+                }}
+              ></img>
             </div>
           </div>
         </div>
@@ -43,7 +50,9 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full md:text-left mb-8">
           {/* Social Media Section */}
           <div className="lg:ml-8 mt-16 col-span-1 xss:mx-auto xs:mx-0">
-            <p className="font-semibold mb-4 text-white text-xl">Follow Us On</p>
+            <p className="font-semibold mb-4 text-white text-xl">
+              Follow Us On
+            </p>
             <div className="flex space-x-6">
               <a
                 href="https://facebook.com"

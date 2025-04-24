@@ -19,7 +19,6 @@ const Profile = () => {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [suggestedFollowers, setSuggestedFollowers] = useState([]);
-  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
 
   const [isDatafetched, setIsDataFetched] = useState(false);
 

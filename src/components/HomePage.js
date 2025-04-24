@@ -123,7 +123,7 @@ export const Homepage = () => {
         <div
           className={`fixed lg:top-24 ${
             isLargeScreen ? "right-3" : "left-5"
-          } md:bottom-14 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-1/5 lg:w-1/4 md:w-[32vw] xl:h-fit lg:h-fit md:me-5 lg:me-5 xl:me-10 py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10`}
+          } xl:right-5 md:bottom-16 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit lg:h-fit md:me-5 lg:me-5 xl:me-0 py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10`}
         >
           <Suggestionsbar
             suggestedFollowers={suggestions}
@@ -131,9 +131,9 @@ export const Homepage = () => {
           />
         </div>
         {/* Main Content Area */}{" "}
-        <div className="flex flex-col mx-auto md:ml-auto md:mr-10 lg:mx-auto md:mx-0 w-full px-5 md:px-0 xl:w-1/2 lg:w-2/5 md:w-3/5 xl:mt-9 md:mt-2 lg:mt-9 xs:mt-0">
+        <div className="flex flex-col mx-auto md:ml-auto lg:mx-auto md:mr-10 md:mx-0 w-full px-5 md:px-0 xl:w-[52vw] lg:w-[41vw] md:w-3/5 xl:mt-9 md:mt-2 lg:mt-9 xs:mt-0">
           {/* mobile upload and profile */}
-          <div className="border-2 rounded-md mb-10 md:hidden">
+          <div className="border-2 rounded-md mt-3 mb-10 md:hidden">
             {/* mobile profile */}
             <div className="px-2 my-2 flex gap-2">
               {user.image ? (
