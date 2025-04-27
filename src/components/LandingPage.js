@@ -31,9 +31,7 @@ const LandingPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("home");
-      console.log("authtrue");
     } else {
-      console.log("authfalse");
       navigate("/");
     }
   }, [isAuthenticated]);
@@ -49,7 +47,7 @@ const LandingPage = () => {
   const responsiveImageRender = ({ ComponentName, Component }) => {
     // console.log("Component: ", Component);
     // console.log("Component Name: ", ComponentName);
-    
+
     if (ComponentName === "Global") {
       if (windowWidth <= 768) {
         return <Component width={350} height={350} />;
@@ -72,7 +70,7 @@ const LandingPage = () => {
   return (
     <>
       {/* Header/Navbar */}
-      <Navbar />
+      {isAuthenticated == false && <Navbar />}
       {popup && btn === "signup" && <SignupPage />}
       {popup && btn === "login" && <LoginPage />}
       {popup && btn === "forgetpassword" && <ForgetPasswordPage />}
