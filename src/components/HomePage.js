@@ -110,7 +110,7 @@ export const Homepage = () => {
 
   return (
     <>
-      <Navbar />
+      {isAuthenticated == true && <Navbar />}
       {showPopup && <Createpost closePopup={togglePopup} />}
       <div className={`${showPopup && "z-0"} min-h-screen bg-white`}>
         {/* Popup for Create Post */}
@@ -121,9 +121,8 @@ export const Homepage = () => {
           post={true}
         />
         <div
-          className={`fixed lg:top-24 ${
-            isLargeScreen ? "right-3" : "left-5"
-          } xl:right-5 md:bottom-16 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit lg:h-fit md:me-5 lg:me-5 xl:me-0 py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10`}
+          className={`fixed lg:top-24 ${isLargeScreen ? "right-3" : "left-5"
+            } xl:right-5 md:bottom-16 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit lg:h-fit md:me-5 lg:me-5 xl:me-0 py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10`}
         >
           <Suggestionsbar
             suggestedFollowers={suggestions}
