@@ -31,9 +31,7 @@ const LandingPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("home");
-      console.log("authtrue");
     } else {
-      console.log("authfalse");
       navigate("/");
     }
   }, [isAuthenticated]);
@@ -72,7 +70,7 @@ const LandingPage = () => {
   return (
     <>
       {/* Header/Navbar */}
-      <Navbar />
+      {isAuthenticated == false && <Navbar />}
       {popup && btn === "signup" && <SignupPage />}
       {popup && btn === "login" && <LoginPage />}
       {popup && btn === "forgetpassword" && <ForgetPasswordPage />}
