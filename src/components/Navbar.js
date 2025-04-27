@@ -46,7 +46,7 @@ const Navbar = () => {
 
   useEffect(() => {
     console.log("Mounted");
-  
+
     return () => {
       console.log("Unmounted");
     };
