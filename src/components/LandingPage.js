@@ -49,7 +49,7 @@ const LandingPage = () => {
   const responsiveImageRender = ({ ComponentName, Component }) => {
     // console.log("Component: ", Component);
     // console.log("Component Name: ", ComponentName);
-    
+
     if (ComponentName === "Global") {
       if (windowWidth <= 768) {
         return <Component width={350} height={350} />;
@@ -78,7 +78,7 @@ const LandingPage = () => {
       {popup && btn === "forgetpassword" && <ForgetPasswordPage />}
 
       {/* Main Content */}
-      <div className={!popup && "bg-white"}>
+      <div className={popup ? "" : "bg-white"}>
         {/* part -1 */}
         <div className="w-auto h-full items-center mx-2 md:mx-10 md:grid md:grid-cols-2">
           <div className="px-5 my-5 w-full grid-cols-1">

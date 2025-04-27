@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import api from "./api.js";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { CgProfile } from "react-icons/cg";
 
 const ViewProfile = () => {
   //General States & Context Details
@@ -555,11 +556,20 @@ const ViewProfile = () => {
               <div className="lg:w-[60%]">
                 <div className="flex xss:mb-4 lg:mb-0 xl:mb-0 xss:justify-evenly lg:justify-normal sm:px-8 w-auto">
                   <div className="flex xss:w-[30%] sm:w-auto items-center sm:p-4  xss:mt-2 lg:mt-0 lg:p-0 flex-col">
-                    <img
+                    {/* <img
                       src={profileImage || Ellipse4}
                       alt="profile"
                       className="rounded-full object-cover xss:w-[90px] xss:h-[90px] md:w-[140px] md:h-[120px] lg:h-[90px] lg:w-[90px] xl:h-[120px] xl:w-[120px]"
-                    />
+                    /> */}
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="profile"
+                        className="rounded-full object-cover xss:w-[90px] xss:h-[90px] md:w-[140px] md:h-[120px] lg:h-[90px] lg:w-[90px] xl:h-[120px] xl:w-[120px]"
+                      />
+                    ) : (
+                      <CgProfile className="rounded-full object-cover xss:w-[90px] xss:h-[90px] md:w-[140px] md:h-[120px] lg:h-[90px] lg:w-[90px] xl:h-[120px] xl:w-[120px]" />
+                    )}
                     <h2 className="xss:text-base text-center sm:text-xl font-bold sm:mt-5  xss:mt-2 lg:mt-1">
                       {user.name}
                     </h2>
@@ -628,7 +638,7 @@ const ViewProfile = () => {
                     <div className="flex justify-between border-b-2 rounded-md border-gray-300">
                       <h3 className="text-xl p-4 text-gray-300">Biography</h3>
                       {isBiographyEdited ? (
-                        <div className="flex gap-4 p-4 xss:gap-2" >
+                        <div className="flex gap-4 p-4 xss:gap-2">
                           <button
                             onClick={() => {
                               setIsBiographyEdited(false);
