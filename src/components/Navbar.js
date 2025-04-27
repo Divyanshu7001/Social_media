@@ -43,9 +43,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="py-3 px-3 flex justify-between items-center mx-0 md:px-10 sticky top-0 bg-white z-20  border-b-2 border-gray-300">
+      <nav className="py-3 px-4 xl:px-4 lg:px-2 flex justify-between items-center mx-0 md:px-10 sticky top-0 bg-white z-20  border-b-2 border-gray-300">
         {/* Logo Section */}
-        <div className="text-primary text-2xl mx-4 font-bold ">LOGO</div>
+        <div className="text-primary text-2xl xl:mx-4 lg:mx-2 font-bold ">LOGO</div>
 
         <div className="lg:hidden flex items-center">
           <button onClick={handleMenuToggle} className="text-2xl">
@@ -168,7 +168,7 @@ const Navbar = () => {
                 }}
                 onClick={() => {
                   togglePopup();
-                  if (window.innerWidth < 768) {
+                  if (window.innerWidth < 1024) {
                     handleMenuToggle();
                   }
                 }}
@@ -227,7 +227,7 @@ const Navbar = () => {
       {showPopup && (
         <div
           style={{
-            position: "absolute",
+            position: "fixed",
             top: "80px", // Adjust the position as per your requirement
             right: "10px",
             width: "300px",
@@ -249,7 +249,7 @@ const Navbar = () => {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={`http://175.29.21.101/storage/${user.image}` || Ellipse4} // Placeholder for user image
+                src={`${user.image}` || Ellipse4} // Placeholder for user image
                 alt="User"
                 style={{
                   borderRadius: "50%",
