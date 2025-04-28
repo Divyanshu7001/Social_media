@@ -45,7 +45,7 @@ const App = () => {
                 }
               )
               .then((res) => {
-                console.log("Fetched User Data: ", res.data);
+                //console.log("Fetched User Data: ", res.data);
                 setUser(res.data.profile_data.user);
               });
           } else {
@@ -58,7 +58,6 @@ const App = () => {
         }
       }
       setIsAuthenticated(isAuthenticatedFromLocalStorage);
-
     };
     auth();
   }, []);

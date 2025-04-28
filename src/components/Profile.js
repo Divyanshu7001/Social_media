@@ -6,9 +6,12 @@ import api from "./api";
 import { Context } from "../index";
 import toast from "react-hot-toast";
 import { VscFeedback } from "react-icons/vsc";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { Suggestionsbar } from "./Suggestionsbar";
+import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { FaRegBookmark } from "react-icons/fa";
 const Profile = () => {
   const { user, profileData, isAuthenticated } = useContext(Context);
   const navigate = useNavigate();
@@ -180,55 +183,64 @@ const Profile = () => {
       <Navbar />
 
       <div className="w-full mx-auto flex justify-end">
-        <div className="my-[2vw] w-full flex xss:flex-col xss:space-y-10 lg:space-y-0  lg:flex-row  xss:mx-6 sm:mx-11">
-          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col max-h-[40vh]">
-            <div className="flex flex-col mx-auto items-center justify-center gap-[0.5vw] mt-[2vw] xs:ml-auto xs:my-auto lg:mt-[2vw]">
-              <div className="xss:w-32 xss:h-auto">
-                <img
-                  src={`${user.image}`}
-                  alt="Avatar"
-                  className="h-32 w-32 object-cover rounded-full"
-                />
+        <div className="my-[2vw] w-full flex xss:flex-col xss:space-y-10 lg:space-y-0  lg:flex-row  xss:mx-6 sm:mx-10 lg:mx-5 xl:mx-8">
+          <div className="xss:w-full lg:w-[25vw] xl:w-[21vw] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col lg:h-fit">
+            <div className="flex flex-col mx-auto items-center justify-center gap-[0.2vw] mt-[2vw] xs:ml-auto xs:my-auto lg:mt-4 lg:mx-auto">
+              <div className="xss:w-24 xss:h-auto">
+                {user?.image ? (
+                  <img
+                    src={user?.image}
+                    alt="Avatar"
+                    className="h-24 w-24 object-cover rounded-full"
+                  />
+                ) : (
+                  <CgProfile className="w-24 h-24 object-cover rounded-full" />
+                )}
               </div>
               <h2 className="font-semibold text-xl">{user.name}</h2>
             </div>
 
-            <div className="w-auto lg:w-[60%] xl:w-auto flex flex-col mx-auto justify-center items-center space-y-5 md:space-y-9 lg:space-y-5 my-4 lg:my-5 md:my-14">
-              
+            <div className="w-auto lg:w-auto flex flex-col mx-auto lg:mx-6 justify-center items-center lg:justify-start lg:items-start space-y-5 md:space-y-9 lg:space-y-8 my-4 lg:my-5 md:my-14">
               {[
                 {
-                  icon: "./images/connections.png",
+                  destination: "/connection",
                   text: "My Connections",
-                  color: "text-[#0000FF]",
+                  icon: <MdOutlinePeopleAlt size={28} />,
                 },
                 {
-                  icon: "./images/chat.png",
+                  destination: "/Message",
                   text: "Message",
-                  color: "text-black",
+                  icon: <MdOutlineMessage size={25} />,
                 },
                 {
-                  icon: "./images/notifications.png",
+                  destination: "/Notifications",
                   text: "Notifications",
-                  color: "text-black",
+                  icon: <IoMdNotificationsOutline size={28} />,
                 },
                 {
-                  icon: "./images/save.png",
+                  destination: "/saved",
                   text: "Saved Items",
-                  color: "text-black",
+                  icon: <FaRegBookmark size={22} />,
                 },
               ].map((item, index) => (
                 <div
                   key={index}
                   className="w-full flex items-center gap-2 justify-start font-semibold hover:cursor-pointer"
                 >
-                  <img src={item.icon} alt={item.text} />
-                  <p className={`text-lg ${item.color}`}>{item.text}</p>
+                  {item.icon}
+                  <Link
+                    to={item.destination}
+                    className="font-semibold text-blue-600"
+                  >
+                    {item.text}
+                  </Link>
+                  {/* <p className={`text-lg ${item.color}`}>{item.text}</p> */}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="xss:h-auto lg:h-[20vw] xss:w-full lg:w-[40%]">
+          <div className="xss:h-auto lg:h-[20vw] xss:w-full lg:w-[45%] lg:mx-auto">
             <div className="w-[90%] flex mx-auto h-[4vw]">
               <div
                 className={`${
@@ -337,7 +349,7 @@ const Profile = () => {
           </div>
 
           {/* Third Column */}
-          <div className="xss:w-full lg:w-[30%] border-[2px] border-opacity-85 rounded-xl py-5 px-4 lg:px-5">
+          <div className="xss:w-full lg:w-[26vw] xl:w-[21vw] border-[2px] border-opacity-85 rounded-xl py-5 px-4 lg:px-5">
             <Suggestionsbar
               suggestedFollowers={suggestedFollowers}
               handleFollow={handleFollow}
