@@ -49,7 +49,7 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
 
       <div
         className={`overflow-y-scroll md:h-[16vh] h-fit xl:h-fit lg:h-auto`}
-        style={{ scrollbarWidth: "thin" }}
+        style={{ scrollbarWidth: "none" }}
       >
         {suggestedFollowers.length > 0 ? (
           (showAllSuggestions
