@@ -110,7 +110,7 @@ const SignupPage = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-80 backdrop-blur-sm min-h-screen flex items-center justify-center">
-      <div className="bg-white border-2 mx-auto md:w-3/5 md:h-fit lg:w-3/5 lg:max-h-[83vh] md:fixed md:z-50 relative">
+      <div className="bg-white border-2 mx-auto md:w-3/5 md:h-fit lg:w-3/5 lg:h-auto md:fixed md:z-50 relative">
         <div className="xl:px-14 xl:py-10 p-8">
           <div className="flex justify-between xl:mt-3">
             <a href={" "} className="text-4xl text-primary font-semibold">

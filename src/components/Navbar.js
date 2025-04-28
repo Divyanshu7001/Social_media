@@ -4,6 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"; // I
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import { Context } from "../index.js";
 import { IoMdLogOut } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -35,7 +36,9 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", false);
-    // localStorage.setItem("user", JSON.stringify({ user: "Data Not found" }));
+    localStorage.setItem("user", JSON.stringify({ user: "Data Not found" }));
+    localStorage.removeItem("userId");
+
     setUser({});
     setIsAuthenticated(false);
   };
@@ -56,7 +59,9 @@ const Navbar = () => {
     <>
       <nav className="py-3 px-4 xl:px-4 lg:px-2 flex justify-between items-center mx-0 md:px-10 sticky top-0 bg-white z-20  border-b-2 border-gray-300">
         {/* Logo Section */}
-        <div className="text-primary text-2xl xl:mx-4 lg:mx-2 font-bold ">LOGO</div>
+        <div className="text-primary text-2xl xl:mx-4 lg:mx-2 font-bold ">
+          LOGO
+        </div>
 
         <div className="lg:hidden flex items-center">
           <button onClick={handleMenuToggle} className="text-2xl">
@@ -253,15 +258,27 @@ const Navbar = () => {
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={`${user.image}` || Ellipse4} // Placeholder for user image
-                alt="User"
-                style={{
-                  borderRadius: "50%",
-                  width: "70px",
-                  height: "70px",
-                }}
-              />
+              {user?.image ? (
+                <img
+                  src={user?.image}
+                  alt="User"
+                  style={{
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    width: "70px",
+                    height: "70px",
+                  }}
+                />
+              ) : (
+                <CgProfile
+                  style={{
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    width: "64px",
+                    height: "64px",
+                  }}
+                />
+              )}
               <div style={{ marginLeft: "20px" }}>
                 <h3 style={{ margin: 0 }}>{user.name}</h3>
                 <p

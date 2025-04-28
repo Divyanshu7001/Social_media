@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../index.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar.js";
 import HomePage1 from "./HomePage1.js";
 import api from "./api.js";
@@ -12,6 +12,9 @@ import { Suggestionsbar } from "./Suggestionsbar.js";
 import { CgProfile } from "react-icons/cg";
 import { useMediaQuery } from "@react-hook/media-query";
 import toast from "react-hot-toast";
+import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { FaRegBookmark } from "react-icons/fa";
 
 // Main Component
 export const Homepage = () => {
@@ -121,8 +124,9 @@ export const Homepage = () => {
           post={true}
         />
         <div
-          className={`fixed lg:top-24 ${isLargeScreen ? "right-3" : "left-5"
-            } xl:right-5 md:bottom-16 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit lg:h-fit md:me-5 lg:me-5 xl:me-0 py-3 rounded border-2 me-10 px-4 md:px-4 lg:px-5 mb-10`}
+          className={`fixed lg:top-24 ${
+            isLargeScreen ? "right-3" : "left-5"
+          } xl:right-5 md:bottom-5 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit   md:h-auto lg:h-fit lg:me-5 xl:me-0 py-3 rounded border-2 px-4 md:px-4 lg:px-5`}
         >
           <Suggestionsbar
             suggestedFollowers={suggestions}
@@ -133,6 +137,49 @@ export const Homepage = () => {
         <div className="flex flex-col mx-auto md:ml-auto lg:mx-auto md:mr-10 md:mx-0 w-full px-5 md:px-0 xl:w-[52vw] lg:w-[41vw] md:w-3/5 xl:mt-9 md:mt-2 lg:mt-9 xs:mt-0">
           {/* mobile upload and profile */}
           <div className="border-2 rounded-md mt-3 mb-10 md:hidden">
+            {/* Quick Links*/}
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center space-x-2 ">
+                <MdOutlinePeopleAlt size={28} />
+
+                <Link
+                  to="/connection"
+                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-400"
+                >
+                  My Connections
+                </Link>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <MdOutlineMessage size={25} />
+
+                <Link
+                  to="/Message"
+                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-200"
+                >
+                  Message
+                </Link>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <IoMdNotificationsOutline size={28} />
+
+                <Link to="/Notifications" className="font-medium text-gray-500">
+                  Notifications
+                </Link>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <FaRegBookmark size={22} />
+
+                <Link
+                  to="/Saved"
+                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-200"
+                >
+                  Saved Items
+                </Link>
+              </div>
+            </div>
             {/* mobile profile */}
             <div className="px-2 my-2 flex gap-2">
               {user.image ? (

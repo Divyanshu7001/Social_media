@@ -4,10 +4,11 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaRegBookmark } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Ellipse4 from "../assets/img/Ellipse4.png";
+import { CgProfile } from "react-icons/cg";
 
 export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
   //console.log(user_data, "user_data in left sidebar");
-  
+
   return (
     <div
       className={`${
@@ -17,11 +18,15 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
       <div className=" bg-white rounded border-2 h-4/5 hidden md:flex lg:flex flex-col w-full px-8 mt-0.5 md:mt-0.5 lg:mt-3.5  md:px-1 lg:px-8 py-5">
         {/* User Info */}
         <div className="flex  flex-col items-center s">
-          <img
-            src={user_data.profile_img || Ellipse4}
-            alt="Ellipse"
-            className="h-24 w-24 rounded-full object-cover"
-          />
+          {user_data?.profile_img ? (
+            <img
+              src={user_data?.profile_img}
+              alt="User profile"
+              className="h-24 w-24 rounded-full object-cover"
+            />
+          ) : (
+            <CgProfile className="h-24 w-24 rounded-full object-cover" />
+          )}
           <div className="text-xl font-semibold mt-1 text-center">
             {user_data.name || "John Paul"}
           </div>
@@ -73,8 +78,6 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
           >
             Create Post
           </button>
-
-          
         </div>
       )}
     </div>
