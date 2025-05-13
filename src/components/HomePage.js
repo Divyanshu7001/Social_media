@@ -114,7 +114,7 @@ export const Homepage = () => {
 
   return (
     <>
-      <Navbar />
+      {isAuthenticated == true && <Navbar />}
       {showPopup && <Createpost closePopup={togglePopup} />}
       <div className={`${showPopup && "z-0"} min-h-screen bg-white`}>
         {/* Popup for Create Post */}

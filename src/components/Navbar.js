@@ -39,6 +39,18 @@ const Navbar = () => {
     setIsAuthenticated(false);
   };
 
+  useEffect(() => {
+    console.log("Authendicated : " + isAuthenticated);
+  }, [])
+
+  useEffect(() => {
+    console.log("Mounted");
+
+    return () => {
+      console.log("Unmounted");
+    };
+  }, []);
+
   return (
     <>
       <nav className="py-3 px-4 xl:px-4 lg:px-2 flex justify-between items-center mx-0 md:px-10 sticky top-0 bg-white z-20  border-b-2 border-gray-300">
@@ -76,19 +88,17 @@ const Navbar = () => {
 
         {/* Links Section */}
         <div
-          className={`flex gap-8 lg:flex items-center mx-3 lg:gap-6 xl:gap-10 ${
-            isMenuOpen
-              ? "flex-col absolute text-center top-full left-0 w-full bg-white shadow-lg lg:static lg:flex-row lg:gap-10"
-              : "hidden lg:flex"
-          }`}
+          className={`flex gap-8 lg:flex items-center mx-3 lg:gap-6 xl:gap-10 ${isMenuOpen
+            ? "flex-col absolute text-center top-full left-0 w-full bg-white shadow-lg lg:static lg:flex-row lg:gap-10"
+            : "hidden lg:flex"
+            }`}
         >
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `font-semibold ${
-                isActive
-                  ? "text-primary lg:text-md"
-                  : "text-gray-500 lg:text-sm"
+              `font-semibold ${isActive
+                ? "text-primary lg:text-md"
+                : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -97,10 +107,9 @@ const Navbar = () => {
           <NavLink
             to="/journals"
             className={({ isActive }) =>
-              `font-semibold  ${
-                isActive
-                  ? "text-primary lg:text-md"
-                  : "text-gray-500 lg:text-sm "
+              `font-semibold  ${isActive
+                ? "text-primary lg:text-md"
+                : "text-gray-500 lg:text-sm "
               }`
             }
           >
@@ -109,10 +118,9 @@ const Navbar = () => {
           <NavLink
             to="/institutions"
             className={({ isActive }) =>
-              `font-semibold  ${
-                isActive
-                  ? "text-primary lg:text-md"
-                  : "text-gray-500 lg:text-sm"
+              `font-semibold  ${isActive
+                ? "text-primary lg:text-md"
+                : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -121,10 +129,9 @@ const Navbar = () => {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              `font-semibold  ${
-                isActive
-                  ? "text-primary lg:text-md"
-                  : "text-gray-500 lg:text-sm"
+              `font-semibold  ${isActive
+                ? "text-primary lg:text-md"
+                : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -133,10 +140,9 @@ const Navbar = () => {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              `font-semibold  ${
-                isActive
-                  ? "text-primary lg:text-md"
-                  : "text-gray-500 lg:text-sm"
+              `font-semibold  ${isActive
+                ? "text-primary lg:text-md"
+                : "text-gray-500 lg:text-sm"
               }`
             }
           >
