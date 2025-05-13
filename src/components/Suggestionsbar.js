@@ -2,35 +2,20 @@ import React, { useState } from "react";
 
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
+import Stories from "./Stories";
 
-export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
+export const Suggestionsbar = ({
+  suggestedFollowers,
+  handleFollow,
+  enableStories,
+}) => {
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   //console.log("Suggested Followers: ", suggestedFollowers);
   const navigate = useNavigate();
   return (
     <div className="mx-auto xss:space-y-2 lg:space-y-2 xl:space-y-4 h-auto">
-      <div className="flex-col justify-between items-center">
-        <div className="home-suggestion-title">Top Stories</div>
-        <p className="text-sm text-gray-600">
-          Join our vibrant community of Information Technology scholars and
-          researchers.
-        </p>
-      </div>
-      <div className="flex-col justify-between items-center">
-        <div className="home-suggestion-title">Top Journals</div>
-        <p className="text-sm text-gray-600">
-          IEEE Transactions on Computers
-          <br />
-          Journal of the ACM (JACM)
-        </p>
-      </div>
-      <div className="flex-col justify-between items-center">
-        <div className="home-suggestion-title">Top Articles</div>
-        <p className="text-sm text-gray-600">
-          Dive into the potential of quantum computing and its implications for
-          solving complex problems in record time.
-        </p>
-      </div>
+      {enableStories && <Stories />}
+
       <div className="flex justify-between items-center">
         <h2 className="opacity-80 font-semibold text-md lg:text-lg text-gray-600">
           Suggested for You
@@ -54,7 +39,9 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
         {suggestedFollowers.length > 0 ? (
           (showAllSuggestions
             ? suggestedFollowers
-            : suggestedFollowers.slice(0, 3)
+            : enableStories
+            ? suggestedFollowers.slice(0, 3)
+            : suggestedFollowers.slice(0, 5)
           ).map((follow) => (
             <div
               key={follow.id ? follow.id : follow.userId}
@@ -71,7 +58,7 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
                         )
                       }
                       alt="Avatar"
-                      className="h-full w-full object-cover rounded-full"
+                      className="h-full w-full object-cover cursor-pointer rounded-full"
                     />
                   ) : (
                     <CgProfile
@@ -80,29 +67,40 @@ export const Suggestionsbar = ({ suggestedFollowers, handleFollow }) => {
                           `/profile/${follow.id ? follow.id : follow.userId}`
                         )
                       }
-                      className="xss:w-10 xss:h-14 xs:w-12 xs:h-16"
+                      className="xss:w-10 xss:h-14 cursor-pointer xs:w-12 xs:h-16"
                     />
                   )}
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-[#000] sm:text-lg xl:text-xl font-semibold">
-                    {follow.name}
-                  </p>
                   <p
                     onClick={() =>
-                      handleFollow(follow.id ? follow.id : follow.userId)
+                      navigate(
+                        `/profile/${follow.id ? follow.id : follow.userId}`
+                      )
                     }
-                    className="text-[#0000FF] text-md font-semibold cursor-pointer md:block xl:hidden"
+                    className="text-[#000] sm:text-lg cursor-pointer xl:text-xl font-semibold"
                   >
-                    Follow
+                    {follow.name}
                   </p>
+                  {enableStories && (
+                    <p
+                      onClick={() =>
+                        handleFollow(follow.id ? follow.id : follow.userId)
+                      }
+                      className="text-[#0000FF] text-md font-semibold cursor-pointer md:block xl:hidden"
+                    >
+                      Follow
+                    </p>
+                  )}
                 </div>
               </div>
               <p
                 onClick={() =>
                   handleFollow(follow.id ? follow.id : follow.userId)
                 }
-                className="text-[#0000FF] text-md font-semibold cursor-pointer hidden xl:block"
+                className={`text-[#0000FF] text-md font-semibold cursor-pointer hidden ${
+                  enableStories ? "xl:block" : "xss:block"
+                } `}
               >
                 Follow
               </p>

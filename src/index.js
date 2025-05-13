@@ -9,8 +9,13 @@ const Appwrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({});
   const [profileData, setProfileData] = useState({});
+  const [savedFiles, setSavedFiles] = useState({});
+  const [myUploads, setMyUploads] = useState([]);
+  const [followingData, setFollowingData] = useState([]);
+  const [followersData, setFollowersData] = useState([]);
   const [popup, setPopup] = useState(false);
   const [btn, setBtn] = useState(null);
+  const [fetchData, setFetchData] = useState(false);
 
   const toggle = () => {
     setPopup(!popup);
@@ -25,6 +30,16 @@ const Appwrapper = () => {
         setUser,
         profileData,
         setProfileData,
+        savedFiles,
+        setSavedFiles,
+        myUploads,
+        setMyUploads,
+        followersData,
+        setFollowersData,
+        followingData,
+        setFollowingData,
+        fetchData,
+        setFetchData,
         popup,
         setPopup,
         toggle,

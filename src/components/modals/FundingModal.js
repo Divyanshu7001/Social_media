@@ -348,7 +348,7 @@ export const FundingDetailsEditModal = ({
   fundingDetailsData,
   setEditData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [titleOfFundedProject, setTitleOfFundedProject] = useState(
     fundingDetailsData.title
   );
