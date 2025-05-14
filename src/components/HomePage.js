@@ -30,6 +30,7 @@ export const Homepage = () => {
   const [userList, setUserList] = useState([]);
   const [dataFetch, setDataFetch] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+  const isxsScreen = useMediaQuery("(min-width: 480px) and (max-width: 639px)");
 
   // Toggle popup state
   const togglePopup = () => setShowPopup(!showPopup);
@@ -131,6 +132,7 @@ export const Homepage = () => {
           <Suggestionsbar
             suggestedFollowers={suggestions}
             handleFollow={handleFollow}
+            enableStories={true}
           />
         </div>
         {/* Main Content Area */}{" "}
@@ -140,41 +142,58 @@ export const Homepage = () => {
             {/* Quick Links*/}
             <div className="flex justify-between items-center p-4">
               <div className="flex items-center space-x-2 ">
-                <MdOutlinePeopleAlt size={28} />
+                <MdOutlinePeopleAlt
+                  onClick={() => navigate("/connection")}
+                  className="cursor-pointer"
+                  size={isxsScreen ? 22 : 24}
+                />
 
                 <Link
                   to="/connection"
-                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-400"
+                  className="font-medium cursor-pointer text-gray-500 xss:hidden xs:block hover:text-blue-600 hover:font-bold transition duration-400 xs:text-sm sm:text-base"
                 >
-                  My Connections
+                  Connections
                 </Link>
               </div>
 
               <div className="flex items-center space-x-2">
-                <MdOutlineMessage size={25} />
+                <MdOutlineMessage
+                  className="cursor-pointer"
+                  size={isxsScreen ? 22 : 24}
+                />
 
                 <Link
                   to="/Message"
-                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-200"
+                  className="font-medium text-gray-500 cursor-pointer hover:text-blue-600 xss:hidden xs:block hover:font-bold transition duration-200 xs:text-sm sm:text-base"
                 >
                   Message
                 </Link>
               </div>
 
               <div className="flex items-center space-x-2">
-                <IoMdNotificationsOutline size={28} />
+                <IoMdNotificationsOutline
+                  className="cursor-pointer"
+                  size={24}
+                />
 
-                <Link to="/Notifications" className="font-medium text-gray-500">
+                <Link
+                  to="/Notifications"
+                  className="font-medium text-gray-500 cursor-pointer hover:text-blue-600 xss:hidden xs:block hover:font-bold transition duration-200 xs:text-sm sm:text-base"
+                >
                   Notifications
                 </Link>
               </div>
 
               <div className="flex items-center space-x-2">
-                <FaRegBookmark size={22} />
+                <FaRegBookmark
+                  onClick={() => navigate("/Saved")}
+                  className="cursor-pointer"
+                  size={isxsScreen ? 22 : 24}
+                />
 
                 <Link
                   to="/Saved"
-                  className="font-medium text-gray-500 hover:text-blue-600 hover:font-bold transition duration-200"
+                  className="font-medium cursor-pointer text-gray-500 hover:text-blue-600 xss:hidden xs:block hover:font-bold transition duration-200 xs:text-sm sm:text-base"
                 >
                   Saved Items
                 </Link>

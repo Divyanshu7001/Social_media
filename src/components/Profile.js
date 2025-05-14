@@ -132,8 +132,8 @@ const Profile = () => {
     }
   };
 
-  const handleUnfollow = async (unfollowId) => {
-    //console.log("Id to be Unfollowed: ", unfollowId);
+  const handleRemoveFollowing = async (unfollowId) => {
+    console.log("Id to be Unfollowed: ", unfollowId);
 
     try {
       await api
@@ -161,6 +161,35 @@ const Profile = () => {
     }
   };
 
+  const handleRemoveFollower=async(unfollowerId)=>{
+    console.log("Id to be Unfollowed: ", unfollowerId);
+
+    try {
+      await api
+        .post(
+          `/removeFollower`,
+          {
+            logged_id: user.id,
+            follow_id: unfollowerId,
+          },
+          {
+            headers: {
+              withCredentials: true,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          toast.success(res.data.message);
+          setIsDataFetched(false);
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error while Removing Follower");
+    }
+  }
+
   const filterSuggestions = (followId) => {
     const updatedSuggestions = suggestedFollowers.filter((suggestion) => {
       return suggestion.id !== followId;
@@ -175,7 +204,7 @@ const Profile = () => {
 
   // console.log("Followers Data: ", followers);
   // console.log("Following Data: ", following);
-  // console.log("Suggestions Data Global: ", suggestedFollowers);
+  //console.log("Suggestions Data Global: ", suggestedFollowers);
   // console.log("profile Data: ", profileData);
 
   return (
@@ -183,8 +212,8 @@ const Profile = () => {
       <Navbar />
 
       <div className="w-full mx-auto flex justify-end">
-        <div className="my-[2vw] w-full flex xss:flex-col xss:space-y-10 lg:space-y-0  lg:flex-row  xss:mx-6 sm:mx-10 lg:mx-5 xl:mx-8">
-          <div className="xss:w-full lg:w-[25vw] xl:w-[21vw] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col lg:h-fit">
+        <div className="xss:my-[5vw] sm:my-[2vw] w-full flex xss:flex-col xss:space-y-5 lg:space-y-0  lg:flex-row  xss:mx-2 xs:mx-4 sm:mx-10 lg:mx-5 xl:mx-8">
+          <div className="xss:w-full lg:w-[25vw] xl:w-[22vw] border-[2px] border-opacity-85 rounded-xl flex xss:flex-col xs:flex-row lg:flex-col lg:h-fit">
             <div className="flex flex-col mx-auto items-center justify-center gap-[0.2vw] mt-[2vw] xs:ml-auto xs:my-auto lg:mt-4 lg:mx-auto">
               <div className="xss:w-24 xss:h-auto">
                 {user?.image ? (
@@ -240,67 +269,79 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="xss:h-auto lg:h-[20vw] xss:w-full lg:w-[45%] lg:mx-auto">
-            <div className="w-[90%] flex mx-auto h-[4vw]">
-              <div
-                className={`${
-                  activeTab === "followers" ? "border-b-4" : "border-b-2"
-                } w-[50%] flex justify-center items-center border-black cursor-pointer`}
+          <div className="xss:h-auto lg:h-fit xss:w-full lg:w-[65%] mx-auto">
+            <div className="flex xs:gap-1 sm:gap-2 w-full justify-center rounded">
+              <button
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
+                  activeTab === "followers"
+                    ? "border-gray-500 text-gray-500"
+                    : "border-primary  text-primary"
+                }`}
+                onClick={() => setActiveTab("followers")}
               >
-                <p
-                  className={`${
-                    activeTab === "followers"
-                      ? "xss:text-lg lg:text-md"
-                      : "xss:text-lg lg:text-sm"
-                  } font-semibold xss:mb-6 lg:mb-0 `}
-                  onClick={() => setActiveTab("followers")}
-                >
-                  {followers?.length ? followers.length : 0} Followers
-                </p>
-              </div>
-              <div
-                className={`${
-                  activeTab === "following" ? "border-b-4" : "border-b-2"
-                } w-[50%] flex justify-center items-center border-black cursor-pointer`}
+                Followers
+              </button>
+              <button
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
+                  activeTab === "following"
+                    ? "border-gray-500  text-gray-500"
+                    : "border-primary text-primary "
+                }`}
+                onClick={() => setActiveTab("following")}
               >
-                <p
-                  className={`${
-                    activeTab === "following"
-                      ? "xss:text-lg lg:text-md"
-                      : "xss:text-lg lg:text-sm"
-                  } font-semibold xss:mb-6 lg:mb-0`}
-                  onClick={() => setActiveTab("following")}
-                >
-                  {following?.length ? following.length : 0} Following
-                </p>
-              </div>
+                Following
+              </button>
+              <button
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
+                  activeTab === "suggestions"
+                    ? "border-gray-500 text-gray-500"
+                    : "border-primary  text-primary"
+                }`}
+                onClick={() => setActiveTab("suggestions")}
+              >
+                Suggestions
+              </button>
             </div>
 
             {activeTab === "followers" ? (
-              <div>
+              <div className="h-fit">
                 {followers?.length > 0 ? (
                   followers.map((follower) => (
                     <div
                       key={follower.id}
-                      className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
+                      className="xss:w-[90%] xs:w-[80%] lg:w-[60%] mx-auto mt-3 flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
                         <div className="xss:w-10 xss:h-12 sm:w-12 sm:h-14">
                           {follower.image ? (
                             <img
                               src={`${follower.image}`}
+                              onClick={() =>
+                                navigate(`/profile/${follower.id}`)
+                              }
                               alt="Avatar"
-                              className="h-full w-full object-cover rounded-full"
+                              className="h-full w-full object-cover rounded-full cursor-pointer"
                             />
                           ) : (
-                            <CgProfile className="xss:w-10 xss:h-12 sm:w-12 sm:h-14" />
+                            <CgProfile
+                              onClick={() =>
+                                navigate(`/profile/${follower.id}`)
+                              }
+                              className="xss:w-10 xss:h-12 sm:w-12 sm:h-14 cursor-pointer"
+                            />
                           )}
                         </div>
-                        <p className="text-[#000] justify-start sm:text-xl font-semibold">
+                        <p
+                          className="text-[#000] justify-start sm:text-xl font-semibold cursor-pointer"
+                          onClick={() => navigate(`/profile/${follower.id}`)}
+                        >
                           {follower.name}
                         </p>
                       </div>
-                      <RiDeleteBin2Line className="xss:text-3xl sm:text-4xl text-black  rounded-xl p-1  mr-5 mb-2" />
+                      <RiDeleteBin2Line
+                        onClick={() => handleRemoveFollowing(follower.id)}
+                        className="xss:text-3xl cursor-pointer sm:text-4xl text-black  rounded-xl p-1  mr-5 mb-2"
+                      />
                     </div>
                   ))
                 ) : (
@@ -310,32 +351,42 @@ const Profile = () => {
                 )}
               </div>
             ) : (
-              <div>
+              <></>
+            )}
+            {activeTab === "following" ? (
+              <div className="h-fit">
                 {following?.length > 0 ? (
                   following.map((follow) => (
                     <div
                       key={follow.id}
-                      className="xss:w-[90%] lg:w-[60%] mx-auto mt-[2vw] flex justify-between items-center"
+                      className="xss:w-[90%] xs:w-[80%] lg:w-[60%] mx-auto mt-3 flex justify-between items-center"
                     >
                       <div className="flex gap-3 items-center ml-3">
                         <div className="xss:w-10 xss:h-12 sm:w-12 sm:h-14">
                           {follow.image ? (
                             <img
                               src={`${follow.image}`}
+                              onClick={() => navigate(`/profile/${follow.id}`)}
                               alt="Avatar"
-                              className="h-full w-full object-cover rounded-full"
+                              className="h-full w-full object-cover rounded-full cursor-pointer"
                             />
                           ) : (
-                            <CgProfile className="xss:w-10 xss:h-12 sm:w-12 sm:h-14" />
+                            <CgProfile
+                              onClick={() => navigate(`/profile/${follow.id}`)}
+                              className="xss:w-10 xss:h-12 sm:w-12 sm:h-14 cursor-pointer"
+                            />
                           )}
                         </div>
-                        <p className="text-[#000] sm:text-xl font-semibold">
+                        <p
+                          className="text-[#000] sm:text-xl font-semibold cursor-pointer"
+                          onClick={() => navigate(`/profile/${follow.id}`)}
+                        >
                           {follow.name}
                         </p>
                       </div>
                       <RiDeleteBin2Line
-                        className="xss:text-3xl sm:text-4xl  text-black rounded-xl p-1  mr-5 mb-2"
-                        onClick={() => handleUnfollow(follow.id)}
+                        className="xss:text-3xl sm:text-4xl cursor-pointer text-black rounded-xl p-1  mr-5 mb-2"
+                        onClick={() => handleRemoveFollowing(follow.id)}
                       />
                     </div>
                   ))
@@ -345,15 +396,61 @@ const Profile = () => {
                   </p>
                 )}
               </div>
+            ) : (
+              <></>
             )}
-          </div>
-
-          {/* Third Column */}
-          <div className="xss:w-full lg:w-[26vw] xl:w-[21vw] border-[2px] border-opacity-85 rounded-xl py-5 px-4 lg:px-5">
-            <Suggestionsbar
-              suggestedFollowers={suggestedFollowers}
-              handleFollow={handleFollow}
-            />
+            {activeTab === "suggestions" ? (
+              <div className="h-fit">
+                {suggestedFollowers?.length > 0 ? (
+                  suggestedFollowers.map((suggestion) => (
+                    <div
+                      key={suggestion.id}
+                      className="xss:w-[90%] xs:w-[80%] lg:w-[60%] mx-auto mt-3 flex justify-between items-center"
+                    >
+                      <div className="flex gap-3 items-center ml-3">
+                        <div className="xss:w-10 xss:h-12 sm:w-12 sm:h-14">
+                          {suggestion.image ? (
+                            <img
+                              src={`${suggestion.image}`}
+                              onClick={() =>
+                                navigate(`/profile/${suggestion.id}`)
+                              }
+                              alt="Avatar"
+                              className="h-full w-full object-cover rounded-full cursor-pointer"
+                            />
+                          ) : (
+                            <CgProfile
+                              onClick={() =>
+                                navigate(`/profile/${suggestion.id}`)
+                              }
+                              className="xss:w-10 xss:h-12 sm:w-12 sm:h-14 cursor-pointer"
+                            />
+                          )}
+                        </div>
+                        <p
+                          className="text-[#000] justify-start sm:text-xl font-semibold cursor-pointer"
+                          onClick={() => navigate(`/profile/${suggestion.id}`)}
+                        >
+                          {suggestion.name}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleFollow(suggestion.id)}
+                        className="bg-primary text-white px-4 py-1 rounded-lg mr-5 mb-2"
+                      >
+                        Follow
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-lg font-semibold mt-5">
+                    No Suggestions Found
+                  </p>
+                )}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

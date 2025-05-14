@@ -10,7 +10,7 @@ export const EmploymentAddModal = ({
   setIsDataFetched,
   setAddData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [organizationName, setOrganizationName] = useState("");
   const [city, setCity] = useState("");
   const [region, setRegion] = useState("");
@@ -206,7 +206,7 @@ export const EmploymentEditModal = ({
   setEditData,
 }) => {
   //console.log("Employee Data: ", employeeData);
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
     employeeData.organization
   );
@@ -243,6 +243,7 @@ export const EmploymentEditModal = ({
           setbutton1Clicked(false);
           setPopup(false);
           setEditData(false);
+          console.log("Calling setFetchData from EmploymentEditModal");
           setIsDataFetched(false);
           toast.success(res.data.message);
         });

@@ -28,6 +28,7 @@ const OtherProfile = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [posts, setPosts] = useState([]);
+
   // const interests = [
   //   "Papers",
   //   "Biology",
@@ -73,6 +74,7 @@ const OtherProfile = () => {
             setArticles(
               res.data.article_upload == null ? [] : res.data.article_upload
             );
+            setPosts(res.data.post_upload == null ? [] : res.data.post_upload);
           });
       } else {
         console.log("User is not defined yet");
@@ -85,6 +87,48 @@ const OtherProfile = () => {
   useEffect(() => {
     fetchProfileData();
   }, [userId]);
+
+  const ImageContainer = ({ image }) => {
+    const [isPortrait, setIsPortrait] = useState(false);
+    useEffect(() => {
+      isImagePortrait(image);
+    }, []);
+
+    const isImagePortrait = (image) => {
+      //console.log("Image: ", image);
+      if (!image) return;
+      const img = new Image();
+      img.src = image;
+      img.onload = () => {
+        const { height, width } = img;
+        //console.log("Image dimensions: ", height, width);
+
+        height > width || height == width
+          ? setIsPortrait(true)
+          : setIsPortrait(false);
+      };
+      img.onerror = () => {
+        console.error("Failed to load image.");
+      };
+    };
+    return (
+      <>
+        {isPortrait ? (
+          <img
+            src={image}
+            alt="Post"
+            className="object-contain mt-2 w-full xss:h-auto xs:h-96 py-3"
+          />
+        ) : (
+          <img
+            src={image}
+            alt="Post"
+            className="xss:object-contain xl:object-fill mt-2 w-full xss:h-auto sm:h-96 me-auto py-3"
+          />
+        )}
+      </>
+    );
+  };
 
   const handleFollow = async (followId) => {
     //console.log("Id to be followed: ", followId);
@@ -293,13 +337,6 @@ const OtherProfile = () => {
                   >
                     {/* Content for Saved Files */}
                     <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                      {/* <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
-                                            <img
-                                              src="./book.jpg"
-                                              alt="Notebook"
-                                              className="  w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
-                                            />
-                                          </div> */}
                       <div className="flex flex-col space-y-1">
                         <Link to={`/ArticleDetails/${post.id}`}>
                           <div className=" flex items-center">
@@ -364,68 +401,80 @@ const OtherProfile = () => {
           ) : null}
 
           {activeTab === "All" || activeTab === "Posts" ? (
-            <div className="books flex flex-col space-y-4">
-              {/* Book Item */}
-              <div className="flex flex-col w-auto h-auto px-4 py-4 border rounded-lg shadow-sm bg-white mr-4">
-                <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
-                  <div className="flex items-center space-x-4 ml-4">
-                    <div className="w-16 h-16">
-                      <img
-                        src="images/johnpaul.png"
-                        alt="User profile"
-                        className="rounded-full object-cover w-full h-full"
-                      />
+            <>
+              {posts && posts.length > 0 ? (
+                posts.map((post, index) => (
+                  <div id={index} className="books flex flex-col space-y-4">
+                    {/* Book Item */}
+                    <div className="flex flex-col w-auto h-auto xss:px-3 xs:px-4 py-4 border rounded-lg shadow-sm bg-white mr-4z">
+                      <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
+                        <div className="flex items-center xss:space-x-2 sm:space-x-4 sm:ml-4">
+                          <div className="w-16 h-16">
+                            {otherProfileData?.image ? (
+                              <img
+                                src={otherProfileData?.image}
+                                alt="User profile"
+                                className="rounded-full object-cover w-full h-full"
+                              />
+                            ) : (
+                              <CgProfile className="w-16 h-16" />
+                            )}
+                          </div>
+                          <div>
+                            <h2 className="text-2xl font-semibold text-gray-600 mb-1">
+                              {otherProfileData?.name}
+                            </h2>
+                            <p className="text-lg text-gray-500">
+                              {otherProfileData?.country}
+                            </p>
+                          </div>
+                        </div>
+                        <PiDotsThreeOutlineVertical className="h-8 w-8 mr-6" />
+                      </div>
+                      <div className="mt-4 px-2 border-b-[1.4px] border-gray-200">
+                        <p className="text-xl text-gray-500 font-medium mb-2">
+                          {post.description}
+                        </p>
+                        <ImageContainer image={post.post} />
+                      </div>
+                      <div className="flex justify-between my-1 items-center sm:mx-9 ">
+                        <div className="flex items-center space-x-1">
+                          <FontAwesomeIcon
+                            icon={solidHeart}
+                            className="text-red-600 sm:text-xl xss:text-lg"
+                          />
+                          <span className="sm:text-lg xss:text-base">
+                            1 likes
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <img
+                            src={weuieyesonfilled}
+                            alt="Views"
+                            className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                          />
+                          <span className="text-lg xss:text-base">2 Views</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <img
+                            src={openmojishare}
+                            alt="Share"
+                            className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                          />
+                          <span className="text-lg xss:text-base">Share</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <CiBookmark className="sm:h-7 sm:w-7 xss:h-6 xss:w-6 text-gray-500" />
+                          <span className="text-lg xss:text-base">Save</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-semibold text-gray-600 mb-1">
-                        John
-                      </h2>
-                      <p className="text-lg text-gray-500">
-                        Chennai, Tamilnadu
-                      </p>
-                    </div>
                   </div>
-                  <PiDotsThreeOutlineVertical className="h-8 w-8 mr-6" />
-                </div>
-                <div className="mt-4 px-2">
-                  <p className="text-xl text-gray-500 font-medium mb-2">
-                    Join our vibrant community of Information Technology
-                    scholars and researchers.
-                  </p>
-                  <img
-                    src="/book.jpg"
-                    alt="Notebook with Key"
-                    className="w-full object-cover max-h-80 my-2"
-                  />
-                </div>
-                <div className="flex mt-2 mx-6 justify-between text-gray-700">
-                  <div className="flex">
-                    <FaHeart className="h-6 w-6 mr-1 text-red-500" />
-                    <p className="font-sans text-lg font-semibold text-gray-400">
-                      1 like
-                    </p>
-                  </div>
-                  <div className="flex">
-                    <IoMdEye className="h-7 w-7 mr-1 text-gray-400" />
-                    <p className="font-sans text-lg font-semibold text-gray-400">
-                      2 Views
-                    </p>
-                  </div>
-                  <div className="flex">
-                    <CiShare2 className="h-7 w-7 mr-1 text-gray-400" />
-                    <p className="font-sans text-lg font-semibold text-gray-400">
-                      Share
-                    </p>
-                  </div>
-                  <div className="flex">
-                    <CiBookmark className="h-7 w-7 mr-1 text-gray-400" />
-                    <p className="font-sans text-lg font-semibold text-gray-400">
-                      Save
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                ))
+              ) : (
+                <p>No Article Uploads yet</p>
+              )}
+            </>
           ) : null}
         </div>
       </div>

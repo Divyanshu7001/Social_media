@@ -9,7 +9,7 @@ export const WorkAddModal = ({
   setIsDataFetched,
   setAddData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [workType, setWorkType] = useState("");
   const [workTitle, setWorkTitle] = useState("");
   const [journalTitle, setJournalTitle] = useState("");
@@ -162,7 +162,7 @@ export const WorkEditModal = ({
   workData,
   setEditData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [workType, setWorkType] = useState(workData.work_type);
   const [workTitle, setWorkTitle] = useState(workData.work_title);
   const [journalTitle, setJournalTitle] = useState(workData.journal_title);

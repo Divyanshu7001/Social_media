@@ -14,7 +14,7 @@ export const EducationAddModal = ({
   setIsDataFetched,
   setAddData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [organizationName, setOrganizationName] = useState("");
   const [department, setDepartment] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -242,7 +242,7 @@ export const EducationEditModal = ({
   educationData,
   setEditData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
     educationData.organization_name
   );

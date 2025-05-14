@@ -250,7 +250,7 @@ export const ProfessionalActivityEditModal = ({
   professionalActivityData,
   setEditData,
 }) => {
-  const { user } = useContext(Context);
+  const { user, setFetchData } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
     professionalActivityData.organization_name
   );

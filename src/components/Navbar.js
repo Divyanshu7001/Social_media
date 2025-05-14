@@ -15,11 +15,10 @@ const Navbar = () => {
     toggle,
     setBtn,
     setIsAuthenticated,
-    profileData,
-    setUser,
     setPopup,
   } = useContext(Context);
   const [showPopup, setShowPopup] = useState(false);
+  //console.log(isAuthenticated);
 
   const handleUploadClick = () => {
     navigate("/Upload");
@@ -36,10 +35,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", false);
-    localStorage.setItem("user", JSON.stringify({ user: "Data Not found" }));
     localStorage.removeItem("userId");
-
-    setUser({});
     setIsAuthenticated(false);
   };
 
@@ -81,7 +77,7 @@ const Navbar = () => {
               }}
             />
             <input
-              className="text-lg"
+              className="text-lg w-full border-none outline-none"
               type="text"
               placeholder="What are you looking for?"
             />
@@ -238,7 +234,7 @@ const Navbar = () => {
         <div
           style={{
             position: "fixed",
-            top: "80px", // Adjust the position as per your requirement
+            top: "80px",
             right: "10px",
             width: "300px",
             backgroundColor: "white",
@@ -247,6 +243,7 @@ const Navbar = () => {
             zIndex: 50,
             padding: "20px",
             border: "1px solid #cfcfcf",
+            justifyContent: "center",
             fontFamily: "'Poppins', sans-serif",
           }}
         >
@@ -257,7 +254,7 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div className="ml-3" style={{ display: "flex", alignItems: "center" }}>
               {user?.image ? (
                 <img
                   src={user?.image}
@@ -302,8 +299,8 @@ const Navbar = () => {
                 background: "none",
                 cursor: "pointer",
                 fontSize: "35px",
-                margin: "-65px -13px 0 0",
-                color: "rgba(0,0,0,0.5)",
+                margin: "-65px -5px -20px 0",
+                color: "rgba(0,0,0,0.6)",
                 fontWeight: "400",
               }}
             >
@@ -313,10 +310,11 @@ const Navbar = () => {
           {location.pathname === "/profileView" ? (
             <Link to="/">
               <button
-                onClick={setPopup(false)}
+                onClick={()=>setPopup(false)}
                 style={{
                   marginTop: "20px",
                   padding: "10px",
+                  marginLeft:"14px",
                   borderRadius: "9999px",
                   border: "1px solid rgba(0,0,255,1)",
                   backgroundColor: "transparent",
@@ -333,11 +331,12 @@ const Navbar = () => {
           ) : (
             <Link to="/profileView">
               <button
-                onClick={setPopup(false)}
+                onClick={()=>setPopup(false)}
                 style={{
                   marginTop: "20px",
                   padding: "10px",
                   borderRadius: "9999px",
+                  marginLeft:"14px",
                   border: "1px solid rgba(0,0,255,1)",
                   backgroundColor: "transparent",
                   width: "89%",
@@ -353,7 +352,7 @@ const Navbar = () => {
           )}
 
           <div
-            style={{ border: "1px solid #cfcfcf", margin: "30px 10px" }}
+            style={{ border: "1px solid #cfcfcf", margin: "25px 10px" }}
           ></div>
           <div
           // style={{
