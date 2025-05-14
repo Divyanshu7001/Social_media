@@ -80,8 +80,8 @@ const SavedItems = () => {
             <button
               className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${
                 btn === "article"
-                  ? "border-gray-500 text-gray-500"
-                  : "border-primary  text-primary"
+                  ? "border-primary  text-primary"
+                  : "border-gray-500 text-gray-500"
               }`}
               onClick={() => setBtn("article")}
             >
@@ -90,8 +90,8 @@ const SavedItems = () => {
             <button
               className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${
                 btn === "post"
-                  ? "border-gray-500  text-gray-500"
-                  : "border-primary text-primary "
+                  ? " border-primary text-primary "
+                  : "border-gray-500  text-gray-500"
               }`}
               onClick={() => setBtn("post")}
             >

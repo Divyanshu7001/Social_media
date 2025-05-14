@@ -70,7 +70,7 @@ const LandingPage = () => {
   return (
     <>
       {/* Header/Navbar */}
-      {isAuthenticated == false && <Navbar />}
+      {!isAuthenticated && <Navbar />}
       {popup && btn === "signup" && <SignupPage />}
       {popup && btn === "login" && <LoginPage />}
       {popup && btn === "forgetpassword" && <ForgetPasswordPage />}
