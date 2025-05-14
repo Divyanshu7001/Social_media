@@ -6,7 +6,6 @@ import Homepage from "./components/HomePage.js";
 import UploadPage from "./components/UploadPage.js";
 import ProfileCard from "./components/ProfileCard.js";
 import CreatePost from "./components/Createpost.js";
-import Article from "./components/Article.js";
 import JournalsPage from "./components/JournalsPage.js";
 import JournalDetails from "./components/JournalDetails.js";
 import UploadPaperDetails from "./components/UploadPaperDetails.js";
@@ -76,7 +75,7 @@ const App = () => {
           <Route path="/Upload" element={<UploadPage />} />
           <Route path="/Createpost" element={<CreatePost />} />
           <Route path="/ProfileCard" element={<ProfileCard />} />
-          <Route path="/Article" element={<Article />} />
+          {/* <Route path="/Article" element={<Article />} /> */}
           <Route path="/UploadPaperDetails" element={<UploadPaperDetails />} />
           <Route path="/profileView" element={<ViewProfile />} />
           <Route path="/connection" element={<Profile />} />

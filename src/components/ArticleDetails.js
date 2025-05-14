@@ -74,13 +74,6 @@ const ArticleDetails = () => {
       const blob = await response.data; // Convert the response to a Blob
       const url = window.URL.createObjectURL(blob);
       window.open(url, "_blank");
-      // const url = response.data.url;
-      // const a = document.createElement('a');
-      // a.href = url;
-      // console.log(a)
-      // // a.download = `${article.length > 0 && article[0].paper_title}.pdf`;
-      // a.click();
-      // window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error(error);
     }

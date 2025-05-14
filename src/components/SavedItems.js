@@ -52,6 +52,30 @@ const SavedItems = () => {
     }
     if (user && user.id) fetchSave();
   }, [user, isAuthenticated])
+
+  const downloadpdf = async (id, user_id) => {
+    try {
+      const response = await api.post(
+        "downloadArticle",
+        {
+          id: id,
+          user_id: user_id,
+        },
+        {
+          withCredentials: true,
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const blob = await response.data; // Convert the response to a Blob
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const users_data = userList[0] || []
   const articles = savedItems.articles || []
   const posts = savedItems.posts || []
@@ -123,7 +147,7 @@ const SavedItems = () => {
 
               </div>
 
-              <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm">Download</button>
+              <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm" onClick={() => downloadpdf(art.articleId, art.articleUserId)}>Download</button>
 
             </div>
           )) : <p className='mt-5 text-center font-bold'>No Articles Avaliable</p>
