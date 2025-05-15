@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaRegBookmark } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Ellipse4 from "../assets/img/Ellipse4.png";
 import { CgProfile } from "react-icons/cg";
-
+import { Context } from "../index.js";
 export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
   //console.log(user_data, "user_data in left sidebar");
-
+  const { setPopup } = useContext(Context);
   return (
     <div
       className={`${
@@ -17,7 +17,7 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
     >
       <div className=" bg-white rounded border-2 h-4/5 hidden md:flex lg:flex flex-col w-full px-8 mt-0.5 md:mt-0.5 lg:mt-3.5  md:px-1 lg:px-8 py-5">
         {/* User Info */}
-        <div className="flex  flex-col items-center s">
+        <div className="flex flex-col items-center">
           {user_data?.profile_img ? (
             <img
               src={user_data?.profile_img}
@@ -37,7 +37,11 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
           <div className="flex items-center space-x-2 mt-4">
             <MdOutlinePeopleAlt size={28} />
             {/* <img src={fluentpeople24regular} alt="Fluent People" className="h-6 w-6" /> */}
-            <Link to="/connection" className="font-semibold text-blue-600">
+            <Link
+              to="/connection"
+              onClick={() => setPopup(false)}
+              className="font-semibold text-blue-600"
+            >
               My Connections
             </Link>
           </div>
@@ -61,7 +65,11 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
           <div className="flex items-center space-x-2">
             <FaRegBookmark size={22} />
             {/* <img src={iconamoonbookmarkthin} alt="Bookmark" className="h-6 w-6" /> */}
-            <Link to="/Saved" className="font-semibold text-blue-600">
+            <Link
+              to="/Saved"
+              onClick={() => setPopup(false)}
+              className="font-semibold text-blue-600"
+            >
               Saved Items
             </Link>
           </div>
