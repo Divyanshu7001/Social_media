@@ -182,15 +182,18 @@ const PostCard = ({
               src={profile_img}
               alt="Profile"
               onClick={() => navigate(`/profile/${user_id}`)}
-              className="w-12 h-12 rounded-full object-cover object-top"
+              className="w-12 h-12 rounded-full object-cover object-top cursor-pointer"
             />
           ) : (
-            <CgProfile className="w-12 h-12" />
+            <CgProfile
+              onClick={() => navigate(`/profile/${user_id}`)}
+              className="w-12 h-12 cursor-pointer"
+            />
           )}
 
           <div className="ml-2 lg:ml-4 md:ml-2">
             <div
-              className="md:text-lg lg:text-xl font-semibold"
+              className="md:text-lg lg:text-xl font-semibold cursor-pointer"
               onClick={() => navigate(`/profile/${user_id}`)}
             >
               {name}
