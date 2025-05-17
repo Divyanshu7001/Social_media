@@ -24,6 +24,7 @@ const InnerApp = () => {
   const {
     setIsAuthenticated,
     setUser,
+    profileData,
     setProfileData,
     setSavedFiles,
     setMyUploads,
@@ -84,8 +85,10 @@ const InnerApp = () => {
 
   useEffect(() => {
     if (location.pathname === "/profileView") {
-      setIsAuthLoading(true);
-      fetchProfileData().then(() => setIsAuthLoading(false));
+      if (Object.keys(profileData).length === 0) {
+        setIsAuthLoading(true);
+        fetchProfileData().then(() => setIsAuthLoading(false));
+      }
     }
   }, [location.pathname]);
 

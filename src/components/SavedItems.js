@@ -178,7 +178,7 @@ const SavedItems = () => {
                     </div>
                   </div>
 
-                  <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm" onClick={() => downloadpdf(art.articleId, user.id)}>
+                  <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm" onClick={() => downloadpdf(art.articleId, art.articleUserId)}>
                     Download
                   </button>
                 </div>
