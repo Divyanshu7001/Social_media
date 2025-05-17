@@ -85,7 +85,6 @@ export const Homepage = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
-
           setHomeFeed(response.data.homeFeed);
           setUserList(response.data.userDetails);
           setSuggestions(response.data.homeFeed.suggestions);
@@ -114,7 +113,7 @@ export const Homepage = () => {
 
   return (
     <>
-      {isAuthenticated == true && <Navbar />}
+      {isAuthenticated === true && <Navbar />}
       {showPopup && <Createpost closePopup={togglePopup} />}
       <div className={`${showPopup && "z-0"} min-h-screen bg-white`}>
         {/* Popup for Create Post */}
@@ -205,10 +204,14 @@ export const Homepage = () => {
                 <img
                   src={user.image}
                   alt="User"
-                  className="w-20 h-16 rounded-full object-cover"
+                  className="w-20 h-16 rounded-full object-cover cursor-pointer"
+                  onClick={()=>navigate("/profileView")}
                 />
               ) : (
-                <CgProfile className="w-20 h-16" />
+                <CgProfile
+                  className="w-20 h-16 cursor-pointer"
+                  onClick={()=>navigate("/profileView")}
+                />
               )}
               <input
                 type="text"

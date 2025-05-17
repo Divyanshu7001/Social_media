@@ -138,7 +138,7 @@ const ViewProfile = () => {
   //   return <Loader />;
   // }
 
-  // console.log("My Uploads Data: ", myUploads);
+  //console.log("My Uploads Data: ", myUploads);
   // console.log("Saved Files Data: ", savedFiles);
 
   // console.log("Profile Data: ", profileData);
