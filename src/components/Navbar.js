@@ -11,6 +11,8 @@ const Navbar = () => {
   const location = useLocation();
   const {
     user,
+    setUser,
+    setProfileData,
     isAuthenticated,
     toggle,
     setBtn,
@@ -36,12 +38,14 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", false);
     localStorage.removeItem("userId");
+    setUser({});
+    setProfileData({});
     setIsAuthenticated(false);
   };
 
   useEffect(() => {
     console.log("Authendicated : " + isAuthenticated);
-  }, [])
+  }, []);
 
 
 
@@ -82,17 +86,19 @@ const Navbar = () => {
 
         {/* Links Section */}
         <div
-          className={`flex gap-8 lg:flex items-center mx-3 lg:gap-6 xl:gap-10 ${isMenuOpen
-            ? "flex-col absolute text-center top-full left-0 w-full bg-white shadow-lg lg:static lg:flex-row lg:gap-10"
-            : "hidden lg:flex"
-            }`}
+          className={`flex gap-8 lg:flex items-center mx-3 lg:gap-6 xl:gap-10 ${
+            isMenuOpen
+              ? "flex-col absolute text-center top-full left-0 w-full bg-white shadow-lg lg:static lg:flex-row lg:gap-10"
+              : "hidden lg:flex"
+          }`}
         >
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `font-semibold ${isActive
-                ? "text-primary lg:text-md"
-                : "text-gray-500 lg:text-sm"
+              `font-semibold ${
+                isActive
+                  ? "text-primary lg:text-md"
+                  : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -101,9 +107,10 @@ const Navbar = () => {
           <NavLink
             to="/journals"
             className={({ isActive }) =>
-              `font-semibold  ${isActive
-                ? "text-primary lg:text-md"
-                : "text-gray-500 lg:text-sm "
+              `font-semibold  ${
+                isActive
+                  ? "text-primary lg:text-md"
+                  : "text-gray-500 lg:text-sm "
               }`
             }
           >
@@ -112,9 +119,10 @@ const Navbar = () => {
           <NavLink
             to="/institutions"
             className={({ isActive }) =>
-              `font-semibold  ${isActive
-                ? "text-primary lg:text-md"
-                : "text-gray-500 lg:text-sm"
+              `font-semibold  ${
+                isActive
+                  ? "text-primary lg:text-md"
+                  : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -123,9 +131,10 @@ const Navbar = () => {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              `font-semibold  ${isActive
-                ? "text-primary lg:text-md"
-                : "text-gray-500 lg:text-sm"
+              `font-semibold  ${
+                isActive
+                  ? "text-primary lg:text-md"
+                  : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -134,9 +143,10 @@ const Navbar = () => {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              `font-semibold  ${isActive
-                ? "text-primary lg:text-md"
-                : "text-gray-500 lg:text-sm"
+              `font-semibold  ${
+                isActive
+                  ? "text-primary lg:text-md"
+                  : "text-gray-500 lg:text-sm"
               }`
             }
           >
@@ -248,7 +258,10 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            <div className="ml-3" style={{ display: "flex", alignItems: "center" }}>
+            <div
+              className="ml-3"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               {user?.image ? (
                 <img
                   src={user?.image}
@@ -304,11 +317,11 @@ const Navbar = () => {
           {location.pathname === "/profileView" ? (
             <Link to="/">
               <button
-                onClick={()=>setPopup(false)}
+                onClick={() => setPopup(false)}
                 style={{
                   marginTop: "20px",
                   padding: "10px",
-                  marginLeft:"14px",
+                  marginLeft: "14px",
                   borderRadius: "9999px",
                   border: "1px solid rgba(0,0,255,1)",
                   backgroundColor: "transparent",
@@ -325,12 +338,12 @@ const Navbar = () => {
           ) : (
             <Link to="/profileView">
               <button
-                onClick={()=>setPopup(false)}
+                onClick={() => setPopup(false)}
                 style={{
                   marginTop: "20px",
                   padding: "10px",
                   borderRadius: "9999px",
-                  marginLeft:"14px",
+                  marginLeft: "14px",
                   border: "1px solid rgba(0,0,255,1)",
                   backgroundColor: "transparent",
                   width: "89%",
