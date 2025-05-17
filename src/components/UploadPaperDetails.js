@@ -74,7 +74,7 @@ export const UploadPaperDetails = () => {
       headers["Content-Type"] = "multipart/form-data";
     }
 
-    console.log(data);
+    // console.log(data);
 
     try {
       const response = await api.post(
@@ -85,6 +85,7 @@ export const UploadPaperDetails = () => {
           headers,
         }
       );
+
       toast.success(response.data.message, {
         style: {
           borderRadius: "8px",

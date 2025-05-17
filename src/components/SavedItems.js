@@ -51,14 +51,36 @@ const SavedItems = () => {
           console.log("Error while fetch Saved Data: " + error);
         }
       }
-    };
-    fetchSave();
-  }, [user]);
-  const users_data = userList[0] || [];
-  //console.log("Saved Items: ", savedItems);
+    }
+    if (user && user.id) fetchSave();
+  }, [user, isAuthenticated])
 
-  const articles = savedItems?.articles || [];
-  const posts = savedItems?.posts || [];
+  const downloadpdf = async (id, user_id) => {
+    try {
+      const response = await api.post(
+        "downloadArticle",
+        {
+          id: id,
+          user_id: user_id,
+        },
+        {
+          withCredentials: true,
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const blob = await response.data; // Convert the response to a Blob
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const users_data = userList[0] || []
+  const articles = savedItems.articles || []
+  const posts = savedItems.posts || []
 
   return (
     <>
@@ -156,26 +178,23 @@ const SavedItems = () => {
                     </div>
                   </div>
 
-                  <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm">
+                  <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm" onClick={() => downloadpdf(art.articleId, art.articleUserId)}>
                     Download
                   </button>
                 </div>
               ))
             ) : (
-              <p className="mt-5 text-center font-bold">
-                No Articles Avaliable
-              </p>
+              <p className="mt-5 text-center font-bold">No Articles Available</p>
             ))}
 
           {/* post */}
           {btn === "post" &&
             (posts.length > 0 ? (
               posts.map((post) => (
-                <div className="py-2 mb-10 border-2 rounded-lg  mt-5">
+                <div className="py-2 mb-10 border-2 rounded-lg mt-5" key={post.postId}>
                   {/* head */}
                   <div className="flex justify-between items-center px-2 xl:px-2 lg:px-0">
                     <div className="flex px-1 md:px-1 py-4 items-center xl:px-6 lg:px-4">
-                      {/* "profile_img ? profile_img :" */}
                       <img
                         src={post.profile_img || Ellipse4}
                         alt="Profile"
@@ -190,14 +209,9 @@ const SavedItems = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <div className="flex px-0 py-4 items-center md:px-0 xl:px-2 lg:px-0 ">
-                  <button className="text-primary text-base lg:text-lg xl:text-xl mr-1 xl:mr-4 lg:mr-2 md:mr-1">Follow</button>
-
-                  <MoreVertIcon />
-                </div> */}
                   </div>
                   {/* body */}
-                  <div className="flex-col ">
+                  <div className="flex-col">
                     <p className="mt-2 px-9 xl:px-9 lg:px-4 text-gray-700">
                       {post.title}
                     </p>
@@ -219,84 +233,16 @@ const SavedItems = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                       <PiEyeFill size={20} color="gray" />
-                      {/* <img src={weuieyesonfilled} alt="Views" className="w-6 h-6" /> */}
                       <span className="home-like-share-saved"> Views</span>
                     </div>
-                    {/* <div className="flex items-center space-x-2">
-                  <img src={openmojishare} alt="Share" className="w-6 h-6" />
-                  <span className="home-like-share-saved">Share</span>
-                </div>
-                <div className="flex items-center space-x-2 cursor-pointer">
-                  <FontAwesomeIcon
-                    icon={false ? solidBookmark : regularBookmark}
-                    className="text-gray-600"
-                  />
-                  <span className="home-like-share-saved">Saved</span>
-                </div> */}
                   </div>
                 </div>
               ))
             ) : (
-              <p className="mt-5 text-center font-bold">No Posts Avaliable</p>
+              <p className="mt-5 text-center font-bold">No Posts Available</p>
             ))}
         </div>
       </div>
-
-      {/* <div className="">
-
-          <div className="w-[70%] border-[2px] border-opacity-85 rounded-xl py-[2vw]">
-
-            <div className='w-[86%] mx-auto'>
-
-
-              <div className="flex justify-between items-center">
-                <h2 className="font-semibold">The Future of Quantum Computing: Transforming IT Landscapes</h2>
-              </div>
-
-
-              <div className='flex flex-row items-center gap-[2vw] mt-[2vw]'>
-                <div className='h-[5vw] w-[5vw]'>
-                  <img src='images/Ellipse4.png' alt='Avatar' className='h-full w-full object-cover' />
-                </div>
-
-                <div className="">
-                  <h2 className='font-bold'>John</h2>
-                  <h2 className='opacity-80'>Chennai, Tamilnadu</h2>
-                </div>
-              </div>
-
-              <p className='mt-[1vw] opacity-80 text-sm'>Dive into the potential of quantum computing and its implications for solving complex problems in record time. Join our vibrant community of Information Technology scholars and researchers, quantum computing and its implications for solving complex problems in  time.</p>
-              <p className='mt-[1.5vw] opacity-80 text-sm'>Dive into the potential of quantum computing and its implications for solving complex problems in record time. Join our vibrant community of Information Technology scholars and researchers.</p>
-
-              <div className="my-[2vw] flex gap-[2vw] items-center">
-
-                <div className="flex gap-[0.3vw] items-center">
-                  <img src='./images/like.png'></img>
-                  <h2 className='text-sm opacity-75'>Likes</h2>
-                </div>
-
-
-                <div className="flex gap-[0.3vw] items-center">
-                  <img src='./images/views.png'></img>
-                  <h2 className='text-sm opacity-75'>views</h2>
-                </div>
-
-
-                <div className="flex gap-[0.3vw] items-center">
-                  <img src='./images/pages.png'></img>
-                  <h2 className='text-sm opacity-75'>50 pages</h2>
-                </div>
-
-              </div>
-
-              <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm">Download</button>
-
-            </div>
-
-          </div>
-
-        </div> */}
-      {/* <Footer /> */}
     </>
   );
 };

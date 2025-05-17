@@ -48,13 +48,7 @@ const Navbar = () => {
     console.log("Authendicated : " + isAuthenticated);
   }, []);
 
-  useEffect(() => {
-    console.log("Mounted");
 
-    return () => {
-      console.log("Unmounted");
-    };
-  }, []);
 
   return (
     <>
