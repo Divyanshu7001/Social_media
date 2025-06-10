@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { Context } from "../index.js";
 import api from "./api";
-import { Link } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
@@ -25,6 +25,7 @@ const SavedItems = () => {
   // const [userList, setUserList] = useState([]);
   const [btn, setBtn] = useState("article");
   const [fetchData, setFetch] = useState(true);
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const fetchSave = async () => {
@@ -224,24 +225,30 @@ const SavedItems = () => {
                     key={art.articleId}
                     className="border-2 rounded-lg px-7 md:px-10 py-8 mt-4"
                   >
-                    <Link to={`/ArticleDetails/${art.articleId}`}>
-                      <div className="flex justify-between items-center">
-                        <h2 className="font-bold mb-2 md:mb-6 text-xl">{art.title}</h2>
-                      </div>
-                      <div className="flex flex-row items-center gap-2">
-                        <img
-                          src={art.profile_img || "images/Ellipse4.png"}
-                          alt="Avatar"
-                          className="object-cover rounded-full w-10 h-10"
-                        />
 
-                        <div className="">
-                          <h2 className="font-bold">{art.articleUsername}</h2>
-                          <h2 className="opacity-80">
-                            {art.articleUserLocation || "location"}
-                          </h2>
-                        </div>
+                    <div className="flex justify-between items-center">
+                      <h2 className="font-bold mb-2 md:mb-6 text-xl">{art.title}</h2>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 cursor-pointer" onClick={() => {
+                      Navigate(
+                        `/profile/${art.articleUserId}`
+                      )
+                    }}>
+                   
+                      <img
+                        src={art.profile_img || "images/Ellipse4.png"}
+                        alt="Avatar"
+                        className="object-cover rounded-full w-10 h-10"
+                      />
+
+                      <div className="">
+                        <h2 className="font-bold">{art.articleUsername}</h2>
+                        <h2 className="opacity-80">
+                          {art.articleUserLocation || "location"}
+                        </h2>
                       </div>
+                    </div>
+                    <Link to={`/ArticleDetails/${art.articleId}`}>
                       {art.description.length > 130 ? (<p className="mt-[1vw] font-medium text-sm text-gray-500">
                         {art.description.slice(0, 130)}...
                       </p>) : (<p className="mt-[1vw] font-medium text-sm text-gray-500">
@@ -289,7 +296,7 @@ const SavedItems = () => {
             {btn === "post" &&
               (posts.length > 0 ? (
                 posts.map((post, index) => {
-                  return (<SavedPostImage key={index || post.postid} post={post} dataFetch ={setFetch} userData={user} />);
+                  return (<SavedPostImage key={index || post.postid} post={post} dataFetch={setFetch} userData={user} />);
 
                 })
               ) : (

@@ -10,8 +10,11 @@ import { PiEyeFill } from "react-icons/pi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toast from 'react-hot-toast';
 import api from './api';
+import { useNavigate } from 'react-router-dom';
 
 const SavedPostImage = ({ post, dataFetch, userData }) => {
+
+    const navigate = useNavigate();
     const [isPortrait, setIsPortrait] = useState(false);
     useEffect(() => {
         const image = new Image();
@@ -24,7 +27,7 @@ const SavedPostImage = ({ post, dataFetch, userData }) => {
 
     const handleLike = async (action) => {
         try {
-            
+
             const data = new FormData();
             data.append("user_id", userData.id);
             data.append("post_id", post.postid);
@@ -61,7 +64,7 @@ const SavedPostImage = ({ post, dataFetch, userData }) => {
         <div className="py-2 mb-10 border-2 rounded-lg mt-5" >
             {/* head */}
             <div className="flex justify-between items-center px-2 xl:px-2 lg:px-0">
-                <div className="flex px-1 md:px-1 py-4 items-center xl:px-6 lg:px-4">
+                <div className="flex px-1 md:px-1 py-4 items-center xl:px-6 lg:px-4 cursor-pointer" onClick={() => { navigate(`/profile/${post.postUserId}`) }}>
                     <img
                         src={post.profile_img || Ellipse4}
                         alt="Profile"
