@@ -31,7 +31,7 @@ import { Context } from "../index.js";
 import toast from "react-hot-toast";
 import api from "./api.js";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 
 const ViewProfile = () => {
@@ -47,7 +47,6 @@ const ViewProfile = () => {
     followersData,
     followingData,
   } = useContext(Context);
-
 
   if (!setProfileData) {
     console.error("setProfileData is undefined! Check Context Provider.");
@@ -70,7 +69,7 @@ const ViewProfile = () => {
   //Biography Section states
   const biography = profileData?.bio || "No Biography yet";
   const [isBiographyEdited, setIsBiographyEdited] = useState(false);
-  const [tempBiography, setTempBiography] = useState("");
+  const [tempBiography, setTempBiography] = useState(profileData?.bio || "");
 
   //Skills Section states
   const isSkillsAvailable =
@@ -139,7 +138,7 @@ const ViewProfile = () => {
   // }
 
   //console.log("My Uploads Data: ", myUploads);
-  console.log("Saved Files Data: ", savedFiles);
+  //console.log("Saved Files Data: ", savedFiles);
 
   // console.log("Profile Data: ", profileData);
   // console.log("Education Data: ", educationData);
@@ -286,28 +285,28 @@ const ViewProfile = () => {
   };
 
   const downloadpdf = async (id, user_id) => {
-      try {
-        const response = await api.post(
-          "downloadArticle",
-          {
-            id: id,
-            user_id: user_id,
+    try {
+      const response = await api.post(
+        "downloadArticle",
+        {
+          id: id,
+          user_id: user_id,
+        },
+        {
+          withCredentials: true,
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            withCredentials: true,
-            responseType: "blob",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const blob = await response.data; // Convert the response to a Blob
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, "_blank");
-      } catch (error) {
-        console.error(error);
-      }
-    };
+        }
+      );
+      const blob = await response.data; // Convert the response to a Blob
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
     switch (section) {
@@ -475,7 +474,7 @@ const ViewProfile = () => {
                         <img
                           src={profileImage}
                           alt="profile"
-                          className="rounded-full object-cover xss:w-[98px] xss:h-[98px] xs:w-[103px] xs:h-[103px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:h-[100px] lg:w-[100px] xl:h-[120px] xl:w-[120px]"
+                          className="rounded-full object-cover xss:w-[98px] xss:h-[98px] xs:w-[103px] xs:h-[103px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:h-[100px] lg:w-[100px] xl:h-[110px] xl:w-[110px]"
                         />
                       ) : (
                         <CgProfile className="rounded-full object-cover xss:w-[90px] xss:h-[90px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px] lg:h-[100px] lg:w-[100px] xl:h-[120px] xl:w-[120px]" />
@@ -736,7 +735,7 @@ const ViewProfile = () => {
                               setAddData(true);
                               setPopup((prev) => !prev);
                             }}
-                            className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                            className="mt-2 lg:mt-0 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
                           >
                             + Add
                           </button>
@@ -768,7 +767,7 @@ const ViewProfile = () => {
                                   setEmployeeToEdit(employee);
                                   setPopup((prev) => !prev);
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                               <RiDeleteBin2Line
                                 onClick={() => {
@@ -777,7 +776,7 @@ const ViewProfile = () => {
                                     dataType: "employee",
                                   });
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -808,7 +807,7 @@ const ViewProfile = () => {
                               setAddData(true);
                               setPopup((prev) => !prev);
                             }}
-                            className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                            className="mt-2 lg:mt-0 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
                           >
                             + Add
                           </button>
@@ -839,7 +838,7 @@ const ViewProfile = () => {
                                   setEducationToEdit(education);
                                   setPopup((prev) => !prev);
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                               <RiDeleteBin2Line
                                 onClick={() => {
@@ -848,7 +847,7 @@ const ViewProfile = () => {
                                     dataType: "education",
                                   });
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -910,7 +909,7 @@ const ViewProfile = () => {
                                   setProfessionalActivityToEdit(activity);
                                   setPopup((prev) => !prev);
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                               <RiDeleteBin2Line
                                 onClick={() => {
@@ -919,7 +918,7 @@ const ViewProfile = () => {
                                     dataType: "professional_activity",
                                   });
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -950,7 +949,7 @@ const ViewProfile = () => {
                               setAddData(true);
                               setPopup((prev) => !prev);
                             }}
-                            className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                            className="mt-2 lg:mt-0 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
                           >
                             + Add
                           </button>
@@ -983,7 +982,7 @@ const ViewProfile = () => {
                                   setEditData(true);
                                   setFundingDetailsToEdit(funding);
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                               <RiDeleteBin2Line
                                 onClick={() => {
@@ -992,7 +991,7 @@ const ViewProfile = () => {
                                     dataType: "funding_details",
                                   });
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -1020,7 +1019,7 @@ const ViewProfile = () => {
                               setAddData(true);
                               setPopup((prev) => !prev);
                             }}
-                            className="mt-2 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
+                            className="mt-2 lg:mt-0 bg-[#0000ff] text-white py-[7px] px-[21px] rounded-full"
                           >
                             + Add
                           </button>
@@ -1047,7 +1046,7 @@ const ViewProfile = () => {
                                   setWorkToEdit(work);
                                   setPopup((prev) => !prev);
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                               <RiDeleteBin2Line
                                 onClick={() => {
@@ -1056,7 +1055,7 @@ const ViewProfile = () => {
                                     dataType: "works",
                                   });
                                 }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1"
+                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -1097,7 +1096,7 @@ const ViewProfile = () => {
                   </div>
                   {/* Saved Files Section */}
                   <div
-                    className="flex border-b sm:mt-8 justify-center text-center"
+                    className="flex border-b sm:mt-8 xl:mt-10 justify-center text-center"
                     // style={{ maxWidth: "max-content" }}
                   >
                     <button
@@ -1134,13 +1133,6 @@ const ViewProfile = () => {
                             >
                               {/* Content for Saved Files */}
                               <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                                {/* <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
-                                <img
-                                  src="./book.jpg"
-                                  alt="Notebook"
-                                  className="  w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
-                                />
-                              </div> */}
                                 <div className="flex flex-col space-y-1">
                                   <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
                                     {post.paper_title}
@@ -1228,18 +1220,18 @@ const ViewProfile = () => {
                                   {post.abstract}
                                 </p>
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
-                                  <div className="flex items-baseline space-x-2">
+                                  <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
                                           : regularHeart
                                       }
-                                      className="text-red-600 cursor-pointer"
+                                      className="text-red-600 cursor-pointer text-xl"
                                     />
-                                    <span className="lg:text-md xss:text-base">
+                                    <span className="lg:text-lg xss:text-base">
                                       {post.likeCount}{" "}
-                                      {post.am_i_liked ? "Likes" : "Like"}
+                                      {post.am_i_liked ? "likes" : "like"}
                                     </span>
                                   </div>
                                   <div className="flex items-center space-x-2">
@@ -1275,19 +1267,11 @@ const ViewProfile = () => {
                               >
                                 {/* Content for Saved Files */}
                                 <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto border-b-2 border-gray-400 border-opacity-35">
-                                  {/* <div className="xss:w-auto xs:w-3/6 h-auto md:w-auto">
-                                  <img
-                                    src="./book.jpg"
-                                    alt="Notebook"
-                                    className="  w-full xss:h-auto xs:h-[90%] md:h-auto md:w-auto"
-                                  />
-                                </div> */}
                                   <div className="flex flex-col space-y-1 sm:px-2 mb-2 w-full ">
                                     <h4 className="sm:text-xl xss:text-lg xss:font-bold sm:font-bold">
                                       {post.title}
                                     </h4>
                                     <div className="flex md:px-1 py-2 items-center">
-                                      {/* "profile_img ? profile_img :" */}
                                       {post.profile_img ? (
                                         <img
                                           src={post.profile_img}
@@ -1354,9 +1338,8 @@ const ViewProfile = () => {
                                         </p>
                                       )}
                                     </div>
-
                                     <button
-                                      className="bg-[#0000FF] px-[2vw] xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xss:py-2  text-white font-semibold rounded-sm"
+                                      className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] lg:px-1.5 xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
                                       onClick={() =>
                                         downloadpdf(
                                           post.articleId,
@@ -1364,24 +1347,23 @@ const ViewProfile = () => {
                                         )
                                       }
                                     >
-                                      Download
+                                      Download PDF
                                     </button>
                                   </div>
                                 </div>
-
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
-                                  <div className="flex items-baseline space-x-2">
+                                  <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
                                           : regularHeart
                                       }
-                                      className="text-red-600 cursor-pointer"
+                                      className="text-red-600 cursor-pointer text-xl"
                                     />
-                                    <span className="lg:text-md xss:text-base">
+                                    <span className="lg:text-lg xss:text-base">
                                       {post.likeCount}{" "}
-                                      {post.am_i_liked ? "Likes" : "Like"}
+                                      {post.am_i_liked ? "likes" : "like"}
                                     </span>
                                   </div>
                                   <div className="flex items-center space-x-2">

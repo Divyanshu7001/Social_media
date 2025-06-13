@@ -1,8 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../index";
 import api from "../api";
 import toast from "react-hot-toast";
+import { validate } from "./utilities/vailidators";
+import { EmploymentInputs } from "./Inputs/EmploymentInputs";
+
 
 export const EmploymentAddModal = ({
   setbutton1Clicked,
@@ -10,7 +13,7 @@ export const EmploymentAddModal = ({
   setIsDataFetched,
   setAddData,
 }) => {
-  const { user, setFetchData } = useContext(Context);
+  const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState("");
   const [city, setCity] = useState("");
   const [region, setRegion] = useState("");
@@ -19,8 +22,29 @@ export const EmploymentAddModal = ({
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [role, setRole] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const values = [
+    { organizationName: organizationName },
+    { city: city },
+    { region: region },
+    { country: country },
+    { department: department },
+    { startDate: startDate },
+    { endDate: endDate },
+    { role: role },
+  ];
+
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0];
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
 
   const handleAddEmployment = async () => {
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         organization: organizationName,
@@ -28,20 +52,18 @@ export const EmploymentAddModal = ({
         region,
         country,
         department,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: startDate ? startDate.toLocaleDateString("en-CA") : null,
+        end_date: endDate ? endDate.toLocaleDateString("en-CA") : null,
         role,
         profile_id: user.profile.id,
         type: "employee",
       };
-
       await api
         .post("/profileAdd", data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          //console.log(res.data.message);
           setbutton1Clicked(false);
           setPopup(false);
           setAddData(false);
@@ -53,7 +75,6 @@ export const EmploymentAddModal = ({
       toast.error("Error Adding Employment:" + error);
     }
   };
-
   return (
     <div
       onClick={() => {
@@ -76,105 +97,26 @@ export const EmploymentAddModal = ({
             />
           </div>
           <hr className="my-[1vw]" />
-
-          <div className="flex xss:flex-col md:flex-row md:gap-4 justify-between ">
-            <div className="flex flex-col xss:w-full w-[60%] ">
-              <label className="font-medium">Organization Name</label>
-              <input
-                value={organizationName}
-                onChange={(e) => setOrganizationName(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter Organization"
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4 mt-[1vw]">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="india">India</option>
-                <option value="pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Department</label>
-              <input
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Start Date</label>
-              <input
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Role/Title</label>
-              <input
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
+          <EmploymentInputs
+            organizationName={organizationName}
+            setOrganizationName={setOrganizationName}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            department={department}
+            setDepartment={setDepartment}
+            role={role}
+            setRole={setRole}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            errors={errors}
+            refs={refs}
+          />
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button
               onClick={handleAddEmployment}
@@ -205,7 +147,6 @@ export const EmploymentEditModal = ({
   employeeData,
   setEditData,
 }) => {
-  //console.log("Employee Data: ", employeeData);
   const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
     employeeData.organization
@@ -217,8 +158,28 @@ export const EmploymentEditModal = ({
   const [startDate, setStartDate] = useState(employeeData.start_date);
   const [endDate, setEndDate] = useState(employeeData.end_date);
   const [role, setRole] = useState(employeeData.role);
+  const [errors, setErrors] = useState({});
+  const values = [
+    { organizationName: organizationName },
+    { city: city },
+    { region: region },
+    { country: country },
+    { department: department },
+    { startDate: startDate },
+    { endDate: endDate },
+    { role: role },
+  ];
+
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0]; // "name", "email", etc.
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
 
   const handleEditEmployment = async () => {
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         organization: organizationName,
@@ -226,24 +187,27 @@ export const EmploymentEditModal = ({
         region,
         country,
         department,
-        start_date: startDate,
-        end_date: endDate,
+        start_date:
+          startDate !== employeeData.start_date
+            ? startDate.toLocaleDateString("en-CA")
+            : startDate,
+        end_date:
+          endDate !== employeeData.end_date
+            ? endDate.toLocaleDateString("en-CA")
+            : endDate,
         role,
         profile_id: user.profile.id,
         type: "employee",
       };
-
       await api
         .post(`/profileEdit/${employeeData.id}`, data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          console.log(res.data.message);
           setbutton1Clicked(false);
           setPopup(false);
           setEditData(false);
-          console.log("Calling setFetchData from EmploymentEditModal");
           setIsDataFetched(false);
           toast.success(res.data.message);
         });
@@ -275,104 +239,26 @@ export const EmploymentEditModal = ({
             />
           </div>
           <hr className="my-[1vw]" />
-
-          <div className="flex xss:flex-col md:flex-row md:gap-4 justify-between ">
-            <div className="flex flex-col xss:w-full w-[60%] ">
-              <label className="font-medium">Organization Name</label>
-              <input
-                value={organizationName}
-                onChange={(e) => setOrganizationName(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter Organization"
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4 mt-[1vw]">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="india">India</option>
-                <option value="pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Department</label>
-              <input
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Start Date</label>
-              <input
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Role/Title</label>
-              <input
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
+          <EmploymentInputs
+            organizationName={organizationName}
+            setOrganizationName={setOrganizationName}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            department={department}
+            setDepartment={setDepartment}
+            role={role}
+            setRole={setRole}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            errors={errors}
+            refs={refs}
+          />
 
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button

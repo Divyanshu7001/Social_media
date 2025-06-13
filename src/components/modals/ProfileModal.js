@@ -1,22 +1,23 @@
 import React, { useRef, useState, useContext } from "react";
 import { Context } from "../../index";
 import { RxCross2 } from "react-icons/rx";
-import Ellipse4 from "../../assets/img/profile.jpg";
 import Defaultimage from "../../assets/img/default1.png";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
 import api from "../api";
-import axios from "axios";
 import { CgProfile } from "react-icons/cg";
+import TextInput from "./utilities/TextInput";
+import { validate } from "./utilities/vailidators";
+
 export const ProfileModal = ({
   setbutton6Clicked,
   setPopup,
   setIsDataFetched,
 }) => {
-  const { user, profileData } = useContext(Context);
+  const { user } = useContext(Context);
   // console.log("User: ", user);
-  console.log("profileData: ", profileData);
+  //console.log("profileData: ", profileData);
 
   const [tempSelectedFile, setTempSelectedFile] = useState(null);
   const [image, setImage] = useState(user?.image || null);
@@ -52,9 +53,26 @@ export const ProfileModal = ({
     setCountry(countryData.name);
   };
 
+  const [errors, setErrors] = useState({});
+  const values = [
+    { name: name },
+    { email: email },
+    { phone: phone },
+    { country: country },
+  ];
+
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0]; // "name", "email", etc.
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
+
   const updateUser = async (event) => {
     event.preventDefault();
-
+    if (!validate({ values, setErrors })) return;
+    // Validate before proceeding
     const formData = new FormData();
     formData.append("id", user.id);
     formData.append("name", name);
@@ -90,6 +108,25 @@ export const ProfileModal = ({
       toast.error(error?.response?.data?.error || "Something went wrong.");
     }
   };
+
+  // Error state and refs for validation
+
+  // const validate = () => {
+  //   const newErrors = {};
+  //   if (!name)
+  //     newErrors.name = "Please fill Name";
+  //   if (!email) newErrors.email = "Email Id is required";
+  //   if (!phone) newErrors.phone = "Please fill Phone Number";
+  //   if (!country) newErrors.country = "Country is required";
+  //   setErrors(newErrors);
+  //   // Focus first error
+  //   if (Object.keys(newErrors).length > 0) {
+  //     const firstKey = Object.keys(newErrors)[0];
+  //     refs[firstKey]?.current?.focus();
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   return (
     <div
@@ -148,25 +185,24 @@ export const ProfileModal = ({
           </div>
           <div className="flex xss:flex-col sm:flex justify-between ">
             <div className="flex flex-col xss:w-full w-[60%] ">
-              <label className="font-semibold">Name</label>
-              <input
+              <TextInput
+                label={"Name"}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 outline-none py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter Name"
+                setValue={setName}
+                required={true}
+                error={errors.name}
+                inputRef={refs.name}
               />
             </div>
-
             <div className="flex xss:flex-col md:flex-row w-full gap-6">
               <div className="flex flex-col xss:w-full md:w-[55%] ">
-                <label className="font-semibold">Email</label>
-                <input
+                <TextInput
+                  label={"Email"}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 outline-none"
-                  type="text"
-                  placeholder="Enter Email"
+                  setValue={setEmail}
+                  required={true}
+                  error={errors.email}
+                  inputRef={refs.email}
                 />
               </div>
               <div className="flex flex-col xss:w-full md:w-[45%]">
@@ -175,12 +211,23 @@ export const ProfileModal = ({
                   <PhoneInput
                     country={country}
                     value={phone}
+                    required={true}
+                    inputProps={{
+                      name: "phone",
+                      required: true,
+                      autoFocus: true,
+                    }}
                     onChange={handlePhoneChange}
                     inputClass="!w-fit !border-none outline-none text-gray-800 text-xl"
                     buttonClass="!bg-transparent !border-none !scale-[1.25]"
                     dropdownClass="!bg-white !text-black !border !border-gray-300 rounded-md"
                   />
                 </div>
+                {errors.phone && (
+                  <span className="text-red-500 text-xs mt-1">
+                    {errors.phone}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -194,6 +241,11 @@ export const ProfileModal = ({
                 type="text"
                 readOnly
               />
+              {errors.country && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.country}
+                </span>
+              )}
             </div>
           </div>
 

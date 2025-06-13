@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../index";
 import toast from "react-hot-toast";
 import api from "../api";
-import DatePicker from "react-date-picker";
-import "react-date-picker/dist/DatePicker.css";
-import "react-calendar/dist/Calendar.css";
-import { FaCalendarAlt } from "react-icons/fa";
-// import "react-datepicker/dist/react-datepicker.css";
+import { validate } from "./utilities/vailidators";
+import { ProfessionalActivityInputs } from "./Inputs/ProfessionalActivityInputs";
+
+
 export const ProfessionalActivityAddModal = ({
   setbutton3Clicked,
   setPopup,
@@ -23,12 +22,27 @@ export const ProfessionalActivityAddModal = ({
   const [region, setRegion] = useState("");
   const [country, setCountry] = useState("");
   const [degree, setDegree] = useState("");
+  const [errors, setErrors] = useState({});
+  const values = [
+    { organizationName: organizationName },
+    { city: city },
+    { region: region },
+    { country: country },
+    { department: department },
+    { endDate: endDate },
+    { startDate: startDate },
+    { degree: degree },
+  ];
 
-  //Date Picker States
-  const [startYearPickerOpen, setStartYearPickerOpen] = useState(false);
-  const [degreeYearPickerOpen, setDegreeYearPickerOpen] = useState(false);
-
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0];
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
   const handleAddProfessionalActivity = async () => {
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         organization_name: organizationName,
@@ -38,18 +52,16 @@ export const ProfessionalActivityAddModal = ({
         department,
         degree: degree ? `${degree.getFullYear()}` : null,
         start_date: startDate ? startDate.getFullYear() : null,
-        end_date: endDate,
+        end_date: endDate ? endDate.toLocaleDateString("en-CA") : null,
         profile_id: user.profile.id,
         type: "professional_activity",
       };
-
       await api
         .post("/profileAdd", data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          //console.log(res.data.message);
           setbutton3Clicked(false);
           setPopup(false);
           setAddData(false);
@@ -57,11 +69,9 @@ export const ProfessionalActivityAddModal = ({
           toast.success(res.data.message);
         });
     } catch (error) {
-      //console.log(error);
       toast.error("Error Adding Professional Acitivity:" + error);
     }
   };
-
   return (
     <div
       onClick={() => {
@@ -84,142 +94,26 @@ export const ProfessionalActivityAddModal = ({
             />
           </div>
           <hr className="my-[1vw]" />
-
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Organization Name</label>
-              <input
-                onChange={(e) => setOrganizationName(e.target.value)}
-                value={organizationName}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter Organization"
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="India">India</option>
-                <option value="Pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Department</label>
-              <input
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full relative">
-              <label className="font-medium">Start Date</label>
-              <DatePicker
-                value={startDate}
-                onChange={(date) => {
-                  setStartDate(date);
-                  setStartYearPickerOpen(false);
-                }}
-                clearIcon={null}
-                calendarIcon={null}
-                yearPlaceholder="Select a Start Year"
-                view="decade"
-                maxDetail="decade"
-                isOpen={startYearPickerOpen}
-                onCalendarClose={() => setStartYearPickerOpen(false)}
-                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-              />
-
-              {/* Calendar Icon */}
-              <FaCalendarAlt
-                className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={() => setStartYearPickerOpen(!startYearPickerOpen)}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full relative">
-              <label className="font-medium">Degree/Title</label>
-              <DatePicker
-                value={degree}
-                onChange={(date) => {
-                  setDegree(date);
-                  setDegreeYearPickerOpen(false);
-                }}
-                yearPlaceholder="Select Degree Year"
-                format="yyyy"
-                view="decade"
-                maxDetail="decade"
-                clearIcon={null}
-                calendarIcon={null}
-                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                isOpen={degreeYearPickerOpen}
-              />
-
-              {/* Calendar Icon */}
-              <FaCalendarAlt
-                className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={() => {
-                  setDegreeYearPickerOpen(!degreeYearPickerOpen);
-                }}
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          {/* <div className='flex justify-between mt-[1vw]'>
-                    <div className='flex flex-col w-[100%] '>
-                        <label className='font-medium'>Link</label>
-                        <input className='w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4'  type="text" placeholder='' />
-                    </div>
-               </div> */}
-
+          <ProfessionalActivityInputs
+            organizationName={organizationName}
+            setOrganizationName={setOrganizationName}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            department={department}
+            setDepartment={setDepartment}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            degree={degree}
+            setDegree={setDegree}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            errors={errors}
+            refs={refs}
+          />
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button
               onClick={handleAddProfessionalActivity}
@@ -250,7 +144,7 @@ export const ProfessionalActivityEditModal = ({
   professionalActivityData,
   setEditData,
 }) => {
-  const { user, setFetchData } = useContext(Context);
+  const { user } = useContext(Context);
   const [organizationName, setOrganizationName] = useState(
     professionalActivityData.organization_name
   );
@@ -265,16 +159,29 @@ export const ProfessionalActivityEditModal = ({
   const [region, setRegion] = useState(professionalActivityData.region);
   const [country, setCountry] = useState(professionalActivityData.country);
   const [degree, setDegree] = useState(professionalActivityData.degree);
+  const [errors, setErrors] = useState({});
 
-  //Change States
-  const [isDegreeChanged, setIsDegreeChanged] = useState(false);
-  const [isStartYearChanged, setIsStartYearChanged] = useState(false);
+  const values = [
+    { organizationName: organizationName },
+    { city: city },
+    { region: region },
+    { country: country },
+    { department: department },
+    { endDate: endDate },
+    { startDate: startDate },
+    { degree: degree },
+  ];
 
-  //Date Picker States
-  const [startYearPickerOpen, setStartYearPickerOpen] = useState(false);
-  const [degreeYearPickerOpen, setDegreeYearPickerOpen] = useState(false);
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0];
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
 
   const handleEditProfessionalActivity = async () => {
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         organization_name: organizationName,
@@ -282,20 +189,27 @@ export const ProfessionalActivityEditModal = ({
         region,
         country,
         department,
-        degree: isDegreeChanged ? `${degree.getFullYear()}` : degree,
-        start_date: isStartYearChanged ? startDate.getFullYear() : startDate,
-        end_date: endDate,
+        degree:
+          degree !== professionalActivityData.degree
+            ? degree.getFullYear().toString()
+            : degree,
+        start_date:
+          startDate !== professionalActivityData.start_date
+            ? startDate.getFullYear()
+            : startDate,
+        end_date:
+          endDate !== professionalActivityData.end_date
+            ? endDate.toLocaleDateString("en-CA")
+            : endDate,
         profile_id: user.profile.id,
         type: "professional_activity",
       };
-
       await api
         .post(`/profileEdit/${professionalActivityData.id}`, data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          //console.log(res.data.message);
           setbutton3Clicked(false);
           setPopup(false);
           setEditData(false);
@@ -303,11 +217,9 @@ export const ProfessionalActivityEditModal = ({
           toast.success("Professional Activity Details Updated Successfully");
         });
     } catch (error) {
-      //console.log(error);
       toast.error("Error Updating Professional Acitivity:" + error);
     }
   };
-
   return (
     <div
       onClick={() => {
@@ -330,144 +242,26 @@ export const ProfessionalActivityEditModal = ({
             />
           </div>
           <hr className="my-[1vw]" />
-
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Organization Name</label>
-              <input
-                onChange={(e) => setOrganizationName(e.target.value)}
-                value={organizationName}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter Organization"
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="India">India</option>
-                <option value="Pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Department</label>
-              <input
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full relative">
-              <label className="font-medium">Start Date</label>
-              <DatePicker
-                value={startDate}
-                onChange={(date) => {
-                  setStartDate(date);
-                  setIsStartYearChanged(true);
-                  setStartYearPickerOpen(false);
-                }}
-                clearIcon={null}
-                calendarIcon={null}
-                yearPlaceholder="Select a Start Year"
-                view="decade"
-                maxDetail="decade"
-                isOpen={startYearPickerOpen}
-                onCalendarClose={() => setStartYearPickerOpen(false)}
-                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-              />
-
-              {/* Calendar Icon */}
-              <FaCalendarAlt
-                className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={() => setStartYearPickerOpen(!startYearPickerOpen)}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full relative">
-              <label className="font-medium">Degree/Title</label>
-              <DatePicker
-                value={degree}
-                onChange={(date) => {
-                  setDegree(date);
-                  setIsDegreeChanged(true);
-                  setDegreeYearPickerOpen(false);
-                }}
-                yearPlaceholder="Select Degree Year"
-                format="yyyy"
-                view="decade"
-                maxDetail="decade"
-                clearIcon={null}
-                calendarIcon={null}
-                className="peer w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                isOpen={degreeYearPickerOpen}
-              />
-
-              {/* Calendar Icon */}
-              <FaCalendarAlt
-                className="absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                onClick={() => {
-                  setDegreeYearPickerOpen(!degreeYearPickerOpen);
-                }}
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          {/* <div className='flex justify-between mt-[1vw]'>
-                    <div className='flex flex-col w-[100%] '>
-                        <label className='font-medium'>Link</label>
-                        <input className='w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4'  type="text" placeholder='' />
-                    </div>
-               </div> */}
-
+          <ProfessionalActivityInputs
+            organizationName={organizationName}
+            setOrganizationName={setOrganizationName}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            department={department}
+            setDepartment={setDepartment}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            degree={degree}
+            setDegree={setDegree}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            errors={errors}
+            refs={refs}
+          />
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button
               onClick={handleEditProfessionalActivity}

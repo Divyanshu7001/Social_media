@@ -1,8 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../index";
 import toast from "react-hot-toast";
 import api from "../api";
+import { validate } from "./utilities/vailidators";
+import { FundingDetailsInputs } from "./Inputs/FundingDetailsInputs";
+
+
 export const FundingDetailsAddModal = ({
   setbutton4Clicked,
   setPopup,
@@ -16,7 +20,6 @@ export const FundingDetailsAddModal = ({
   const [city, setCity] = useState("");
   const [region, setRegion] = useState("");
   const [country, setCountry] = useState("");
-
   const [projectLink, setProjectLink] = useState("");
   const [description, setDescription] = useState("");
   const [fundingType, setFundingType] = useState("");
@@ -27,8 +30,37 @@ export const FundingDetailsAddModal = ({
   const [grantLink, setGrantLink] = useState("");
   const [relationship, setRelationship] = useState("");
 
+  const values = [
+    { titleOfFundedProject: titleOfFundedProject },
+    { startDate: startDate },
+    { endDate: endDate },
+    { city: city },
+    { region: region },
+    { country: country },
+    { projectLink: projectLink },
+    { description: description },
+    { fundingType: fundingType },
+    { fundingSubtype: fundingSubtype },
+    { totalFundingAmount: totalFundingAmount },
+    { fundingAgencyName: fundingAgencyName },
+    { fundingIdentifier: fundingIdentifier },
+    { grantLink: grantLink },
+    { relationship: relationship },
+  ];
+
+  const [errors, setErrors] = useState({});
+
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0]; // "name", "email", etc.
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
+
   const handleAddFunding = async (e) => {
     e.preventDefault();
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         city,
@@ -44,8 +76,8 @@ export const FundingDetailsAddModal = ({
         funding_identifier: fundingIdentifier,
         grant_link: grantLink,
         relationship,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: startDate ? startDate.toLocaleDateString("en-CA") : null,
+        end_date: endDate ? endDate.toLocaleDateString("en-CA") : null,
         profile_id: user.profile.id,
         type: "funding_details",
       };
@@ -93,184 +125,45 @@ export const FundingDetailsAddModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full ">
-              <label className="font-medium">Funding Type</label>
-              <select
-                value={fundingType}
-                onChange={(e) => setFundingType(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Select Funding Type"
-              >
-                <option disabled value="">
-                  Select Funding Type
-                </option>
-                <option value="one">One</option>
-                <option value="two">Two</option>
-                <option value="three">Three</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col w-[39%] xss:w-full">
-              <label className="font-medium">Funding Sub Type</label>
-              <input
-                value={fundingSubtype}
-                onChange={(e) => setFundingSubtype(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Title of Funded Project</label>
-              <input
-                value={titleOfFundedProject}
-                onChange={(e) => setTitleOfFundedProject(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Project Link</label>
-              <input
-                value={projectLink}
-                onChange={(e) => setProjectLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Description</label>
-              <input
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Start Date</label>
-              <input
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full ">
-              <label className="font-medium">Total Funding Amount</label>
-              <input
-                value={totalFundingAmount}
-                onChange={(e) => setTotalFundingAmount(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Funding Agency Name</label>
-              <input
-                value={fundingAgencyName}
-                onChange={(e) => setFundingAgencyName(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="India">India</option>
-                <option value="Pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">
-                Funding Identifier(1) Grant Number
-              </label>
-              <input
-                value={fundingIdentifier}
-                onChange={(e) => setFundingIdentifier(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Grant Link</label>
-              <input
-                value={grantLink}
-                onChange={(e) => setGrantLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
+          <FundingDetailsInputs
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            projectLink={projectLink}
+            setProjectLink={setProjectLink}
+            description={description}
+            setDescription={setDescription}
+            fundingType={fundingType}
+            setFundingType={setFundingType}
+            fundingSubtype={fundingSubtype}
+            setFundingSubtype={setFundingSubtype}
+            totalFundingAmount={totalFundingAmount}
+            setTotalFundingAmount={setTotalFundingAmount}
+            fundingAgencyName={fundingAgencyName}
+            setFundingAgencyName={setFundingAgencyName}
+            fundingIdentifier={fundingIdentifier}
+            setFundingIdentifier={setFundingIdentifier}
+            grantLink={grantLink}
+            setGrantLink={setGrantLink}
+            titleOfFundedProject={titleOfFundedProject}
+            setTitleOfFundedProject={setTitleOfFundedProject}
+            errors={errors}
+            refs={refs}
+          />
 
           <h1 className="font-medium mt-[1vw]">Relationship</h1>
+          {errors.relationship && (
+            <span className="text-red-500 text-xs mt-1">
+              {errors.relationship}
+            </span>
+          )}
           <div className="flex justify-between mt-[1vw]">
             <div className="flex flex-col gap-[0.5vw]">
               <div>
@@ -348,7 +241,7 @@ export const FundingDetailsEditModal = ({
   fundingDetailsData,
   setEditData,
 }) => {
-  const { user, setFetchData } = useContext(Context);
+  const { user } = useContext(Context);
   const [titleOfFundedProject, setTitleOfFundedProject] = useState(
     fundingDetailsData.title
   );
@@ -384,8 +277,37 @@ export const FundingDetailsEditModal = ({
     fundingDetailsData.relationship
   );
 
+  const values = [
+    { titleOfFundedProject: titleOfFundedProject },
+    { startDate: startDate },
+    { endDate: endDate },
+    { city: city },
+    { region: region },
+    { country: country },
+    { projectLink: projectLink },
+    { description: description },
+    { fundingType: fundingType },
+    { fundingSubtype: fundingSubtype },
+    { totalFundingAmount: totalFundingAmount },
+    { fundingAgencyName: fundingAgencyName },
+    { fundingIdentifier: fundingIdentifier },
+    { grantLink: grantLink },
+    { relationship: relationship },
+  ];
+
+  const [errors, setErrors] = useState({});
+
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0]; // "name", "email", etc.
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
+
   const handleEditFunding = async () => {
     try {
+      if (!validate({ values, setErrors })) return;
       const data = {
         city,
         region,
@@ -400,8 +322,14 @@ export const FundingDetailsEditModal = ({
         funding_identifier: fundingIdentifier,
         grant_link: grantLink,
         relationship,
-        start_date: startDate,
-        end_date: endDate,
+        start_date:
+          startDate !== fundingDetailsData.start_date
+            ? startDate.toLocaleDateString("en-CA")
+            : startDate,
+        end_date:
+          endDate !== fundingDetailsData.end_date
+            ? endDate.toLocaleDateString("en-CA")
+            : endDate,
         profile_id: user.profile.id,
         type: "funding_details",
       };
@@ -449,184 +377,45 @@ export const FundingDetailsEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between md:gap-4 xss:flex-col md:flex-row">
-            <div className="flex flex-col w-[60%] xss:w-full ">
-              <label className="font-medium">Funding Type</label>
-              <select
-                value={fundingType}
-                onChange={(e) => setFundingType(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Select Funding Type"
-              >
-                <option disabled value="">
-                  Select Funding Type
-                </option>
-                <option value="one">One</option>
-                <option value="two">Two</option>
-                <option value="three">Three</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col w-[39%] xss:w-full">
-              <label className="font-medium">Funding Sub Type</label>
-              <input
-                value={fundingSubtype}
-                onChange={(e) => setFundingSubtype(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder="Enter City"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Title of Funded Project</label>
-              <input
-                value={titleOfFundedProject}
-                onChange={(e) => setTitleOfFundedProject(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Project Link</label>
-              <input
-                value={projectLink}
-                onChange={(e) => setProjectLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Description</label>
-              <input
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Start Date</label>
-              <input
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full ">
-              <label className="font-medium">Total Funding Amount</label>
-              <input
-                value={totalFundingAmount}
-                onChange={(e) => setTotalFundingAmount(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">End Date</label>
-              <input
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Funding Agency Name</label>
-              <input
-                value={fundingAgencyName}
-                onChange={(e) => setFundingAgencyName(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">City</label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Region or state</label>
-              <input
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Country</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder="Enter City"
-              >
-                <option disabled value="">
-                  Select Country
-                </option>
-                <option value="India">India</option>
-                <option value="Pakistan">Pakistan</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">
-                Funding Identifier(1) Grant Number
-              </label>
-              <input
-                value={fundingIdentifier}
-                onChange={(e) => setFundingIdentifier(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Grant Link</label>
-              <input
-                value={grantLink}
-                onChange={(e) => setGrantLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
+          <FundingDetailsInputs
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            city={city}
+            setCity={setCity}
+            region={region}
+            setRegion={setRegion}
+            country={country}
+            setCountry={setCountry}
+            projectLink={projectLink}
+            setProjectLink={setProjectLink}
+            description={description}
+            setDescription={setDescription}
+            fundingType={fundingType}
+            setFundingType={setFundingType}
+            fundingSubtype={fundingSubtype}
+            setFundingSubtype={setFundingSubtype}
+            totalFundingAmount={totalFundingAmount}
+            setTotalFundingAmount={setTotalFundingAmount}
+            fundingAgencyName={fundingAgencyName}
+            setFundingAgencyName={setFundingAgencyName}
+            fundingIdentifier={fundingIdentifier}
+            setFundingIdentifier={setFundingIdentifier}
+            grantLink={grantLink}
+            setGrantLink={setGrantLink}
+            titleOfFundedProject={titleOfFundedProject}
+            setTitleOfFundedProject={setTitleOfFundedProject}
+            errors={errors}
+            refs={refs}
+          />
 
           <h1 className="font-medium mt-[1vw]">Relationship</h1>
+          {errors.relationship && (
+            <span className="text-red-500 text-xs mt-1">
+              {errors.relationship}
+            </span>
+          )}
           <div className="flex justify-between mt-[1vw]">
             <div className="flex flex-col gap-[0.5vw]">
               <div>
