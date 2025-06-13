@@ -1,41 +1,61 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import api from "../api";
 import toast from "react-hot-toast";
 import { Context } from "../../index";
+import { validate } from "./utilities/vailidators";
+import { WorkInputs } from "./Inputs/WorkInputs";
+
 export const WorkAddModal = ({
   setbutton5Clicked,
   setPopup,
   setIsDataFetched,
   setAddData,
 }) => {
-  const { user, setFetchData } = useContext(Context);
+  const { user } = useContext(Context);
   const [workType, setWorkType] = useState("");
   const [workTitle, setWorkTitle] = useState("");
   const [journalTitle, setJournalTitle] = useState("");
   const [link, setLink] = useState("");
   const [publicationDate, setPublicationDate] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const values = [
+    { workType: workType },
+    { workTitle: workTitle },
+    { journalTitle: journalTitle },
+    { link: link },
+    { publicationDate: publicationDate },
+  ];
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0];
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
 
   const handleAddWork = async (e) => {
     e.preventDefault();
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         work_type: workType,
         work_title: workTitle,
         journal_title: journalTitle,
         link,
-        publication_date: publicationDate,
+        publication_date: publicationDate
+          ? publicationDate.toLocaleDateString("en-CA")
+          : null,
         profile_id: user.profile.id,
         type: "works",
       };
-
       await api
         .post("/profileAdd", data, {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         })
         .then((res) => {
-          //console.log(res.data.message);
           setbutton5Clicked(false);
           setPopup(false);
           setAddData(false);
@@ -43,11 +63,9 @@ export const WorkAddModal = ({
           toast.success(res.data.message);
         });
     } catch (error) {
-      //console.log(error);
       toast.error("Error Adding Education:" + error);
     }
   };
-
   return (
     <div
       onClick={() => {
@@ -70,68 +88,21 @@ export const WorkAddModal = ({
             />
           </div>
           <hr className="my-[1vw]" />
-
-          <div className="flex justify-between xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Work Type</label>
-              <input
-                value={workType}
-                onChange={(e) => setWorkType(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Work Title</label>
-              <input
-                value={workTitle}
-                onChange={(e) => setWorkTitle(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
-            <div className="flex flex-col w-[100%] ">
-              <label className="font-medium">Journal Title</label>
-              <input
-                value={journalTitle}
-                onChange={(e) => setJournalTitle(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Link</label>
-              <input
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Publication Date</label>
-              <input
-                value={publicationDate}
-                onChange={(e) => setPublicationDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
-
+          <WorkInputs
+            workType={workType}
+            setWorkType={setWorkType}
+            workTitle={workTitle}
+            setWorkTitle={setWorkTitle}
+            journalTitle={journalTitle}
+            setJournalTitle={setJournalTitle}
+            link={link}
+            setLink={setLink}
+            publicationDate={publicationDate}
+            setPublicationDate={setPublicationDate}
+            errors={errors}
+            refs={refs}
+          />
           <hr className="my-[1vw]" />
-
           <div className="flex flex-row gap-[1vw] mt-[4vw]">
             <button
               onClick={handleAddWork}
@@ -162,7 +133,7 @@ export const WorkEditModal = ({
   workData,
   setEditData,
 }) => {
-  const { user, setFetchData } = useContext(Context);
+  const { user } = useContext(Context);
   const [workType, setWorkType] = useState(workData.work_type);
   const [workTitle, setWorkTitle] = useState(workData.work_title);
   const [journalTitle, setJournalTitle] = useState(workData.journal_title);
@@ -170,15 +141,35 @@ export const WorkEditModal = ({
   const [publicationDate, setPublicationDate] = useState(
     workData.publication_date
   );
+  const [errors, setErrors] = useState({});
+
+  const values = [
+    { workType: workType },
+    { workTitle: workTitle },
+    { journalTitle: journalTitle },
+    { link: link },
+    { publicationDate: publicationDate },
+  ];
+  const refs = Object.fromEntries(
+    values.map((value) => {
+      const key = Object.keys(value)[0];
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return [key, useRef()];
+    })
+  );
 
   const handleEditWork = async () => {
+    if (!validate({ values, setErrors })) return;
     try {
       const data = {
         work_type: workType,
         work_title: workTitle,
         journal_title: journalTitle,
         link,
-        publication_date: publicationDate,
+        publication_date:
+          publicationDate !== workData.publication_date
+            ? publicationDate.toLocaleDateString("en-CA")
+            : publicationDate,
         profile_id: user.profile.id,
         type: "works",
       };
@@ -225,64 +216,20 @@ export const WorkEditModal = ({
           </div>
           <hr className="my-[1vw]" />
 
-          <div className="flex justify-between xss:flex-col sm:flex md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Work Type</label>
-              <input
-                value={workType}
-                onChange={(e) => setWorkType(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%]  xss:w-full">
-              <label className="font-medium">Work Title</label>
-              <input
-                value={workTitle}
-                onChange={(e) => setWorkTitle(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col sm:flex">
-            <div className="flex flex-col w-[100%] ">
-              <label className="font-medium">Journal Title</label>
-              <input
-                value={journalTitle}
-                onChange={(e) => setJournalTitle(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-[1vw] xss:flex-col md:flex-row md:gap-4">
-            <div className="flex flex-col w-[60%] xss:w-full">
-              <label className="font-medium">Link</label>
-              <input
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4"
-                type="text"
-                placeholder=""
-              />
-            </div>
-            <div className="flex flex-col w-[39%] xss:w-full ">
-              <label className="font-medium">Publication Date</label>
-              <input
-                value={publicationDate}
-                onChange={(e) => setPublicationDate(e.target.value)}
-                className="w-full border-[1.3px] border-opacity-50 py-3 px-2 rounded-md border-black mt-4 "
-                type="date"
-                placeholder=""
-              />
-            </div>
-          </div>
+          <WorkInputs
+            workType={workType}
+            setWorkType={setWorkType}
+            workTitle={workTitle}
+            setWorkTitle={setWorkTitle}
+            journalTitle={journalTitle}
+            setJournalTitle={setJournalTitle}
+            link={link}
+            setLink={setLink}
+            publicationDate={publicationDate}
+            setPublicationDate={setPublicationDate}
+            errors={errors}
+            refs={refs}
+          />
 
           <hr className="my-[1vw]" />
 
