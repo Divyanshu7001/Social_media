@@ -7,7 +7,7 @@ import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
 import api from "../api";
 import { CgProfile } from "react-icons/cg";
-import TextInput from "./utilities/TextInput";
+import TextInput from "./InputStyles/TextInput";
 import { validate } from "./utilities/vailidators";
 
 export const ProfileModal = ({

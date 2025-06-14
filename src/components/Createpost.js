@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 // import line8 from "../assets/img/Line8.png";
 import Ellipse4 from "../assets/img/Ellipse4.png";
-// import materialsymbolslightclose from "../assets/img/materialsymbolslightclose.png";
-// import bytesizedownload from "../assets/img/bytesizedownload.png";
 import { Context } from "../index.js";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 import api from "./api.js";
 import { MdOutlineClear } from "react-icons/md";
+import toast from "react-hot-toast";
+import { CgProfile } from "react-icons/cg";
 
 const Box = ({ closePopup }) => {
   const { user } = useContext(Context);
@@ -21,28 +21,53 @@ const Box = ({ closePopup }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 480) {
-        SetIcons(25)
+        SetIcons(30);
       } else if (window.innerWidth <= 768) {
-        SetIcons(30)
+        SetIcons(40);
       } else {
-        SetIcons(60)
+        SetIcons(60);
       }
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return window.removeEventListener('resize', handleResize)
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return window.removeEventListener("resize", handleResize);
   }, []);
 
+  const [isImagePortrait, setIsImagePortrait] = useState(false);
+
+  const isPortrait = (image) => {
+    //console.log("Image: ", image);
+    if (!image) return;
+    const img = new Image();
+    img.src = image;
+    img.onload = () => {
+      const { height, width } = img;
+      //console.log("Image dimensions: ", height, width);
+
+      height > width || height == width
+        ? setIsImagePortrait(true)
+        : setIsImagePortrait(false);
+    };
+    img.onerror = () => {
+      console.error("Failed to load image.");
+    };
+  };
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       // Check the file type
-      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
       if (allowedTypes.includes(file.type)) {
         const imageURL = URL.createObjectURL(file);
         setUploadedImage(imageURL);
         setUploadFile(file);
+        isPortrait(imageURL);
         setImageError(null); // Clear any previous error
       } else {
         // If the file is not an image, show an error
@@ -54,6 +79,7 @@ const Box = ({ closePopup }) => {
       // If no file is selected
       setUploadedImage(null);
       setUploadFile(null);
+      setIsImagePortrait(false);
       setImageError("No file selected. Please choose an image.");
     }
   };
@@ -84,24 +110,30 @@ const Box = ({ closePopup }) => {
       data.append("user_id", user.id);
       console.log(data);
 
-      const response = await api.post(
-        "uploadPost",
-        data,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      closePopup()
-      console.log(response);
+      try {
+        await api
+          .post("uploadPost", data, {
+            withCredentials: true,
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((res) => {
+            console.log(res.data);
+            toast.success(res.data.message);
+            closePopup();
+          });
+      } catch (error) {
+        console.log("Error while uploading Post:", error);
+        toast.error("Failed to upload post. Please try again.");
+        return;
+      }
     } catch (error) {
       console.log("Error while uploading Post:", error);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-70 backdrop-blur-sm flex h-screen justify-center items-center z-50">
-      <div className="bg-white w-full max-w-4xl h-3/5 md:h-3/5 lg:h-4/5 xl:h-4/5 2xl:h-2/3  p-5 rounded-lg shadow-md relative">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-80 backdrop-blur-sm flex min-h-screen justify-center items-center z-50">
+      <div className="bg-white xss:mx-3 w-full h-auto max-w-4xl p-4 rounded-lg shadow-md">
         <div className="flex justify-between items-center pb-3">
           <div className="font-semibold text-2xl text-black ">Create Post</div>
           <MdOutlineClear
@@ -113,13 +145,21 @@ const Box = ({ closePopup }) => {
 
         <div className="text-left">
           <p className="py-1 border-t-2" />
-          {/* <img src={line8} alt="Line" className="w-full h-px bg-blue-500 mb-5" /> */}
           <div className="flex items-center mb-5">
-            <img
+            {/* <img
               src={`${user.image}` || Ellipse4}
               alt="Profile"
               className="w-24 h-24 rounded-full mr-4"
-            />
+            /> */}
+            {user?.image ? (
+              <img
+                src={user?.image}
+                alt="User profile"
+                className="h-24 w-24 rounded-full object-cover mr-4"
+              />
+            ) : (
+              <CgProfile className="h-24 w-24 rounded-full object-cover mr-4" />
+            )}
             <div className="font-semibold text-xl text-black">
               {user.name || "John Paul"}
             </div>
@@ -135,38 +175,69 @@ const Box = ({ closePopup }) => {
               className="md:w-full p-2 text-sm border-2 border-gray-200 text-md outline-none font-poppins bg-transparent w-full"
             />
             {descError && (
-              <p className="text-red-500 font-bold mt-2">
-                {descError}
-              </p>
+              <p className="text-red-500 font-bold mt-2">{descError}</p>
             )}
           </div>
 
-          <div className=" mt-5 md:mt-5 lg:mt-10 h-44 w-full">
-            <div className="border border-primary rounded-lg p-3 text-center w-1/2 md:w-2/5 lg:w-3/5 lg:h-full relative">
+          <div className="my-5 lg:mt-10 h-44 w-auto">
+            <div
+              className={`border border-primary rounded-lg p-2 text-center flex justify-center items-center relative ${
+                isImagePortrait ? "w-fit h-auto" : "w-auto xs:w-3/5 md:w-2/5 h-44"
+              } `}
+            >
               {uploadedImage ? (
-                <img
-                  src={uploadedImage}
-                  alt="Uploaded"
-                  className="max-w-full max-h-44 object-cover rounded-lg"
-                />
+                <>
+                  {isImagePortrait ? (
+                    <>
+                      <img
+                        src={uploadedImage}
+                        alt="Uploaded"
+                        className="w-auto max-h-40 object-contain rounded-lg"
+                      />
+                      <MdOutlineClear
+                        onClick={() => {
+                          setUploadedImage(null);
+                          setUploadFile(null);
+                          setImageError(null);
+                          setIsImagePortrait(false);
+                        }}
+                        size={28}
+                        className="cursor-pointer absolute top-2 right-2 text-white bg-gray-800 rounded-full p-1 hover:bg-gray-700 transition-colors"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src={uploadedImage}
+                        alt="Uploaded"
+                        className="w-full max-h-40 rounded-lg "
+                      />
+                      <MdOutlineClear
+                        onClick={() => {
+                          setUploadedImage(null);
+                          setUploadFile(null);
+                          setImageError(null);
+                        }}
+                        size={28}
+                        className="cursor-pointer absolute top-2 right-2 text-white bg-gray-800 rounded-full p-1 hover:bg-gray-700 transition-colors"
+                      />
+                    </>
+                  )}
+                </>
               ) : (
                 <>
                   <label
                     htmlFor="file-upload"
                     className="cursor-pointer flex flex-col justify-center items-center"
                   >
-                    {/* <img
-                      src={bytesizedownload}
-                      alt="Upload"
-                      className="w-12 h-12"
-                    /> */}
                     <IoCloudDownloadOutline
                       size={icon}
                       color="gray"
                       className="mt-5"
                     />
-                    <div className="font-semibold text-base md:text-lg lg:text-xl my-3 text-gray-500">
-                      Upload Image
+                    <div className="font-semibold text-base md:text-lg lg:text-xl my-2 text-gray-500">
+                      Upload Image <br />
+                      Maximum file size: 1mb
                     </div>
                   </label>
                   <input
@@ -177,30 +248,26 @@ const Box = ({ closePopup }) => {
                   />
                 </>
               )}
-
             </div>
             <div>
               {imageError && (
-                <p className="text-red-500 font-bold mt-2">
-                  {imageError}
-                </p>
+                <p className="text-red-500 font-bold mt-2">{imageError}</p>
               )}
             </div>
-
-            <div className="flex flex-col md:flex-row gap-2 justify-end mt-4">
-              <button
-                className="bg-white text-primary hidden md:block border text-lg font-semibold border-primary py-2 px-10 rounded-md cursor-pointer"
-                onClick={closePopup}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-primary text-white py-2 px-10 rounded-md text-lg font-semibold cursor-pointer "
-                onClick={handlePostUpload}
-              >
-                Post
-              </button>
-            </div>
+          </div>
+          <div className="flex flex-row gap-2 justify-end mt-8">
+            <button
+              className="bg-white text-primary block border text-lg font-semibold border-primary py-2 px-10 xss:px-6 rounded-md cursor-pointer"
+              onClick={closePopup}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-primary text-white py-2 px-10 xss:px-7 rounded-md text-lg font-semibold cursor-pointer "
+              onClick={handlePostUpload}
+            >
+              Post
+            </button>
           </div>
         </div>
       </div>
@@ -209,4 +276,3 @@ const Box = ({ closePopup }) => {
 };
 
 export default Box;
-

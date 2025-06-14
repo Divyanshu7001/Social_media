@@ -1,11 +1,4 @@
-const TextInput = ({
-  label,
-  value,
-  setValue,
-  required,
-  error,
-  inputRef,
-}) => {
+const TextInput = ({ label, value, setValue, required, error, inputRef }) => {
   return (
     <div>
       <label className="font-medium">{label}</label>

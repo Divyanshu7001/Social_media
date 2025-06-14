@@ -1,5 +1,5 @@
-import DateInput from "../utilities/DateInput";
-import TextInput from "../utilities/TextInput";
+import DateInput from "../InputStyles/DateInput";
+import TextInput from "../InputStyles/TextInput";
 
 export const WorkInputs = ({
   workType,

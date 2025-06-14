@@ -1,6 +1,6 @@
-import DateInput from "../utilities/DateInput";
-import SelectionInput from "../utilities/SelectionInput";
-import TextInput from "../utilities/TextInput";
+import DateInput from "../InputStyles/DateInput";
+import SelectionInput from "../InputStyles/SelectionInput";
+import TextInput from "../InputStyles/TextInput";
 
 export const FundingDetailsInputs = ({
   titleOfFundedProject,
