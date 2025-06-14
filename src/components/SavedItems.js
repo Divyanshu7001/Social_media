@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { Context } from "../index.js";
 import api from "./api";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
@@ -160,12 +160,12 @@ const SavedItems = () => {
                 icon: <MdOutlinePeopleAlt size={28} />,
               },
               {
-                destination: "/Message",
+                destination: "#",
                 text: "Message",
                 icon: <MdOutlineMessage size={25} />,
               },
               {
-                destination: "/Notifications",
+                destination: "#",
                 text: "Notifications",
                 icon: <IoMdNotificationsOutline size={28} />,
               },
@@ -234,7 +234,7 @@ const SavedItems = () => {
                         `/profile/${art.articleUserId}`
                       )
                     }}>
-                   
+
                       <img
                         src={art.profile_img || "images/Ellipse4.png"}
                         alt="Avatar"

@@ -49,7 +49,7 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
           <div className="flex items-center space-x-2">
             <MdOutlineMessage size={25} />
             {/* <img src={materialsymbolslightchatoutline} alt="Message" className="h-6 w-6" /> */}
-            <Link to="/Message" className="font-semibold text-blue-600">
+            <Link to="#" className="font-semibold text-blue-600">
               Message
             </Link>
           </div>
@@ -57,7 +57,7 @@ export const LeftSidebar = ({ user_data, togglePopup, showPopup, post }) => {
           <div className="flex items-center space-x-2">
             <IoMdNotificationsOutline size={28} />
             {/* <img src={claritynotificationline} alt="Notification" className="h-6 w-6" /> */}
-            <Link to="/Notifications" className="font-semibold text-blue-600">
+            <Link to="#" className="font-semibold text-blue-600">
               Notifications
             </Link>
           </div>

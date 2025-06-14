@@ -261,7 +261,7 @@ const OtherProfile = () => {
                   onClick={() => handleFollow(userId, profile.am_i_following ? "unfollow" : "follow")}
                   className="bg-[#0000ff] hover:bg-blue-700 border-blue-600 rounded-md xs:px-8 lg:px-5 xl:px-8 py-2 xss:px-4 text-white font-semibold text-lg"
                 >
-                  {console.log(user.id ,"", userId )}
+                  {console.log(user.id, "", userId)}
                   {profile.am_i_following ? "Unfollow" : "Follow"}
                 </button>)}
                 <button className="border border-[#0000ff] hover:bg-blue-100 rounded-md xs:px-7 lg:px-4 xl:px-7 py-2 xss:px-4 text-[#0000ff] font-semibold text-lg">
@@ -332,17 +332,6 @@ const OtherProfile = () => {
                       No Skills Available
                     </p>
                   )}
-
-                  {/* <p className="px-4 py-1 border-2 rounded-2xl uppercase">php</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">Laravel</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">php</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">Laravel</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">php</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">Laravel</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">php</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">Laravel</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">php</p>
-                  <p className="px-4 py-1 border-2 rounded-2xl uppercase">Laravel</p> */}
                 </div>
               </div>
             </div>
@@ -579,7 +568,7 @@ const OtherProfile = () => {
         <div className="col-span-1 flex flex-col space-y-10 lg:ml-10">
           <div className="flex flex-col space-y-6">
             <h1 className="text-2xl font-semibold text-gray-800">
-              {otherProfileData?.name || "John Paul"}'s Uploads
+              {otherProfileData?.name || "John Paul"} Uploads
             </h1>
             <div className="flex xss:gap-2 sm:gap-6">
               <button

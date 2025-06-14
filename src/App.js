@@ -32,6 +32,7 @@ const InnerApp = () => {
     fetchData,
     setFollowingData,
     setFollowersData,
+    setToken
   } = useContext(Context);
 
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -42,6 +43,12 @@ const InnerApp = () => {
       localStorage.getItem("isAuthenticated")
     );
     const userIdFromLocal = JSON.parse(localStorage.getItem("userId"));
+    const tokenFromLocal = localStorage.getItem("token");
+    if (tokenFromLocal) {
+      setToken(tokenFromLocal);
+    } else {
+      setToken(null);
+    }
 
     if (!userIdFromLocal || !isAuthenticatedFromLocalStorage) {
       setIsAuthenticated(false);
@@ -132,7 +139,7 @@ const InnerApp = () => {
         <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
       </Routes>
 
-      
+
       <Toaster
         position="top-center"
         toastOptions={{
