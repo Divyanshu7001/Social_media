@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 // import "../style/UploadPaperDetails.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Context } from "../index.js";
 import toast from "react-hot-toast";
 import api from "./api.js";
+import { validate } from "./modals/utilities/vailidators";
+
 export const UploadPaperDetails = () => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
@@ -25,13 +27,47 @@ export const UploadPaperDetails = () => {
   const [showUserList, setShowUserList] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [newCoAuthor, setNewCoAuthor] = useState("");
+  const [errors, setErrors] = useState({});
 
   const location = useLocation();
   const { selectedFile } = location.state || {};
   //console.log(selectedFile);
 
+  // Define refs for each field
+  const refs = {
+    paperTitle: useRef(),
+    abstract: useRef(),
+    publicationName: useRef(),
+    year: useRef(),
+    link: useRef(),
+    doi: useRef(),
+    research_interest: useRef(),
+    category: useRef(),
+    coAuthors: useRef(),
+  };
+
   const handleUpload = async (e) => {
     e.preventDefault();
+    // Prepare values for validation
+    const values = [
+      { paperTitle: formData.paperTitle },
+      { abstract: formData.abstract },
+      { publicationName: formData.publicationName },
+      { year: formData.year },
+      { link: formData.link },
+      { doi: formData.doi },
+      { research_interest: formData.research_interest },
+      { category: formData.category },
+      { coAuthors: coAuthors.length ? coAuthors.join(", ") : "" },
+    ];
+    if (!validate({ values, setErrors })) {
+      // Focus the first error field
+      const firstErrorKey = Object.keys(errors)[0];
+      if (firstErrorKey && refs[firstErrorKey] && refs[firstErrorKey].current) {
+        refs[firstErrorKey].current.focus();
+      }
+      return;
+    }
 
     if (
       !formData.paperTitle ||
@@ -77,14 +113,10 @@ export const UploadPaperDetails = () => {
     // console.log(data);
 
     try {
-      const response = await api.post(
-        "uploadJournal",
-        data,
-        {
-          withCredentials: true,
-          headers,
-        }
-      );
+      const response = await api.post("uploadJournal", data, {
+        withCredentials: true,
+        headers,
+      });
 
       toast.success(response.data.message, {
         style: {
@@ -162,13 +194,19 @@ export const UploadPaperDetails = () => {
         <div className="bg-gray-100 flex justify-center w-full">
           {/*relative h-[1659px] overflow-hidden w-[1440px] */}
           <div className=" bg-gray-100 w-full h-full ">
-
-            <h1 className="text-3xl font-bold text-gray-700 text-center my-5 md:my-10">Enter Paper Details</h1>
+            <h1 className="text-3xl font-bold text-gray-700 text-center my-5 md:my-10">
+              Enter Paper Details
+            </h1>
 
             <div className="bg-gray-200 p-5 md:p-10 mb-10 rounded-lg shadow-md w-11/12  md:w-11/12 lg:w-[75%] mx-auto flex flex-col md:flex md:flex-row  gap-8 ">
               <div className="w-full md:w-[55%]">
                 <div className="mb-4">
-                  <label htmlFor="paperTitle" className="block text-lg font-semibold text-gray-700">Paper Title</label>
+                  <label
+                    htmlFor="paperTitle"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    Paper Title
+                  </label>
                   <input
                     type="text"
                     name="paperTitle"
@@ -176,31 +214,64 @@ export const UploadPaperDetails = () => {
                     value={formData.paperTitle}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    ref={refs.paperTitle}
                   />
+                  {errors.paperTitle && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.paperTitle}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="abstract" className="block text-lg font-semibold text-gray-700">Abstract</label>
+                  <label
+                    htmlFor="abstract"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    Abstract
+                  </label>
                   <textarea
                     name="abstract"
                     value={formData.abstract}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2 h-[150px] resize-none"
+                    ref={refs.abstract}
                   ></textarea>
+                  {errors.abstract && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.abstract}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="link" className="block text-lg font-semibold text-gray-700">Link</label>
+                  <label
+                    htmlFor="link"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    Link
+                  </label>
                   <input
                     type="text"
                     name="link"
                     value={formData.link}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    ref={refs.link}
                   />
+                  {errors.link && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.link}
+                    </span>
+                  )}
                 </div>
 
-                <label htmlFor="author" className="block text-lg font-semibold text-gray-700 mt-4">Authors</label>
+                <label
+                  htmlFor="author"
+                  className="block text-lg font-semibold text-gray-700 mt-4"
+                >
+                  Authors
+                </label>
                 <div className="bg-gray-100 p-4 rounded-md border border-gray-300">
                   <div className="flex flex-col md:flex-row items-center mb-2 md:mb-4">
                     <input
@@ -209,8 +280,14 @@ export const UploadPaperDetails = () => {
                       onChange={handleCoAuthorChange}
                       placeholder="Enter Co-Author Name"
                       className="p-4 border border-gray-300 rounded-md mr-2 w-full md:w-[60%] mb-4 md:mb-0"
+                      ref={refs.coAuthors}
                     />
-                    <p className="text-blue-500 cursor-pointer" onClick={handleAddNewCoAuthor}>+Add Co-Author</p>
+                    <p
+                      className="text-blue-500 cursor-pointer"
+                      onClick={handleAddNewCoAuthor}
+                    >
+                      +Add Co-Author
+                    </p>
                   </div>
 
                   {showUserList && (
@@ -254,12 +331,22 @@ export const UploadPaperDetails = () => {
                       </div>
                     ))}
                   </div>
+                  {errors.coAuthors && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.coAuthors}
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="w-full md:w-[40%]">
                 <div className="mb-4">
-                  <label htmlFor="publicationName" className="block text-lg font-semibold text-gray-700">Publication Name</label>
+                  <label
+                    htmlFor="publicationName"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    Publication Name
+                  </label>
                   <input
                     type="text"
                     name="publicationName"
@@ -267,68 +354,123 @@ export const UploadPaperDetails = () => {
                     value={formData.publicationName}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    ref={refs.publicationName}
                   />
+                  {errors.publicationName && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.publicationName}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="year" className="block text-lg font-semibold text-gray-700">Year</label>
+                  <label
+                    htmlFor="year"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    Year
+                  </label>
                   <input
                     type="text"
                     name="year"
                     value={formData.year}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    ref={refs.year}
                   />
+                  {errors.year && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.year}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="doi" className="block text-lg font-semibold text-gray-700">DOI</label>
+                  <label
+                    htmlFor="doi"
+                    className="block text-lg font-semibold text-gray-700"
+                  >
+                    DOI
+                  </label>
                   <input
                     type="text"
                     name="doi"
                     value={formData.doi}
                     onChange={handleChange}
                     className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    ref={refs.doi}
                   />
+                  {errors.doi && (
+                    <span className="text-red-500 text-xs mt-1">
+                      {errors.doi}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <div className="mb-4">
-                    <label htmlFor="category" className="block text-lg font-semibold text-gray-700">Category</label>
+                    <label
+                      htmlFor="category"
+                      className="block text-lg font-semibold text-gray-700"
+                    >
+                      Category
+                    </label>
                     <select
                       name="category"
                       value={formData.category}
                       onChange={handleChange}
                       className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                      ref={refs.category}
                     >
                       <option value="">Select Category</option>
                       <option value="research">Research</option>
                       <option value="review">Review</option>
                       <option value="case study">Case Study</option>
                     </select>
+                    {errors.category && (
+                      <span className="text-red-500 text-xs mt-1">
+                        {errors.category}
+                      </span>
+                    )}
                   </div>
 
                   <div className="mb-4">
-                    <label htmlFor="research_interest" className="block text-lg font-semibold text-gray-700">Research Interests</label>
+                    <label
+                      htmlFor="research_interest"
+                      className="block text-lg font-semibold text-gray-700"
+                    >
+                      Research Interests
+                    </label>
                     <input
                       type="text"
                       name="research_interest"
                       value={formData.research_interest}
                       onChange={handleChange}
                       className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                      ref={refs.research_interest}
                     />
+                    {errors.research_interest && (
+                      <span className="text-red-500 text-xs mt-1">
+                        {errors.research_interest}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="bg-primary text-center px-5 py-3 mb-10 text-white text-lg font-semibold rounded-md cursor-pointer w-32 mx-auto" onClick={handleUpload}>
+            <div
+              className="bg-primary text-center px-5 py-3 mb-10 text-white text-lg font-semibold rounded-md cursor-pointer w-32 mx-auto"
+              onClick={handleUpload}
+            >
               Save
             </div>
 
             {showPopup && (
               <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-md w-[400px] text-center">
-                  <h3 className="mb-4 text-xl font-semibold">Add New Co-Author</h3>
+                  <h3 className="mb-4 text-xl font-semibold">
+                    Add New Co-Author
+                  </h3>
                   <input
                     type="text"
                     value={newCoAuthor}
@@ -351,13 +493,10 @@ export const UploadPaperDetails = () => {
                 </div>
               </div>
             )}
-
-
           </div>
         </div>
         <Footer />
       </div>
-
     </>
   );
 };

@@ -63,11 +63,15 @@ const InnerApp = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("fetched user in app: ", res.data);
+      //console.log("fetched user in app: ", res.data);
       setUser(res.data.profile_data.user);
       setProfileData(res.data.profile_data.user.profile || {});
       setSavedFiles(res.data.saved_data || {});
-      setMyUploads(res.data.article_upload || []);
+      setMyUploads({
+        posts: res.data.post_upload || [],
+        articles: res.data.article_upload || [],
+      });
+
       setFollowersData(res.data.follower_count || 0);
       setFollowingData(res.data.following_count || 0);
       setIsAuthenticated(true);
@@ -132,7 +136,6 @@ const InnerApp = () => {
         <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
       </Routes>
 
-      
       <Toaster
         position="top-center"
         toastOptions={{

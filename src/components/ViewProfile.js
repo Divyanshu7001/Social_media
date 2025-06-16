@@ -42,7 +42,9 @@ const ViewProfile = () => {
     profileData,
     setProfileData,
     myUploads,
+    setMyUploads,
     savedFiles,
+    setSavedFiles,
     setFetchData,
     followersData,
     followingData,
@@ -137,7 +139,7 @@ const ViewProfile = () => {
   //   return <Loader />;
   // }
 
-  //console.log("My Uploads Data: ", myUploads);
+  console.log("My Uploads Data: ", myUploads);
   //console.log("Saved Files Data: ", savedFiles);
 
   // console.log("Profile Data: ", profileData);
@@ -146,7 +148,7 @@ const ViewProfile = () => {
   // console.log("Funding Details: ", fundingDetails);
   // console.log("Professional Activities: ", professionalActivityDetails);
   // console.log("Works: ", works);
-  // console.log("Skills: ", skills);
+  console.log("Skills: ", skills);
 
   // console.log("Map skills: ", skills[0].skills);
 
@@ -192,8 +194,8 @@ const ViewProfile = () => {
 
   const addSkill = (event) => {
     event.preventDefault();
-    if (input && !tempSkills.includes(input)) {
-      setTempSkills([...tempSkills, input]);
+    if (input && !tempSkills.includes(input.toUpperCase())) {
+      setTempSkills([...tempSkills, input.toUpperCase()]);
       setInput("");
     }
   };
@@ -234,7 +236,10 @@ const ViewProfile = () => {
   };
 
   const handleEditSkillsData = async () => {
-    const updatedSkills = [...skills, ...tempSkills];
+    let updatedSkills = [...skills, ...tempSkills];
+    console.log("Updated Skills: ", updatedSkills);
+    // eslint-disable-next-line no-const-assign
+    updatedSkills.length <= 0 && (updatedSkills = [null]);
     try {
       await api
         .post(
@@ -281,6 +286,68 @@ const ViewProfile = () => {
     } catch (error) {
       console.error("Error deleting Data: ", error.response.data.error);
       toast.error("Error deleting Data: " + error.response.data.error);
+    }
+  };
+
+  const handleLike = async (action, post_id, postType, { refreshType }) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      postType === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", postType);
+      console.log("data: ", data);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        refreshData(refreshType);
+      }
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(err.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+    }
+  };
+
+  const refreshData = async (refreshType) => {
+    try {
+      await api
+        .post(
+          `fetchProfile`,
+          { user_id: user.id },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          refreshType === "SavedFiles"
+            ? setSavedFiles(res.data.saved_data || {})
+            : setMyUploads({
+                posts: res.data.post_upload || [],
+                articles: res.data.article_upload || [],
+              });
+        });
+    } catch (error) {
+      console.error(`Error while refreshing ${refreshType} data: `, error);
+      toast.error(`Error while refreshing ${refreshType} data: `, error);
     }
   };
 
@@ -677,20 +744,34 @@ const ViewProfile = () => {
                           </div>
                         ) : (
                           <div className="flex gap-2 flex-wrap break-words">
+                            {skills.length === 1 &&
+                              tempSkills.length === 0 &&
+                              skills[0] == null && (
+                                <div key={0}>
+                                  <p>No skills yet</p>
+                                </div>
+                              )}
                             {skills.map((skill, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center text-wrap px-3 py-1 border rounded-full"
-                              >
-                                <span className="mr-2 text-wrap">{skill}</span>
-
-                                <button
-                                  onClick={() => removeSkill(skill)}
-                                  className="text-gray-500 hover:text-red-500 focus:outline-none"
-                                >
-                                  ×
-                                </button>
-                              </div>
+                              <>
+                                {skill != null && (
+                                  <>
+                                    <div
+                                      key={index}
+                                      className="flex items-center text-wrap px-3 py-1 border rounded-full"
+                                    >
+                                      <span className="mr-2 text-wrap">
+                                        {skill}
+                                      </span>
+                                      <button
+                                        onClick={() => removeSkill(skill)}
+                                        className="text-gray-500 hover:text-red-500 focus:outline-none"
+                                      >
+                                        ×
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              </>
                             ))}
                             {isSkillEdited &&
                               tempSkills.map((tempSkill, i) => (
@@ -1125,66 +1206,172 @@ const ViewProfile = () => {
                   <div className="mt-6">
                     {activeTab === "uploads" ? (
                       <>
-                        {myUploads && myUploads.length > 0 ? (
-                          myUploads.map((post, i) => (
-                            <div
-                              key={i}
-                              className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
-                            >
-                              {/* Content for Saved Files */}
-                              <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                                <div className="flex flex-col space-y-1">
-                                  <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                                    {post.paper_title}
-                                  </h4>
-                                  <p className="sm:text-lg xss:text-md text-gray-600">
-                                    By {post.authors}
+                        {myUploads ? (
+                          <>
+                            {myUploads?.posts.length > 0 &&
+                              myUploads?.posts.map((post, i) => (
+                                <div
+                                  key={i}
+                                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                >
+                                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 pb-2 border-gray-400 border-opacity-35">
+                                    <div className="xss:w-2/6 xs:w-2/6 h-auto md:w-2/6 xl:w-2/6">
+                                      <img
+                                        src={post.post}
+                                        alt="Notebook"
+                                        className="w-full h-52 xl:object-cover"
+                                      />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                        {post.description}
+                                      </h4>
+                                      <p className="sm:text-lg xss:text-md text-gray-600">
+                                        By {post.PostUsername}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                    {post.abstract}
                                   </p>
-                                  <p className="xs:block sm:text-lg text-gray-600">
-                                    Publication Name: {post.publication_name}
+                                  <div className="flex justify-between my-1 items-center sm:mx-9">
+                                    <div className="flex items-center space-x-2">
+                                      <FontAwesomeIcon
+                                        onClick={() =>
+                                          handleLike(
+                                            post.am_i_liked ? "unlike" : "like",
+                                            post.id,
+                                            "post",
+                                            { refreshType: "MyUploads" }
+                                          )
+                                        }
+                                        icon={
+                                          post.am_i_liked
+                                            ? solidHeart
+                                            : regularHeart
+                                        }
+                                        className="text-red-600 cursor-pointer text-xl"
+                                      />
+                                      <span className="lg:text-lg xss:text-base">
+                                        {post.likeCount}{" "}
+                                        {post.am_i_liked ? "likes" : "like"}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={weuieyesonfilled}
+                                        alt="Views"
+                                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        {post.viewsCount == null
+                                          ? 0
+                                          : post.viewsCount}{" "}
+                                        Views
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={openmojishare}
+                                        alt="Share"
+                                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        Share
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            {myUploads?.articles.length > 0 &&
+                              myUploads?.articles.map((post, i) => (
+                                <div
+                                  key={i}
+                                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                >
+                                  {/* Content for Saved Files */}
+                                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
+                                    <div className="flex flex-col space-y-1 w-full">
+                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                        {post.paper_title}
+                                      </h4>
+                                      <p className="sm:text-lg xss:text-md text-gray-600">
+                                        By {post.authors}
+                                      </p>
+                                      <p className="xs:block sm:text-lg text-gray-600">
+                                        Publication Name:{" "}
+                                        {post.publication_name}
+                                      </p>
+                                      <p className="xs:block sm:text-lg text-gray-600">
+                                        Research Interest:{" "}
+                                        {post.research_interest} | year:{" "}
+                                        {post.year}
+                                      </p>
+                                      <button
+                                        className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] lg:px-1.5 xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
+                                        onClick={() =>
+                                          downloadpdf(post.id, post.user_id)
+                                        }
+                                      >
+                                        Download PDF
+                                      </button>
+                                      <br />
+                                    </div>
+                                  </div>
+                                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                    {post.abstract}
                                   </p>
-                                  <p className="xs:block sm:text-lg text-gray-600">
-                                    Research Interest: {post.research_interest}{" "}
-                                    | year: {post.year}
-                                  </p>
+                                  <div className="flex justify-between my-1 items-center sm:mx-9">
+                                    <div className="flex items-center space-x-2">
+                                      <FontAwesomeIcon
+                                        onClick={() =>
+                                          handleLike(
+                                            post.am_i_liked ? "unlike" : "like",
+                                            post.id,
+                                            "article",
+                                            { refreshType: "MyUploads" }
+                                          )
+                                        }
+                                        icon={
+                                          post.am_i_liked
+                                            ? solidHeart
+                                            : regularHeart
+                                        }
+                                        className="text-red-600 cursor-pointer text-xl"
+                                      />
+                                      <span className="sm:text-lg xss:text-base">
+                                        {post.likeCount}{" "}
+                                        {post.am_i_liked ? "likes" : "like"}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={weuieyesonfilled}
+                                        alt="Views"
+                                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        
+                                        {post.viewsCount == null
+                                          ? 0
+                                          : post.viewsCount}{" "}
+                                        Views
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={openmojishare}
+                                        alt="Share"
+                                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        Share
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
-                                {post.abstract}
-                              </p>
-                              <div className="flex justify-between my-1 items-center sm:mx-9">
-                                <div className="flex items-center space-x-2">
-                                  <FontAwesomeIcon
-                                    icon={solidHeart}
-                                    className="text-red-600 sm:text-xl xss:text-lg"
-                                  />
-                                  <span className="sm:text-lg xss:text-base">
-                                    1 likes
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <img
-                                    src={weuieyesonfilled}
-                                    alt="Views"
-                                    className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
-                                  />
-                                  <span className="text-lg xss:text-base">
-                                    2 Views
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <img
-                                    src={openmojishare}
-                                    alt="Share"
-                                    className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
-                                  />
-                                  <span className="text-lg xss:text-base">
-                                    Share
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          ))
+                              ))}
+                          </>
                         ) : (
                           <p>No uploads yet</p>
                         )}
@@ -1222,6 +1409,14 @@ const ViewProfile = () => {
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
                                   <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
+                                      onClick={() =>
+                                        handleLike(
+                                          post.am_i_liked ? "unlike" : "like",
+                                          post.postid,
+                                          "post",
+                                          { refreshType: "SavedFiles" }
+                                        )
+                                      }
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
@@ -1354,6 +1549,14 @@ const ViewProfile = () => {
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
                                   <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
+                                      onClick={() =>
+                                        handleLike(
+                                          post.am_i_liked ? "unlike" : "like",
+                                          post.articleId,
+                                          "article",
+                                          { refreshType: "SavedFiles" }
+                                        )
+                                      }
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
