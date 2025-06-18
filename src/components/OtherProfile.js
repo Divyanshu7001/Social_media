@@ -729,6 +729,7 @@ const refreshData = async (refreshType) => {
                     key={i}
                     className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                   >
+                    {console.log("Article Data: ", post)}
                     {/* Content for Saved Files */}
                     <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
                       <div className="flex flex-col space-y-1">
@@ -820,7 +821,7 @@ const refreshData = async (refreshType) => {
                       className="books flex flex-col space-y-4"
                       key={index}
                     >
-                      {/* {console.log("Post Data: ", post)} */}
+                      {console.log("Post Data: ", post)}
                       <div className="flex flex-col w-auto h-auto xss:px-3 xs:px-4 py-4 border rounded-lg shadow-sm bg-white mr-4z">
                         <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
                           <div className="flex items-center xss:space-x-2 sm:space-x-4 sm:ml-4">

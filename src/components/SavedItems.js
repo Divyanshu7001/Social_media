@@ -4,15 +4,11 @@ import Navbar from "./Navbar";
 import { FaRegBookmark } from "react-icons/fa";
 import { PiEyeFill, PiFilesDuotone } from "react-icons/pi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart as solidHeart,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faHeart as regularHeart,
-} from "@fortawesome/free-regular-svg-icons";
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { Context } from "../index.js";
 import api from "./api";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
@@ -51,42 +47,15 @@ const SavedItems = () => {
           console.log("Error while fetch Saved Data: " + error);
         }
       }
-    }
+    };
     if (fetchData === true && user && user.id) {
       fetchSave();
     }
     // if (user && user.id) fetchSave();
-
   }, [user, isAuthenticated, fetchData]);
 
-  const articles = savedItems.articles || []
-  const posts = savedItems.posts || []
-
-  const downloadpdf = async (id, user_id) => {
-    try {
-      const response = await api.post(
-        "downloadArticle",
-        {
-          id: id,
-          user_id: user_id,
-        },
-        {
-          withCredentials: true,
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const blob = await response.data; // Convert the response to a Blob
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  // const users_data = userList[0] || []
-
+  const articles = savedItems.articles || [];
+  const posts = savedItems.posts || [];
 
   const handleLike = async (action, id) => {
     try {
@@ -199,19 +168,21 @@ const SavedItems = () => {
 
             <div className="flex gap-5 w-full justify-center rounded">
               <button
-                className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${btn === "article"
-                  ? "border-primary  text-primary"
-                  : "border-gray-500 text-gray-500"
-                  }`}
+                className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${
+                  btn === "article"
+                    ? "border-primary  text-primary"
+                    : "border-gray-500 text-gray-500"
+                }`}
                 onClick={() => setBtn("article")}
               >
                 Articles
               </button>
               <button
-                className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${btn === "post"
-                  ? " border-primary text-primary "
-                  : "border-gray-500  text-gray-500"
-                  }`}
+                className={`px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-2xl ${
+                  btn === "post"
+                    ? " border-primary text-primary "
+                    : "border-gray-500  text-gray-500"
+                }`}
                 onClick={() => setBtn("post")}
               >
                 Post
@@ -225,16 +196,17 @@ const SavedItems = () => {
                     key={art.articleId}
                     className="border-2 rounded-lg px-7 md:px-10 py-8 mt-4"
                   >
-
                     <div className="flex justify-between items-center">
-                      <h2 className="font-bold mb-2 md:mb-6 text-xl">{art.title}</h2>
+                      <h2 className="font-bold mb-2 md:mb-6 text-xl">
+                        {art.title}
+                      </h2>
                     </div>
-                    <div className="flex flex-row items-center gap-2 cursor-pointer" onClick={() => {
-                      Navigate(
-                        `/profile/${art.articleUserId}`
-                      )
-                    }}>
-                   
+                    <div
+                      className="flex flex-row items-center gap-2 cursor-pointer"
+                      onClick={() => {
+                        Navigate(`/profile/${art.articleUserId}`);
+                      }}
+                    >
                       <img
                         src={art.profile_img || "images/Ellipse4.png"}
                         alt="Avatar"
@@ -249,17 +221,28 @@ const SavedItems = () => {
                       </div>
                     </div>
                     <Link to={`/ArticleDetails/${art.articleId}`}>
-                      {art.description.length > 130 ? (<p className="mt-[1vw] font-medium text-sm text-gray-500">
-                        {art.description.slice(0, 130)}...
-                      </p>) : (<p className="mt-[1vw] font-medium text-sm text-gray-500">
-                        {art.description}
-                      </p>)}
-
+                      {art.description.length > 130 ? (
+                        <p className="mt-[1vw] font-medium text-sm text-gray-500">
+                          {art.description.slice(0, 130)}...
+                        </p>
+                      ) : (
+                        <p className="mt-[1vw] font-medium text-sm text-gray-500">
+                          {art.description}
+                        </p>
+                      )}
                     </Link>
                     {/* <p className='mt-[1.5vw] font-medium text-sm text-gray-500'>Dive into the potential of quantum computing and its implications for solving complex problems in record time. Join our vibrant community of Information Technology scholars and researchers.</p> */}
 
                     <div className="my-[2vw] flex gap-[2vw] items-center">
-                      <div className="flex gap-[0.3vw] items-center hover:cursor-pointer" onClick={() => handleLike(art.am_i_liked ? "unlike" : "like", art.articleId)}>
+                      <div
+                        className="flex gap-[0.3vw] items-center hover:cursor-pointer"
+                        onClick={() =>
+                          handleLike(
+                            art.am_i_liked ? "unlike" : "like",
+                            art.articleId
+                          )
+                        }
+                      >
                         {/* <img src='./images/like.png'></img> */}
                         <FontAwesomeIcon
                           icon={art.am_i_liked ? solidHeart : regularHeart}
@@ -282,22 +265,35 @@ const SavedItems = () => {
                         <h2 className="text-sm ">50 Pages</h2>
                       </div>
                     </div>
-
-                    <button className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm" onClick={() => downloadpdf(art.articleId, art.articleUserId)}>
+                    {console.log("Article Data: ", art)}
+                    <Link
+                      to={art?.image}
+                      rel="noreferrer"
+                      target="_blank"
+                      className="bg-[#0000FF] px-[2vw] py-[0.3vw] text-white font-semibold rounded-sm"
+                    >
                       Download
-                    </button>
+                    </Link>
                   </div>
                 ))
               ) : (
-                <p className="mt-5 text-center font-bold">No Articles Available</p>
+                <p className="mt-5 text-center font-bold">
+                  No Articles Available
+                </p>
               ))}
 
             {/* post */}
             {btn === "post" &&
               (posts.length > 0 ? (
                 posts.map((post, index) => {
-                  return (<SavedPostImage key={index || post.postid} post={post} dataFetch={setFetch} userData={user} />);
-
+                  return (
+                    <SavedPostImage
+                      key={index || post.postid}
+                      post={post}
+                      dataFetch={setFetch}
+                      userData={user}
+                    />
+                  );
                 })
               ) : (
                 <p className="mt-5 text-center font-bold">No Posts Available</p>

@@ -31,7 +31,7 @@ import { Context } from "../index.js";
 import toast from "react-hot-toast";
 import api from "./api.js";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 
 const ViewProfile = () => {
@@ -351,29 +351,6 @@ const ViewProfile = () => {
     }
   };
 
-  const downloadpdf = async (id, user_id) => {
-    try {
-      const response = await api.post(
-        "downloadArticle",
-        {
-          id: id,
-          user_id: user_id,
-        },
-        {
-          withCredentials: true,
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const blob = await response.data; // Convert the response to a Blob
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    } catch (error) {
-      console.error(error);
-    }
-  };
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
     switch (section) {
@@ -1307,14 +1284,15 @@ const ViewProfile = () => {
                                         {post.research_interest} | year:{" "}
                                         {post.year}
                                       </p>
-                                      <button
-                                        className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] lg:px-1.5 xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
-                                        onClick={() =>
-                                          downloadpdf(post.id, post.user_id)
-                                        }
+
+                                      <Link
+                                        to={`${post.image}${post.article}`}
+                                        rel="noreferrer"
+                                        target="_blank"
+                                        className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
                                       >
-                                        Download PDF
-                                      </button>
+                                        Download
+                                      </Link>
                                       <br />
                                     </div>
                                   </div>
@@ -1351,7 +1329,6 @@ const ViewProfile = () => {
                                         className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
                                       />
                                       <span className="text-lg xss:text-base">
-                                        
                                         {post.viewsCount == null
                                           ? 0
                                           : post.viewsCount}{" "}
@@ -1533,17 +1510,14 @@ const ViewProfile = () => {
                                         </p>
                                       )}
                                     </div>
-                                    <button
-                                      className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] lg:px-1.5 xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
-                                      onClick={() =>
-                                        downloadpdf(
-                                          post.articleId,
-                                          post.articleUserId
-                                        )
-                                      }
+                                    <Link
+                                      to={post?.image}
+                                      rel="noreferrer"
+                                      target="_blank"
+                                      className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
                                     >
-                                      Download PDF
-                                    </button>
+                                      Download
+                                    </Link>
                                   </div>
                                 </div>
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
