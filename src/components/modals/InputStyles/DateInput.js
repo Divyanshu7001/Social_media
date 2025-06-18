@@ -59,7 +59,7 @@ const DateInput = ({
         onClick={() => setPickerOpen(!pickerOpen)}
         size={16}
       />
-      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+      {error && <p className="text-red-600 font-semibold mt-2">{error}</p>}
     </div>
   );
 };

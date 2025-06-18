@@ -55,10 +55,10 @@ export const ProfileModal = ({
 
   const [errors, setErrors] = useState({});
   const values = [
-    { name: name },
-    { email: email },
-    { phone: phone },
-    { country: country },
+    { label:"Name", name: name },
+    { label:"Email", email: email },
+    { label:"Phone", phone: phone },
+    { label:"Country", country: country },
   ];
 
   const refs = Object.fromEntries(

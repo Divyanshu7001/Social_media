@@ -21,11 +21,11 @@ export const WorkAddModal = ({
   const [errors, setErrors] = useState({});
 
   const values = [
-    { workType: workType },
-    { workTitle: workTitle },
-    { journalTitle: journalTitle },
-    { link: link },
-    { publicationDate: publicationDate },
+    { label: "Work Type", workType: workType },
+    { label: "Work Title", workTitle: workTitle },
+    { label: "Journal Title", journalTitle: journalTitle },
+    { label: "Link", link: link },
+    { label: "Publication Date", publicationDate: publicationDate },
   ];
   const refs = Object.fromEntries(
     values.map((value) => {
@@ -144,11 +144,11 @@ export const WorkEditModal = ({
   const [errors, setErrors] = useState({});
 
   const values = [
-    { workType: workType },
-    { workTitle: workTitle },
-    { journalTitle: journalTitle },
-    { link: link },
-    { publicationDate: publicationDate },
+    { label: "Work Type", workType: workType },
+    { label: "Work Title", workTitle: workTitle },
+    { label: "Journal Title", journalTitle: journalTitle },
+    { label: "Link", link: link },
+    { label: "Publication Date", publicationDate: publicationDate },
   ];
   const refs = Object.fromEntries(
     values.map((value) => {
