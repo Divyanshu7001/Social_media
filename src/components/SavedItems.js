@@ -25,7 +25,7 @@ const SavedItems = () => {
 
   useEffect(() => {
     const fetchSave = async () => {
-      console.log("In saved fetch call");
+      //console.log("In saved fetch call");
 
       if (user && user.id) {
         try {

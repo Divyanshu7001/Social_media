@@ -139,7 +139,7 @@ const ViewProfile = () => {
   //   return <Loader />;
   // }
 
-  console.log("My Uploads Data: ", myUploads);
+  //console.log("My Uploads Data: ", myUploads);
   //console.log("Saved Files Data: ", savedFiles);
 
   // console.log("Profile Data: ", profileData);
@@ -148,7 +148,7 @@ const ViewProfile = () => {
   // console.log("Funding Details: ", fundingDetails);
   // console.log("Professional Activities: ", professionalActivityDetails);
   // console.log("Works: ", works);
-  console.log("Skills: ", skills);
+  //console.log("Skills: ", skills);
 
   // console.log("Map skills: ", skills[0].skills);
 

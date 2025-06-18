@@ -15,12 +15,14 @@ import toast from "react-hot-toast";
 import { MdOutlineMessage, MdOutlinePeopleAlt } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaRegBookmark } from "react-icons/fa";
+import Loader from "./Loader.js";
 
 // Main Component
 export const Homepage = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated, user } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Declare state
   const [showPopup, setShowPopup] = useState(false);
@@ -31,6 +33,44 @@ export const Homepage = () => {
   const [dataFetch, setDataFetch] = useState(true);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
   const isxsScreen = useMediaQuery("(min-width: 480px) and (max-width: 639px)");
+
+  useEffect(() => {
+    const fetchHomeFeed = async () => {
+      if (user && user.id) {
+        // console.log("homeFeed");
+        try {
+          const response = await api.post(
+            "homeFeed",
+            { user_id: user.id },
+            {
+              withCredentials: true,
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          // console.log("hello");
+          setHomeFeed(response.data.homeFeed);
+          setUserList(response.data.userDetails);
+          setSuggestions(response.data.homeFeed.suggestions);
+          setDataFetch(false);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching home feed:", error);
+        }
+      }
+    };
+    if (user && user.id && dataFetch === true) fetchHomeFeed();
+  }, [user, isAuthenticated, dataFetch]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   // Toggle popup state
   const togglePopup = () => setShowPopup(!showPopup);
@@ -72,37 +112,6 @@ export const Homepage = () => {
     setSuggestions(updatedSuggestions);
   };
   // Fetch Home Feed
-  useEffect(() => {
-    const fetchHomeFeed = async () => {
-      if (user && user.id) {
-        // console.log("homeFeed");
-        try {
-          const response = await api.post(
-            "homeFeed",
-            { user_id: user.id },
-            {
-              withCredentials: true,
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          // console.log("hello");
-          setHomeFeed(response.data.homeFeed);
-          setUserList(response.data.userDetails);
-          setSuggestions(response.data.homeFeed.suggestions);
-          setDataFetch(false);
-        } catch (error) {
-          console.error("Error fetching home feed:", error);
-        }
-      }
-    };
-    if (user && user.id && dataFetch === true) fetchHomeFeed();
-  }, [user, isAuthenticated, dataFetch]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated]);
 
   const posts = homeFeed.posts || [];
   const articles = homeFeed.articles || [];
@@ -125,8 +134,9 @@ export const Homepage = () => {
           post={true}
         />
         <div
-          className={`fixed lg:top-24 ${isLargeScreen ? "right-3" : "left-5"
-            } xl:right-5 md:bottom-5 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit   md:h-auto lg:h-fit lg:me-5 xl:me-0 py-3 rounded border-2 px-4 md:px-4 lg:px-5`}
+          className={`fixed lg:top-24 ${
+            isLargeScreen ? "right-3" : "left-5"
+          } xl:right-5 md:bottom-5 hidden mt-0.5 lg:mt-3.5 w-1/5 md:flex flex-col lg:flex xl:w-[22vw] lg:w-[26vw] md:w-[32vw] xl:h-fit   md:h-auto lg:h-fit lg:me-5 xl:me-0 py-3 rounded border-2 px-4 md:px-4 lg:px-5`}
         >
           <Suggestionsbar
             suggestedFollowers={suggestions}
