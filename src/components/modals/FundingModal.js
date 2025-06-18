@@ -52,7 +52,7 @@ export const FundingDetailsAddModal = ({
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -299,7 +299,7 @@ export const FundingDetailsEditModal = ({
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

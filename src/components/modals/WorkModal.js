@@ -29,7 +29,7 @@ export const WorkAddModal = ({
   ];
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -152,7 +152,7 @@ export const WorkEditModal = ({
   ];
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

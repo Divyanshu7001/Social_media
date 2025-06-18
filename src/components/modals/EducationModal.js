@@ -36,7 +36,7 @@ export const EducationAddModal = ({
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -176,7 +176,7 @@ export const EducationEditModal = ({
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
