@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as solidHeart,
+  faBookmark as solidBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
-import { CiBookmark } from "react-icons/ci";
 import { PiDotsThreeOutlineVertical } from "react-icons/pi";
 import { Link, useParams } from "react-router-dom";
 import api from "./api";
@@ -13,7 +15,10 @@ import toast from "react-hot-toast";
 import { Context } from "../index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaAngleUp, FaChevronDown } from "react-icons/fa";
-import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import {
+  faHeart as regularHeart,
+  faBookmark as regularBookmark,
+} from "@fortawesome/free-regular-svg-icons";
 
 const OtherProfile = () => {
   const { userId } = useParams();
@@ -159,77 +164,81 @@ const OtherProfile = () => {
     }
   };
 
-   const handleLike = async (action, post_id, postType, { refreshType }) => {
-     try {
-       const data = new FormData();
-       data.append("user_id", userId);
-       postType === "post"
-         ? data.append("post_id", post_id)
-         : data.append("article_id", post_id);
-       data.append("type", postType);
-       //console.log("data: ", data);
-       const response = await api.post(action, data, {
-         withCredentials: true,
-         headers: { "Content-Type": "application/json" },
-       });
-
-       if (response.status === 201) {
-         toast.success(response.data.message, {
-           position: "top-right",
-         });
-         refreshData(refreshType);
-       }
-       // window.location.reload();
-     } catch (err) {
-       console.log(err);
-       if (err.code === "ERR_BAD_REQUEST") {
-         if (err.response.data.message) {
-           toast.error(err.response.data.message, {
-             position: "top-right",
-           });
-         } else {
-           toast.error(err.response.data.error, {
-             position: "top-right",
-           });
-         }
-       }
-     }
-   };
-const refreshData = async (refreshType) => {
-  try {
-    await api
-      .post(
-        `fetchProfile`,
-        {
-          user_id: userId,
-          follow_id: user.id,
-        },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then((res) => {
-        //console.log("Data in refreshData: ", res.data);
-        refreshType === "Posts"
-          ? setPosts(res.data.post_upload == null ? [] : res.data.post_upload)
-          : setArticles(
-              res.data.article_upload == null ? [] : res.data.article_upload
-            );
+  const handleLike = async (action, post_id, postType, { refreshType }) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", userId);
+      postType === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", postType);
+      //console.log("data: ", data);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
       });
-  } catch (error) {
-    console.error(`Error while refreshing ${refreshType} data: `, error);
-    toast.error(`Error while refreshing ${refreshType} data: `, error);
-  }
-};
 
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        refreshData(refreshType);
+      }
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(err.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+    }
+  };
+  const refreshData = async (refreshType) => {
+    console.log("In Refresh caller");
 
-  const handlesaved = async (action) => {
+    console.log("refreshType: ", refreshType);
+    try {
+      await api
+        .post(
+          `fetchProfile`,
+          {
+            user_id: userId,
+            follow_id: user.id,
+          },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          //console.log("Data in refreshData: ", res.data);
+          refreshType === "Posts"
+            ? setPosts(res.data.post_upload == null ? [] : res.data.post_upload)
+            : setArticles(
+                res.data.article_upload == null ? [] : res.data.article_upload
+              );
+        });
+    } catch (error) {
+      console.error(`Error while refreshing ${refreshType} data: `, error);
+      toast.error(`Error while refreshing ${refreshType} data: `, error);
+    }
+  };
+
+  const handlesaved = async (action, post_id, type) => {
     try {
       const data = new FormData();
       data.append("user_id", user.id);
-      //data.append("post_id", post_id);
-      data.append("type", "post");
+      type === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", type);
       const response = await api.post(action, data, {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -240,10 +249,12 @@ const refreshData = async (refreshType) => {
         toast.success(response.data.message, {
           position: "top-right",
         });
+        type === "post" ? refreshData("Posts") : refreshData("Articles");
       } else if (response.status === 200) {
         toast.success(response.data.message, {
           position: "top-right",
         });
+        type === "post" ? refreshData("Posts") : refreshData("Articles");
       }
       // window.location.reload()
     } catch (error) {
@@ -729,7 +740,7 @@ const refreshData = async (refreshType) => {
                     key={i}
                     className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                   >
-                    {/* {console.log("Article Data: ", post)} */}
+                    {console.log("Article Data: ", post)}
                     {/* Content for Saved Files */}
                     <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
                       <div className="flex flex-col space-y-1">
@@ -757,7 +768,7 @@ const refreshData = async (refreshType) => {
                       {post.abstract}
                     </p>
                     <div className="flex justify-between my-1 items-center sm:mx-9">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <FontAwesomeIcon
                           onClick={() =>
                             handleLike(
@@ -774,31 +785,40 @@ const refreshData = async (refreshType) => {
                           {post.likeCount} {post.am_i_liked ? "likes" : "like"}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <img
                           src={weuieyesonfilled}
                           alt="Views"
-                          className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                          className="sm:w-7 sm:h-7 xss:w-6 xss:h-6"
                         />
                         <span className="text-lg xss:text-base">
                           {post.viewsCount == null ? 0 : post.viewsCount} Views
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <img
                           src={openmojishare}
                           alt="Share"
-                          className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                          className="sm:w-8 sm:h-8 xss:h-7 xss:w-7"
                         />
                         <span className="text-lg xss:text-base">Share</span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <CiBookmark className="h-7 w-7 text-gray-400" />
-                        <span
-                          onClick={() => handlesaved("save")}
-                          className="text-lg xss:text-base"
-                        >
-                          Save
+                      <div
+                        className="flex items-center space-x-2 cursor-pointer"
+                        onClick={() =>
+                          handlesaved(
+                            post.isSaved ? "deleteSave" : "save",
+                            post.id,
+                            "article"
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon
+                          icon={post.isSaved ? solidBookmark : regularBookmark}
+                          className="text-gray-600 sm:w-5 sm:h-5"
+                        />
+                        <span className="">
+                          {post.isSaved ? "Saved" : "Save"}
                         </span>
                       </div>
                     </div>
@@ -821,7 +841,7 @@ const refreshData = async (refreshType) => {
                       className="books flex flex-col space-y-4"
                       key={index}
                     >
-                      {/* {console.log("Post Data: ", post)} */}
+                      {console.log("Post Data: ", post)}
                       <div className="flex flex-col w-auto h-auto xss:px-3 xs:px-4 py-4 border rounded-lg shadow-sm bg-white mr-4z">
                         <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
                           <div className="flex items-center xss:space-x-2 sm:space-x-4 sm:ml-4">
@@ -891,12 +911,25 @@ const refreshData = async (refreshType) => {
                             />
                             <span className="text-lg xss:text-base">Share</span>
                           </div>
-                          <div className="flex items-center space-x-1">
-                            <CiBookmark
-                              onClick={() => handlesaved("save")}
-                              className="sm:h-7 sm:w-7 xss:h-6 xss:w-6 text-gray-500"
+                          <div
+                            className="flex items-center space-x-2 cursor-pointer"
+                            onClick={() =>
+                              handlesaved(
+                                post.isSaved ? "deleteSave" : "save",
+                                post.id,
+                                "post"
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon={
+                                post.isSaved ? solidBookmark : regularBookmark
+                              }
+                              className="text-gray-600"
                             />
-                            <span className="text-lg xss:text-base">Save</span>
+                            <span className="hidden xs:block">
+                              {post.isSaved ? "Saved" : "Save"}
+                            </span>
                           </div>
                         </div>
                       </div>

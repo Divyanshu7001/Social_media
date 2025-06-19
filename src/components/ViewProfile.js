@@ -23,7 +23,10 @@ import {
 } from "./modals/EmploymentModal";
 import Footer from "./Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as solidHeart,
+  faBookmark as solidBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
@@ -279,7 +282,7 @@ const ViewProfile = () => {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
           setFetchData(true);
           toast.success(res.data.message);
         });
@@ -307,7 +310,7 @@ const ViewProfile = () => {
         toast.success(response.data.message, {
           position: "top-right",
         });
-        refreshData(refreshType);
+        refreshData(refreshType, postType);
       }
       // window.location.reload();
     } catch (err) {
@@ -326,7 +329,53 @@ const ViewProfile = () => {
     }
   };
 
-  const refreshData = async (refreshType) => {
+  const handleRemoveSaved = async (action, post_id, type) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      type === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", type);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      //dataFetch(true);
+      //console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post"
+          ? refreshData("SavedFiles", "post")
+          : refreshData("SavedFiles", "articles");
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post"
+          ? refreshData("SavedFiles", "post")
+          : refreshData("SavedFiles", "articles");
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+      console.log(error);
+    }
+  };
+
+  const refreshData = async (refreshType, typeToUpdate) => {
     try {
       await api
         .post(
@@ -338,12 +387,27 @@ const ViewProfile = () => {
           }
         )
         .then((res) => {
-          refreshType === "SavedFiles"
-            ? setSavedFiles(res.data.saved_data || {})
-            : setMyUploads({
-                posts: res.data.post_upload || [],
-                articles: res.data.article_upload || [],
-              });
+          if (refreshType === "SavedFiles") {
+            typeToUpdate === "post"
+              ? setSavedFiles({
+                  posts: res.data.saved_data.posts || [],
+                  articles: savedFiles.articles,
+                })
+              : setSavedFiles({
+                  posts: savedFiles.posts,
+                  articles: res.data.saved_data.articles || [],
+                });
+          } else {
+            typeToUpdate === "post"
+              ? setMyUploads({
+                  posts: res.data.post_upload || [],
+                  articles: myUploads.articles,
+                })
+              : setMyUploads({
+                  posts: myUploads.posts,
+                  articles: res.data.article_upload || [],
+                });
+          }
         });
     } catch (error) {
       console.error(`Error while refreshing ${refreshType} data: `, error);
@@ -1259,8 +1323,8 @@ const ViewProfile = () => {
                                     <div className="xss:w-2/6 xs:w-2/6 h-auto md:w-2/6 xl:w-2/6">
                                       <img
                                         src={post.post}
-                                        alt="Notebook"
-                                        className="w-full h-52 xl:object-cover"
+                                        alt="Post"
+                                        className="w-full h-52 object-contain"
                                       />
                                     </div>
                                     <div className="flex flex-col space-y-1">
@@ -1493,13 +1557,29 @@ const ViewProfile = () => {
                                       Share
                                     </span>
                                   </div>
+                                  <div
+                                    className="flex items-center space-x-2 cursor-pointer"
+                                    onClick={() =>
+                                      handleRemoveSaved(
+                                        "deleteSave",
+                                        post.postid,
+                                        "post"
+                                      )
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={solidBookmark}
+                                      className="text-gray-600"
+                                    />
+                                    <span>Saved</span>
+                                  </div>
                                 </div>
                               </div>
                             ))}
                             {savedFiles?.articles?.map((post, i) => (
                               <div
                                 key={post.articleId || i}
-                                className="sm:p-1 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                               >
                                 {/* Content for Saved Files */}
                                 <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto border-b-2 border-gray-400 border-opacity-35">
@@ -1611,7 +1691,7 @@ const ViewProfile = () => {
                                     <img
                                       src={weuieyesonfilled}
                                       alt="Views"
-                                      className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      className="sm:w-7 sm:h-7 xss:w-5 xss:h-5 cursor-pointer"
                                     />
                                     <span className="text-lg xss:text-base">
                                       {post.viewsCount ? post.viewsCount : 1}{" "}
@@ -1622,11 +1702,27 @@ const ViewProfile = () => {
                                     <img
                                       src={openmojishare}
                                       alt="Share"
-                                      className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      className="sm:w-7 sm:h-7 xss:h-6 xss:w-6 cursor-pointer"
                                     />
                                     <span className="text-lg xss:text-base">
                                       Share
                                     </span>
+                                  </div>
+                                  <div
+                                    className="flex items-center space-x-2 "
+                                    onClick={() =>
+                                      handleRemoveSaved(
+                                        "deleteSave",
+                                        post.articleId,
+                                        "article"
+                                      )
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={solidBookmark}
+                                      className="text-gray-600 cursor-pointer"
+                                    />
+                                    <span>Saved</span>
                                   </div>
                                 </div>
                               </div>
