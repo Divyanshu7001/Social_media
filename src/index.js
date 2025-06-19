@@ -8,6 +8,7 @@ export const Context = createContext({ isAuthenticated: false });
 const Appwrapper = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({});
+  const [token, setToken] = useState(null);
   const [profileData, setProfileData] = useState({});
   const [savedFiles, setSavedFiles] = useState({ posts: [], articles: [] });
   const [myUploads, setMyUploads] = useState({ posts: [], articles: [] });
@@ -45,6 +46,8 @@ const Appwrapper = () => {
         toggle,
         btn,
         setBtn,
+        token,
+        setToken
       }}
     >
       <App />

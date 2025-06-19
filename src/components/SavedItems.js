@@ -129,12 +129,12 @@ const SavedItems = () => {
                 icon: <MdOutlinePeopleAlt size={28} />,
               },
               {
-                destination: "/Message",
+                destination: "#",
                 text: "Message",
                 icon: <MdOutlineMessage size={25} />,
               },
               {
-                destination: "/Notifications",
+                destination: "#",
                 text: "Notifications",
                 icon: <IoMdNotificationsOutline size={28} />,
               },
@@ -207,6 +207,7 @@ const SavedItems = () => {
                         Navigate(`/profile/${art.articleUserId}`);
                       }}
                     >
+
                       <img
                         src={art.profile_img || "images/Ellipse4.png"}
                         alt="Avatar"

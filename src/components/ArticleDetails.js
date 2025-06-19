@@ -17,10 +17,11 @@ import { PiEyeFill, PiFilesDuotone } from "react-icons/pi";
 import { LiaDownloadSolid } from "react-icons/lia";
 import { Context } from "../index";
 import { CgProfile } from "react-icons/cg";
+import toast from "react-hot-toast";
 
 const ArticleDetails = () => {
   const { id } = useParams();
-  const { user, isAuthenticated } = useContext(Context);
+  const { user, isAuthenticated, token } = useContext(Context);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +29,9 @@ const ArticleDetails = () => {
   }, [isAuthenticated])
 
   const [article, setArticle] = useState([]);
+  const [fetch, setFetch] = useState(true);
+  const [suggestion, setSuggestion] = useState([]);
+  const [follow, setFollow] = useState(null);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -41,27 +45,32 @@ const ArticleDetails = () => {
             withCredentials: true,
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`, // Assuming user.token contains the JWT token
             },
           }
         );
         setArticle(response.data.article);
-        console.log(response.data.article);
+        setSuggestion(response.data.suggestion);
+        setFollow(response.data.follow);
+        console.log(response.data.follow);
+        setFetch(false);
+        // console.log(response.data.article);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchArticle();
-  }, []);
+    if (id && fetch === true) fetchArticle();
+  }, [id, fetch]);
 
   console.log(article, "article");
 
-  const downloadpdf = async () => {
+  const downloadpdf = async (id, user_id) => {
     try {
       const response = await api.post(
         "downloadArticle",
         {
           id: id,
-          user_id: article.length > 0 && article[0].user.id,
+          user_id: user_id,
         },
         {
           withCredentials: true,
@@ -76,6 +85,83 @@ const ArticleDetails = () => {
       window.open(url, "_blank");
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handlesaved = async (action, art_id) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      data.append("article_id", art_id);
+      data.append("type", "article");
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      setFetch(true);
+      // console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+      console.log(error);
+    }
+  };
+
+  const handleFollow = async (action, user_id) => {
+    try {
+      const data = new FormData();
+      data.append("logged_id", user.id);
+      data.append("follow_id", user_id);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      setFetch(true);
+      // console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      }
+      // console.log(response)
+      // window.location.reload();
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+
+      console.log(`Errors while ${action} user `, error);
     }
   };
   return (
@@ -141,9 +227,9 @@ const ArticleDetails = () => {
                 <p className="text-gray-500">{art.abstract}</p>
                 <button
                   className="bg-primary text-white font-bold  py-2 mt-4 px-5 rounded"
-                  onClick={downloadpdf}
+                  onClick={() => downloadpdf(art.id, art.user.id)}
                 >
-                  Download PDF
+                  Download
                 </button>
               </div>
               <div className="w-auto lg:w-2/5 ps-6 h-screen">
@@ -170,8 +256,9 @@ const ArticleDetails = () => {
                   </div>
                   {art.user.id !== user.id && (
                     <div className="flex gap-2 items-center">
-                      <button className="bg-transparent hover:bg-primary text-primary font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                        Follow
+                      <button className="bg-primary  font-semibold text-white py-2 px-4  rounded" onClick={() => handleFollow(follow ? "unfollow" : "follow", art.user.id)}>
+                        {follow ? "Unfollow" : "Follow"}
+
                       </button>
                     </div>
                   )}
@@ -195,110 +282,57 @@ const ArticleDetails = () => {
                 <p className="border-b-2 mt-4"></p>
                 <div className="my-5">
                   <h1 className="font-semibold">Related Papers</h1>
-                  <div className="bg-white shadow-lg  px-4  py-2  border-2 rounded-lg my-3">
-                    {/* <Link to={`/ArticleDetails/${article_id}`}> */}
-                    <div className="flex justify-between items-center px-3 ">
-                      <div className=" flex items-center">
-                        <h3 className="text-xl font-semibold pe-5 capitalize">
-                          articles
-                        </h3>
-                      </div>
-                      {/* <div className="flex py-4 items-center">
-                                                <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4"
-                                                // onClick={() => handleFollow(follow ? "unfollow" : "follow")}
-                                                >
-                                                    {true ? "Unfollow" : "Follow"}</button>
-                                                <MoreVertIcon />
-                                            </div> */}
-                    </div>
-                    <div className="text-sm text-gray-500  px-3 mt-2">
-                      By Deepan
-                    </div>
-                    {/* <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, illum!</p> */}
-                    {/* </Link> */}
-                    <div className="flex justify-between mt-2 py-1 px-5">
-                      <div className="flex items-center space-x-2">
-                        <LiaDownloadSolid />
-                        {/* <FontAwesomeIcon icon={Download} className="text-gray-600" /> */}
-                        <span className="home-like-share-saved">
-                          {" "}
-                          Download
-                        </span>
-                      </div>
+                  {suggestion.length > 0 ? (
+                    suggestion.map((item, index) => (
+                      <div className="bg-white shadow-lg  px-4  py-2  border-2 rounded-lg my-3" key={index}>
+                        {/* <Link to={`/ArticleDetails/${article_id}`}> */}
+                        <div className="flex justify-between items-center px-3 ">
+                          <div className=" flex items-center">
+                            <h3 className="text-xl font-semibold pe-5 capitalize">
+                              {item?.paper_title}
+                            </h3>
+                          </div>
 
-                      <div
-                        className="flex items-center space-x-2 cursor-pointer"
-                      // onClick={() => handlesaved(saved ? "deleteSave" : "save")}
-                      >
-                        <FontAwesomeIcon
-                          icon={true ? solidBookmark : regularBookmark}
-                          className="text-gray-600"
-                        />
-                        <span className="home-like-share-saved">
-                          {true ? "Saved" : "Save"}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <FontAwesomeIcon
-                          icon={faShareAlt}
-                          className="text-gray-600"
-                        />
-                        <span className="home-like-share-saved">Share</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
-                    {/* <Link to={`/ArticleDetails/${article_id}`}> */}
-                    <div className="flex justify-between items-center px-3 ">
-                      <div className=" flex items-center">
-                        <h3 className="text-xl font-semibold pe-5 capitalize">
-                          articles 2
-                        </h3>
-                      </div>
-                      {/* <div className="flex py-4 items-center">
-                                                <button className="text-primary text-base  lg:text-lg xl:text-xl mr-4"
-                                                // onClick={() => handleFollow(follow ? "unfollow" : "follow")}
-                                                >
-                                                    {true ? "Unfollow" : "Follow"}</button>
-                                                <MoreVertIcon />
-                                            </div> */}
-                    </div>
-                    <div className="text-sm text-gray-500  px-3 mt-2">
-                      By Deepan
-                    </div>
-                    {/* <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, illum!</p> */}
-                    {/* </Link> */}
-                    <div className="flex justify-between mt-2 py-1 px-5">
-                      <div className="flex items-center space-x-2">
-                        <LiaDownloadSolid />
-                        {/* <FontAwesomeIcon icon={Download} className="text-gray-600" /> */}
-                        <span className="home-like-share-saved">
-                          {" "}
-                          Download
-                        </span>
-                      </div>
+                        </div>
+                        <div className="text-sm text-gray-500  px-3 mt-2" onClick={() => navigate(`/profile/${item?.user?.id}`)}>
 
-                      <div
-                        className="flex items-center space-x-2 cursor-pointer"
-                      // onClick={() => handlesaved(saved ? "deleteSave" : "save")}
-                      >
-                        <FontAwesomeIcon
-                          icon={true ? solidBookmark : regularBookmark}
-                          className="text-gray-600"
-                        />
-                        <span className="home-like-share-saved">
-                          {true ? "Saved" : "Save"}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <FontAwesomeIcon
-                          icon={faShareAlt}
-                          className="text-gray-600"
-                        />
-                        <span className="home-like-share-saved">Share</span>
-                      </div>
-                    </div>
-                  </div>
+                          By {item?.user?.name}
+
+                        </div>
+                        {/* <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, illum!</p> */}
+                        {/* </Link> */}
+                        <div className="flex justify-between mt-2 py-1 px-5">
+                          <div className="flex items-center space-x-2 cursor-pointer">
+                            <LiaDownloadSolid />
+                            {/* <FontAwesomeIcon icon={Download} className="text-gray-600" /> */}
+                            <span className="home-like-share-saved" onClick={() => downloadpdf(item.id, item.user.id)}>
+
+                              Download
+                            </span>
+                          </div>
+
+                          <div
+                            className="flex items-center space-x-2 cursor-pointer"
+                            onClick={() => handlesaved(item.isSaved ? "deleteSave" : "save", item.id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={item.isSaved ? solidBookmark : regularBookmark}
+                              className="text-gray-600"
+                            />
+                            <span className="home-like-share-saved">
+                              {item.isSaved ? "Saved" : "Save"}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <FontAwesomeIcon
+                              icon={faShareAlt}
+                              className="text-gray-600"
+                            />
+                            <span className="home-like-share-saved">Share</span>
+                          </div>
+                        </div>
+                      </div>))) : (<p className="text-gray-500">No related papers found.</p>)}
+
                 </div>
               </div>
             </div>

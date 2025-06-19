@@ -15,7 +15,7 @@ import { Context } from "../index.js";
 import api from "./api.js";
 import { FaApple } from "react-icons/fa";
 const SignupPage = () => {
-  const { setIsAuthenticated, setUser, toggle, setBtn, setPopup } =
+  const { setIsAuthenticated, setUser, toggle, setBtn, setPopup,setToken } =
     useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,9 +61,11 @@ const SignupPage = () => {
         .then((res) => {
           //console.log(res.data);
           setUser(res.data.user);
+          setToken(res.data.token);
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", true);
           localStorage.setItem("userId", JSON.stringify(res.data.user.id));
+          localStorage.setItem("token", res.data.token);
           setPopup(false);
           navigate("/home");
         });

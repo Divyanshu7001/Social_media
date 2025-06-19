@@ -383,6 +383,7 @@ const OtherProfile = () => {
                     {profile.am_i_following ? "Unfollow" : "Follow"}
                   </button>
                 )}
+
                 <button className="border border-[#0000ff] hover:bg-blue-100 rounded-md xs:px-7 lg:px-4 xl:px-7 py-2 xss:px-4 text-[#0000ff] font-semibold text-lg">
                   Message
                 </button>
@@ -695,7 +696,7 @@ const OtherProfile = () => {
         <div className="col-span-1 flex flex-col space-y-10 lg:ml-10">
           <div className="flex flex-col space-y-6">
             <h1 className="text-2xl font-semibold text-gray-800">
-              {otherProfileData?.name || "John Paul"}'s Uploads
+              {otherProfileData?.name || "John Paul"} Uploads
             </h1>
             <div className="flex xss:gap-2 sm:gap-6">
               <button

@@ -238,12 +238,12 @@ const Profile = () => {
                   icon: <MdOutlinePeopleAlt size={28} />,
                 },
                 {
-                  destination: "/Message",
+                  destination: "#",
                   text: "Message",
                   icon: <MdOutlineMessage size={25} />,
                 },
                 {
-                  destination: "/Notifications",
+                  destination: "#",
                   text: "Notifications",
                   icon: <IoMdNotificationsOutline size={28} />,
                 },
@@ -273,31 +273,28 @@ const Profile = () => {
           <div className="xss:h-auto lg:h-fit xss:w-full lg:w-[65%] mx-auto">
             <div className="flex xs:gap-1 sm:gap-2 w-full justify-center rounded">
               <button
-                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
-                  activeTab === "followers"
-                    ? "border-gray-500 text-gray-500"
-                    : "border-primary  text-primary"
-                }`}
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 text-lg sm:text-xl xss:text-lg ${activeTab === "followers"
+                  ? "border-primary  text-primary"
+                  : "border-gray-500 text-gray-500"
+                  }`}
                 onClick={() => setActiveTab("followers")}
               >
                 Followers
               </button>
               <button
-                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
-                  activeTab === "following"
-                    ? "border-gray-500  text-gray-500"
-                    : "border-primary text-primary "
-                }`}
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-xl xss:text-lg ${activeTab === "following"
+                  ? "border-primary text-primary"
+                  : "border-gray-500 text-gray-500"
+                  }`}
                 onClick={() => setActiveTab("following")}
               >
                 Following
               </button>
               <button
-                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-2xl xss:text-lg ${
-                  activeTab === "suggestions"
-                    ? "border-gray-500 text-gray-500"
-                    : "border-primary  text-primary"
-                }`}
+                className={`xs:px-3 py-1 mb-2 w-1/3 font-bold border-b-2 sm:text-xl xss:text-lg ${activeTab === "suggestions"
+                  ? "border-primary text-primary"
+                  : "border-gray-500 text-gray-500"
+                  }`}
                 onClick={() => setActiveTab("suggestions")}
               >
                 Suggestions
