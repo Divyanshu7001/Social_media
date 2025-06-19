@@ -50,15 +50,15 @@ export const UploadPaperDetails = () => {
     e.preventDefault();
     // Prepare values for validation
     const values = [
-      { paperTitle: formData.paperTitle },
-      { abstract: formData.abstract },
-      { publicationName: formData.publicationName },
-      { year: formData.year },
-      { link: formData.link },
-      { doi: formData.doi },
-      { research_interest: formData.research_interest },
-      { category: formData.category },
-      { coAuthors: coAuthors.length ? coAuthors.join(", ") : "" },
+      {label:"Paper Title", paperTitle: formData.paperTitle },
+      {label:"Abstract", abstract: formData.abstract },
+      {label:"Publication Name", publicationName: formData.publicationName },
+      {label:"Year", year: formData.year },
+      {label:"Link", link: formData.link },
+      {label:"DOI", doi: formData.doi },
+      {label:"Research Interests", research_interest: formData.research_interest },
+      {label:"Category", category: formData.category },
+      {label:"Co-Authors", coAuthors: coAuthors.length ? coAuthors.join(", ") : "" },
     ];
     if (!validate({ values, setErrors })) {
       // Focus the first error field
@@ -213,11 +213,11 @@ export const UploadPaperDetails = () => {
                     placeholder="Enter Title"
                     value={formData.paperTitle}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.paperTitle ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.paperTitle}
                   />
                   {errors.paperTitle && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.paperTitle}
                     </span>
                   )}
@@ -234,11 +234,12 @@ export const UploadPaperDetails = () => {
                     name="abstract"
                     value={formData.abstract}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2 h-[150px] resize-none"
+
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 h-[150px] resize-none focus:outline-none ${errors.abstract ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.abstract}
                   ></textarea>
                   {errors.abstract && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.abstract}
                     </span>
                   )}
@@ -256,11 +257,11 @@ export const UploadPaperDetails = () => {
                     name="link"
                     value={formData.link}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.link ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.link}
                   />
                   {errors.link && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.link}
                     </span>
                   )}
@@ -279,7 +280,7 @@ export const UploadPaperDetails = () => {
                       name="coAuthor"
                       onChange={handleCoAuthorChange}
                       placeholder="Enter Co-Author Name"
-                      className="p-4 border border-gray-300 rounded-md mr-2 w-full md:w-[60%] mb-4 md:mb-0"
+                      className={`p-4 border border-gray-300 rounded-md mr-2 w-full md:w-[60%] focus:outline-none mb-4 md:mb-0 ${errors.coAuthors ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                       ref={refs.coAuthors}
                     />
                     <p
@@ -332,7 +333,7 @@ export const UploadPaperDetails = () => {
                     ))}
                   </div>
                   {errors.coAuthors && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.coAuthors}
                     </span>
                   )}
@@ -353,11 +354,11 @@ export const UploadPaperDetails = () => {
                     placeholder="Enter Publication Name"
                     value={formData.publicationName}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.publicationName ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.publicationName}
                   />
                   {errors.publicationName && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.publicationName}
                     </span>
                   )}
@@ -375,11 +376,11 @@ export const UploadPaperDetails = () => {
                     name="year"
                     value={formData.year}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.year ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.year}
                   />
                   {errors.year && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.year}
                     </span>
                   )}
@@ -397,11 +398,11 @@ export const UploadPaperDetails = () => {
                     name="doi"
                     value={formData.doi}
                     onChange={handleChange}
-                    className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                    className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.doi ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                     ref={refs.doi}
                   />
                   {errors.doi && (
-                    <span className="text-red-500 text-xs mt-1">
+                    <span className="text-red-500 font-semibold mt-1">
                       {errors.doi}
                     </span>
                   )}
@@ -419,7 +420,7 @@ export const UploadPaperDetails = () => {
                       name="category"
                       value={formData.category}
                       onChange={handleChange}
-                      className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                      className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.category ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                       ref={refs.category}
                     >
                       <option value="">Select Category</option>
@@ -428,7 +429,7 @@ export const UploadPaperDetails = () => {
                       <option value="case study">Case Study</option>
                     </select>
                     {errors.category && (
-                      <span className="text-red-500 text-xs mt-1">
+                      <span className="text-red-500 font-semibold mt-1">
                         {errors.category}
                       </span>
                     )}
@@ -446,11 +447,11 @@ export const UploadPaperDetails = () => {
                       name="research_interest"
                       value={formData.research_interest}
                       onChange={handleChange}
-                      className="w-full p-4 border border-gray-300 rounded-md mt-2"
+                      className={`w-full p-4 border border-gray-300 rounded-md mt-2 focus:outline-none ${errors.research_interest ? "border-red-500 focus:border-red-500 ring-2 ring-red-200" : ""}`}
                       ref={refs.research_interest}
                     />
                     {errors.research_interest && (
-                      <span className="text-red-500 text-xs mt-1">
+                      <span className="text-red-500 font-semibold mt-1">
                         {errors.research_interest}
                       </span>
                     )}
