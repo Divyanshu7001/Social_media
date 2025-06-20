@@ -7,7 +7,7 @@ import "react-phone-input-2/lib/style.css";
 import toast from "react-hot-toast";
 import api from "../api";
 import { CgProfile } from "react-icons/cg";
-import TextInput from "./utilities/TextInput";
+import TextInput from "./InputStyles/TextInput";
 import { validate } from "./utilities/vailidators";
 
 export const ProfileModal = ({
@@ -55,15 +55,15 @@ export const ProfileModal = ({
 
   const [errors, setErrors] = useState({});
   const values = [
-    { name: name },
-    { email: email },
-    { phone: phone },
-    { country: country },
+    { label:"Name", name: name },
+    { label:"Email", email: email },
+    { label:"Phone", phone: phone },
+    { label:"Country", country: country },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

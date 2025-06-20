@@ -1,11 +1,4 @@
-const TextInput = ({
-  label,
-  value,
-  setValue,
-  required,
-  error,
-  inputRef,
-}) => {
+const TextInput = ({ label, value, setValue, required, error, inputRef }) => {
   return (
     <div>
       <label className="font-medium">{label}</label>
@@ -20,7 +13,7 @@ const TextInput = ({
         type="text"
         placeholder={`Enter ${label.toLowerCase()}`}
       />
-      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+      {error && <p className="text-red-600 font-semibold mt-2">{error}</p>}
     </div>
   );
 };

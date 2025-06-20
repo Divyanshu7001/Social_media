@@ -24,19 +24,19 @@ export const ProfessionalActivityAddModal = ({
   const [degree, setDegree] = useState("");
   const [errors, setErrors] = useState({});
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { endDate: endDate },
-    { startDate: startDate },
-    { degree: degree },
+    { label:"Organization Name", organizationName: organizationName },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Department", department: department },
+    { label:"End Date", endDate: endDate },
+    { label:"Start Date", startDate: startDate },
+    { label:"Degree", degree: degree },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -162,19 +162,19 @@ export const ProfessionalActivityEditModal = ({
   const [errors, setErrors] = useState({});
 
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { endDate: endDate },
-    { startDate: startDate },
-    { degree: degree },
+    { label:"Organization Name", organizationName: organizationName },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Department", department: department },
+    { label:"End Date", endDate: endDate },
+    { label:"Start Date", startDate: startDate },
+    { label:"Degree", degree: degree },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

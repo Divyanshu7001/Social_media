@@ -73,8 +73,14 @@ const InnerApp = () => {
       console.log("fetched user in app: ", res.data);
       setUser(res.data.profile_data.user);
       setProfileData(res.data.profile_data.user.profile || {});
-      setSavedFiles(res.data.saved_data || {});
-      setMyUploads(res.data.article_upload || []);
+      setSavedFiles({
+        posts: res.data.saved_data.posts || [],
+        articles: res.data.saved_data.articles || [],
+      });
+      setMyUploads({
+        posts: res.data.post_upload || [],
+        articles: res.data.article_upload || [],
+      });
       setFollowersData(res.data.follower_count || 0);
       setFollowingData(res.data.following_count || 0);
       setIsAuthenticated(true);
@@ -83,8 +89,8 @@ const InnerApp = () => {
       setIsAuthenticated(false);
       setUser({});
       setProfileData({});
-      setSavedFiles({});
-      setMyUploads([]);
+      setSavedFiles({ posts: [], articles: [] });
+      setMyUploads({ posts: [], articles: [] });
       setFollowersData([]);
       setFollowingData([]);
     }
@@ -138,7 +144,6 @@ const InnerApp = () => {
         <Route path="/saved" element={<SavedItems />} />
         <Route path="/ArticleDetails/:id" element={<ArticleDetails />} />
       </Routes>
-
 
       <Toaster
         position="top-center"

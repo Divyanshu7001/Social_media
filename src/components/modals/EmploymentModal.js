@@ -25,19 +25,19 @@ export const EmploymentAddModal = ({
   const [errors, setErrors] = useState({});
 
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { startDate: startDate },
-    { endDate: endDate },
-    { role: role },
+    {label:"Organization Name", organizationName: organizationName },
+    {label:"City", city: city },
+    {label:"Region", region: region },
+    {label:"Country", country: country },
+    {label:"Department", department: department },
+    {label:"Start Date", startDate: startDate },
+    {label:"End Date", endDate: endDate },
+    {label:"Role", role: role },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -159,20 +159,21 @@ export const EmploymentEditModal = ({
   const [endDate, setEndDate] = useState(employeeData.end_date);
   const [role, setRole] = useState(employeeData.role);
   const [errors, setErrors] = useState({});
+  
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { startDate: startDate },
-    { endDate: endDate },
-    { role: role },
+    {label:"Organization Name", organizationName: organizationName },
+    {label:"City", city: city },
+    {label:"Region", region: region },
+    {label:"Country", country: country },
+    {label:"Department", department: department },
+    {label:"Start Date", startDate: startDate },
+    {label:"End Date", endDate: endDate },
+    {label:"Role", role: role },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

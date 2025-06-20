@@ -24,19 +24,19 @@ export const EducationAddModal = ({
 
   const [errors, setErrors] = useState({});
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { startDate: startDate },
-    { endDate: endDate },
-    { degree: degree },
+    { label:"Organization Name", organizationName: organizationName },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Department", department: department },
+    { label:"Start Date", startDate: startDate },
+    { label:"End Date", endDate: endDate },
+    { label:"Degree", degree: degree },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -164,19 +164,19 @@ export const EducationEditModal = ({
   const [errors, setErrors] = useState({});
 
   const values = [
-    { organizationName: organizationName },
-    { city: city },
-    { region: region },
-    { country: country },
-    { department: department },
-    { startDate: startDate },
-    { endDate: endDate },
-    { degree: degree },
+    { label:"Organization Name", organizationName: organizationName },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Department", department: department },
+    { label:"Start Date", startDate: startDate },
+    { label:"End Date", endDate: endDate },
+    { label:"Degree", degree: degree },
   ];
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0];
+      const key = Object.keys(value)[1];
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

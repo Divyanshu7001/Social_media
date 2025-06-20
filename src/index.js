@@ -10,8 +10,8 @@ const Appwrapper = () => {
   const [user, setUser] = useState({});
   const [token, setToken] = useState(null);
   const [profileData, setProfileData] = useState({});
-  const [savedFiles, setSavedFiles] = useState({});
-  const [myUploads, setMyUploads] = useState([]);
+  const [savedFiles, setSavedFiles] = useState({ posts: [], articles: [] });
+  const [myUploads, setMyUploads] = useState({ posts: [], articles: [] });
   const [followingData, setFollowingData] = useState([]);
   const [followersData, setFollowersData] = useState([]);
   const [popup, setPopup] = useState(false);

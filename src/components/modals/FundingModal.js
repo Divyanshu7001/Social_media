@@ -31,28 +31,28 @@ export const FundingDetailsAddModal = ({
   const [relationship, setRelationship] = useState("");
 
   const values = [
-    { titleOfFundedProject: titleOfFundedProject },
-    { startDate: startDate },
-    { endDate: endDate },
-    { city: city },
-    { region: region },
-    { country: country },
-    { projectLink: projectLink },
-    { description: description },
-    { fundingType: fundingType },
-    { fundingSubtype: fundingSubtype },
-    { totalFundingAmount: totalFundingAmount },
-    { fundingAgencyName: fundingAgencyName },
-    { fundingIdentifier: fundingIdentifier },
-    { grantLink: grantLink },
-    { relationship: relationship },
+    { label:"Title of Funded Project", titleOfFundedProject: titleOfFundedProject },
+    { label:"Start Date", startDate: startDate },
+    { label:"End Date", endDate: endDate },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Project Link", projectLink: projectLink },
+    { label:"Description", description: description },
+    { label:"Funding Type", fundingType: fundingType },
+    { label:"Funding Subtype", fundingSubtype: fundingSubtype },
+    { label:"Total Funding Amount", totalFundingAmount: totalFundingAmount },
+    { label:"Funding Agency Name", fundingAgencyName: fundingAgencyName },
+    { label:"Funding Identifier", fundingIdentifier: fundingIdentifier },
+    { label:"Grant Link", grantLink: grantLink },
+    { label:"Relationship", relationship: relationship },
   ];
 
   const [errors, setErrors] = useState({});
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })
@@ -278,28 +278,28 @@ export const FundingDetailsEditModal = ({
   );
 
   const values = [
-    { titleOfFundedProject: titleOfFundedProject },
-    { startDate: startDate },
-    { endDate: endDate },
-    { city: city },
-    { region: region },
-    { country: country },
-    { projectLink: projectLink },
-    { description: description },
-    { fundingType: fundingType },
-    { fundingSubtype: fundingSubtype },
-    { totalFundingAmount: totalFundingAmount },
-    { fundingAgencyName: fundingAgencyName },
-    { fundingIdentifier: fundingIdentifier },
-    { grantLink: grantLink },
-    { relationship: relationship },
+    { label:"Title of Funded Project", titleOfFundedProject: titleOfFundedProject },
+    { label:"Start Date", startDate: startDate },
+    { label:"End Date", endDate: endDate },
+    { label:"City", city: city },
+    { label:"Region", region: region },
+    { label:"Country", country: country },
+    { label:"Project Link", projectLink: projectLink },
+    { label:"Description", description: description },
+    { label:"Funding Type", fundingType: fundingType },
+    { label:"Funding Subtype", fundingSubtype: fundingSubtype },
+    { label:"Total Funding Amount", totalFundingAmount: totalFundingAmount },
+    { label:"Funding Agency Name", fundingAgencyName: fundingAgencyName },
+    { label:"Funding Identifier", fundingIdentifier: fundingIdentifier },
+    { label:"Grant Link", grantLink: grantLink },
+    { label:"Relationship", relationship: relationship },
   ];
 
   const [errors, setErrors] = useState({});
 
   const refs = Object.fromEntries(
     values.map((value) => {
-      const key = Object.keys(value)[0]; // "name", "email", etc.
+      const key = Object.keys(value)[1]; // "name", "email", etc.
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return [key, useRef()];
     })

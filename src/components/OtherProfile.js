@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as solidHeart,
+  faBookmark as solidBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
-import { FaHeart } from "react-icons/fa6";
-import { IoMdEye } from "react-icons/io";
-import { CiBookmark, CiShare2 } from "react-icons/ci";
 import { PiDotsThreeOutlineVertical } from "react-icons/pi";
 import { Link, useParams } from "react-router-dom";
 import api from "./api";
@@ -15,6 +15,10 @@ import toast from "react-hot-toast";
 import { Context } from "../index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaAngleUp, FaChevronDown } from "react-icons/fa";
+import {
+  faHeart as regularHeart,
+  faBookmark as regularBookmark,
+} from "@fortawesome/free-regular-svg-icons";
 
 const OtherProfile = () => {
   const { userId } = useParams();
@@ -30,7 +34,6 @@ const OtherProfile = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [articles, setArticles] = useState([]);
   const [posts, setPosts] = useState([]);
-
 
   const [btn1, setBtn1] = useState(false);
   const [btn2, setBtn2] = useState(false);
@@ -55,7 +58,7 @@ const OtherProfile = () => {
             }
           )
           .then((res) => {
-            console.log("Fetched User Data: ", res.data);
+            //console.log("Fetched User Data in Other Profile: ", res.data);
             // console.log(res.data.follower_count);
             // console.log(res.data.following_count);
 
@@ -105,7 +108,7 @@ const OtherProfile = () => {
         const { height, width } = img;
         //console.log("Image dimensions: ", height, width);
 
-        height > width || height == width
+        height > width || height === width
           ? setIsPortrait(true)
           : setIsPortrait(false);
       };
@@ -161,7 +164,116 @@ const OtherProfile = () => {
     }
   };
 
-  console.log("Profile Data: ", otherProfileData);
+  const handleLike = async (action, post_id, postType, { refreshType }) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", userId);
+      postType === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", postType);
+      //console.log("data: ", data);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        refreshData(refreshType);
+      }
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(err.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+    }
+  };
+  const refreshData = async (refreshType) => {
+    console.log("In Refresh caller");
+
+    console.log("refreshType: ", refreshType);
+    try {
+      await api
+        .post(
+          `fetchProfile`,
+          {
+            user_id: userId,
+            follow_id: user.id,
+          },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          //console.log("Data in refreshData: ", res.data);
+          refreshType === "Posts"
+            ? setPosts(res.data.post_upload == null ? [] : res.data.post_upload)
+            : setArticles(
+                res.data.article_upload == null ? [] : res.data.article_upload
+              );
+        });
+    } catch (error) {
+      console.error(`Error while refreshing ${refreshType} data: `, error);
+      toast.error(`Error while refreshing ${refreshType} data: `, error);
+    }
+  };
+
+  const handlesaved = async (action, post_id, type) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      type === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", type);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      //dataFetch(true);
+      console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post" ? refreshData("Posts") : refreshData("Articles");
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post" ? refreshData("Posts") : refreshData("Articles");
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+      console.log(error);
+    }
+  };
+
+  //console.log("Other Profile Data: ", otherProfileData);
   // console.log("Followers Count: ", profileCounts.followersCount);
   // console.log("Following Count: ", profileCounts.followingCount);
 
@@ -257,13 +369,21 @@ const OtherProfile = () => {
 
               {/* Right Column: Buttons */}
               <div className="space-x-4 lg:ml-6 flex xss:justify-center xss:items-center sm:hidden lg:flex">
-                {user.id != userId && (<button
-                  onClick={() => handleFollow(userId, profile.am_i_following ? "unfollow" : "follow")}
-                  className="bg-[#0000ff] hover:bg-blue-700 border-blue-600 rounded-md xs:px-8 lg:px-5 xl:px-8 py-2 xss:px-4 text-white font-semibold text-lg"
-                >
-                  {console.log(user.id, "", userId)}
-                  {profile.am_i_following ? "Unfollow" : "Follow"}
-                </button>)}
+                {user.id !== userId && (
+                  <button
+                    onClick={() =>
+                      handleFollow(
+                        userId,
+                        profile.am_i_following ? "unfollow" : "follow"
+                      )
+                    }
+                    className="bg-[#0000ff] hover:bg-blue-700 border-blue-600 rounded-md xs:px-8 lg:px-5 xl:px-8 py-2 xss:px-4 text-white font-semibold text-lg"
+                  >
+                    {console.log(user.id, "", userId)}
+                    {profile.am_i_following ? "Unfollow" : "Follow"}
+                  </button>
+                )}
+
                 <button className="border border-[#0000ff] hover:bg-blue-100 rounded-md xs:px-7 lg:px-4 xl:px-7 py-2 xss:px-4 text-[#0000ff] font-semibold text-lg">
                   Message
                 </button>
@@ -295,10 +415,8 @@ const OtherProfile = () => {
             <div className="border-2 rounded-md my-2">
               <div className="p-4 border-b-2 rounded">
                 <p className="text-gray-500 text-xl">Biography</p>
-                {console.log(
-                  otherProfileData?.profile?.skills.flatMap(
-                    (skill) => skill.skills
-                  )
+                {otherProfileData?.profile?.skills.flatMap(
+                  (skill) => skill.skills
                 )}
               </div>
               <div className="p-4">
@@ -357,8 +475,9 @@ const OtherProfile = () => {
               {otherProfileData?.profile?.employee.length > 0 ? (
                 otherProfileData?.profile?.employee.map((item, index) => (
                   <div
-                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn1 ? "block" : "hidden"
-                      }`}
+                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                      btn1 ? "block" : "hidden"
+                    }`}
                     key={index}
                   >
                     <p>
@@ -373,8 +492,9 @@ const OtherProfile = () => {
                 ))
               ) : (
                 <div
-                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn1 ? "block" : "hidden"
-                    }`}
+                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                    btn1 ? "block" : "hidden"
+                  }`}
                 >
                   <p>No Employee Avaliable</p>
                 </div>
@@ -403,8 +523,9 @@ const OtherProfile = () => {
                 otherProfileData?.profile?.education.map((item, index) => (
                   <div
                     key={index}
-                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn2 ? "block" : "hidden"
-                      }`}
+                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                      btn2 ? "block" : "hidden"
+                    }`}
                   >
                     <p>Degree: {item.degree}</p>
                     <p>
@@ -419,8 +540,9 @@ const OtherProfile = () => {
                 ))
               ) : (
                 <div
-                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn2 ? "block" : "hidden"
-                    }`}
+                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                    btn2 ? "block" : "hidden"
+                  }`}
                 >
                   <p>No Education Avaliable</p>
                 </div>
@@ -450,8 +572,9 @@ const OtherProfile = () => {
                   (item, index) => (
                     <div
                       key={index}
-                      className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn3 ? "block" : "hidden"
-                        }`}
+                      className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                        btn3 ? "block" : "hidden"
+                      }`}
                     >
                       <p>Organization Name: {item.organization_name}</p>
                       <p>
@@ -464,8 +587,9 @@ const OtherProfile = () => {
                 )
               ) : (
                 <div
-                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn3 ? "block" : "hidden"
-                    }`}
+                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                    btn3 ? "block" : "hidden"
+                  }`}
                 >
                   <p>No Professional Activity Avaliable</p>
                 </div>
@@ -495,8 +619,9 @@ const OtherProfile = () => {
                   (item, index) => (
                     <div
                       key={index}
-                      className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn4 ? "block" : "hidden"
-                        }`}
+                      className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                        btn4 ? "block" : "hidden"
+                      }`}
                     >
                       <p>
                         Funding Organization: {item.funding_agency_name} |{" "}
@@ -511,8 +636,9 @@ const OtherProfile = () => {
                 )
               ) : (
                 <div
-                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn4 ? "block" : "hidden"
-                    }`}
+                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                    btn4 ? "block" : "hidden"
+                  }`}
                 >
                   <p>No Funding Details Avaliable</p>
                 </div>
@@ -540,8 +666,9 @@ const OtherProfile = () => {
                 otherProfileData?.profile?.works.map((item, index) => (
                   <div
                     key={index}
-                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn5 ? "block" : "hidden"
-                      }`}
+                    className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                      btn5 ? "block" : "hidden"
+                    }`}
                   >
                     <p>
                       {" "}
@@ -554,8 +681,9 @@ const OtherProfile = () => {
                 ))
               ) : (
                 <div
-                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${btn5 ? "block" : "hidden"
-                    }`}
+                  className={`py-5 border-[1px] my-4 mx-5 leading-10 px-8 ${
+                    btn5 ? "block" : "hidden"
+                  }`}
                 >
                   <p>No Works Avaliable</p>
                 </div>
@@ -573,28 +701,31 @@ const OtherProfile = () => {
             <div className="flex xss:gap-2 sm:gap-6">
               <button
                 onClick={() => setActiveTab("All")}
-                className={`${activeTab === "All"
-                  ? "bg-[#0000ff] text-white"
-                  : "border border-[#0000ff] text-[#0000ff]"
-                  } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
+                className={`${
+                  activeTab === "All"
+                    ? "bg-[#0000ff] text-white"
+                    : "border border-[#0000ff] text-[#0000ff]"
+                } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
               >
                 All
               </button>
               <button
                 onClick={() => setActiveTab("Articles")}
-                className={`${activeTab === "Articles"
-                  ? "bg-[#0000ff] text-white"
-                  : "border border-[#0000ff] text-[#0000ff]"
-                  } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
+                className={`${
+                  activeTab === "Articles"
+                    ? "bg-[#0000ff] text-white"
+                    : "border border-[#0000ff] text-[#0000ff]"
+                } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
               >
                 Articles
               </button>
               <button
                 onClick={() => setActiveTab("Posts")}
-                className={`${activeTab === "Posts"
-                  ? "bg-[#0000ff] text-white"
-                  : "border border-[#0000ff] text-[#0000ff]"
-                  } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
+                className={`${
+                  activeTab === "Posts"
+                    ? "bg-[#0000ff] text-white"
+                    : "border border-[#0000ff] text-[#0000ff]"
+                } rounded-3xl xss:px-5 px-8 py-2 font-bold xss:text-md text-lg`}
               >
                 Posts
               </button>
@@ -610,6 +741,7 @@ const OtherProfile = () => {
                     key={i}
                     className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                   >
+                    {console.log("Article Data: ", post)}
                     {/* Content for Saved Files */}
                     <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
                       <div className="flex flex-col space-y-1">
@@ -637,120 +769,174 @@ const OtherProfile = () => {
                       {post.abstract}
                     </p>
                     <div className="flex justify-between my-1 items-center sm:mx-9">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <FontAwesomeIcon
-                          icon={solidHeart}
-                          className="text-red-600 sm:text-xl xss:text-lg"
+                          onClick={() =>
+                            handleLike(
+                              post.am_i_liked ? "unlike" : "like",
+                              post.id,
+                              "article",
+                              { refreshType: "Articles" }
+                            )
+                          }
+                          icon={post.am_i_liked ? solidHeart : regularHeart}
+                          className="text-red-600 cursor-pointer text-xl"
                         />
-                        <span className="sm:text-lg xss:text-base">
-                          1 likes
+                        <span className="lg:text-lg xss:text-base">
+                          {post.likeCount} {post.am_i_liked ? "likes" : "like"}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <img
                           src={weuieyesonfilled}
                           alt="Views"
-                          className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                          className="sm:w-7 sm:h-7 xss:w-6 xss:h-6"
                         />
-                        <span className="text-lg xss:text-base">2 Views</span>
+                        <span className="text-lg xss:text-base">
+                          {post.viewsCount == null ? 0 : post.viewsCount} Views
+                        </span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 cursor-pointer">
                         <img
                           src={openmojishare}
                           alt="Share"
-                          className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                          className="sm:w-8 sm:h-8 xss:h-7 xss:w-7"
                         />
                         <span className="text-lg xss:text-base">Share</span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <CiBookmark className="h-7 w-7 text-gray-400" />
-                        <span className="text-lg xss:text-base">Save</span>
+                      <div
+                        className="flex items-center space-x-2 cursor-pointer"
+                        onClick={() =>
+                          handlesaved(
+                            post.isSaved ? "deleteSave" : "save",
+                            post.id,
+                            "article"
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon
+                          icon={post.isSaved ? solidBookmark : regularBookmark}
+                          className="text-gray-600 sm:w-5 sm:h-5"
+                        />
+                        <span className="">
+                          {post.isSaved ? "Saved" : "Save"}
+                        </span>
                       </div>
                     </div>
                   </div>
                 ))
+              ) : activeTab === "All" ? (
+                <p>No Article and Post Uploads yet</p>
               ) : (
-                activeTab === "All" ? <p>No Article and Post Uploads yet</p> : <p>No Article Uploads yet</p>
-
+                <p>No Article Uploads yet</p>
               )}
             </>
           ) : null}
 
           {activeTab === "All" || activeTab === "Posts" ? (
             <>
-              {posts && posts.length > 0 ? (
-                posts.map((post, index) => (
-                  <div id={index} className="books flex flex-col space-y-4" key={index}>
-                    {console.log("Post Data: ", post)}
-                    <div className="flex flex-col w-auto h-auto xss:px-3 xs:px-4 py-4 border rounded-lg shadow-sm bg-white mr-4z">
-                      <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
-                        <div className="flex items-center xss:space-x-2 sm:space-x-4 sm:ml-4">
-                          <div className="w-16 h-16">
-                            {otherProfileData?.image ? (
-                              <img
-                                src={otherProfileData?.image}
-                                alt="User profile"
-                                className="rounded-full object-cover w-full h-full"
-                              />
-                            ) : (
-                              <CgProfile className="w-16 h-16" />
-                            )}
+              {posts && posts.length > 0
+                ? posts.map((post, index) => (
+                    <div
+                      id={index}
+                      className="books flex flex-col space-y-4"
+                      key={index}
+                    >
+                      {console.log("Post Data: ", post)}
+                      <div className="flex flex-col w-auto h-auto xss:px-3 xs:px-4 py-4 border rounded-lg shadow-sm bg-white mr-4z">
+                        <div className="flex items-center justify-between space-x-4 border-b border-gray-200 pb-4">
+                          <div className="flex items-center xss:space-x-2 sm:space-x-4 sm:ml-4">
+                            <div className="w-16 h-16">
+                              {otherProfileData?.image ? (
+                                <img
+                                  src={otherProfileData?.image}
+                                  alt="User profile"
+                                  className="rounded-full object-cover w-full h-full"
+                                />
+                              ) : (
+                                <CgProfile className="w-16 h-16" />
+                              )}
+                            </div>
+                            <div>
+                              <h2 className="text-2xl font-semibold text-gray-600 mb-1">
+                                {otherProfileData?.name}
+                              </h2>
+                              <p className="text-lg text-gray-500">
+                                {otherProfileData?.country}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h2 className="text-2xl font-semibold text-gray-600 mb-1">
-                              {otherProfileData?.name}
-                            </h2>
-                            <p className="text-lg text-gray-500">
-                              {otherProfileData?.country}
-                            </p>
+                          <PiDotsThreeOutlineVertical className="h-8 w-8 mr-6" />
+                        </div>
+                        <div className="mt-4 px-2 border-b-[1.4px] border-gray-200">
+                          <p className="text-xl text-gray-500 font-medium mb-2">
+                            {post.description}
+                          </p>
+                          <ImageContainer image={post.post} />
+                        </div>
+                        <div className="flex justify-between my-1 items-center sm:mx-9 ">
+                          <div className="flex items-center space-x-1">
+                            <FontAwesomeIcon
+                              onClick={() =>
+                                handleLike(
+                                  post.am_i_liked ? "unlike" : "like",
+                                  post.id,
+                                  "post",
+                                  { refreshType: "Posts" }
+                                )
+                              }
+                              icon={post.am_i_liked ? solidHeart : regularHeart}
+                              className="text-red-600 cursor-pointer text-xl"
+                            />
+                            <span className="sm:text-lg xss:text-base">
+                              {post.likeCount}{" "}
+                              {post.am_i_liked ? "likes" : "like"}
+                            </span>
                           </div>
-                        </div>
-                        <PiDotsThreeOutlineVertical className="h-8 w-8 mr-6" />
-                      </div>
-                      <div className="mt-4 px-2 border-b-[1.4px] border-gray-200">
-                        <p className="text-xl text-gray-500 font-medium mb-2">
-                          {post.description}
-                        </p>
-                        <ImageContainer image={post.post} />
-                      </div>
-                      <div className="flex justify-between my-1 items-center sm:mx-9 ">
-                        <div className="flex items-center space-x-1">
-                          <FontAwesomeIcon
-                            icon={solidHeart}
-                            className="text-red-600 sm:text-xl xss:text-lg"
-                          />
-                          <span className="sm:text-lg xss:text-base">
-                            1 likes
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <img
-                            src={weuieyesonfilled}
-                            alt="Views"
-                            className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
-                          />
-                          <span className="text-lg xss:text-base">2 Views</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <img
-                            src={openmojishare}
-                            alt="Share"
-                            className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
-                          />
-                          <span className="text-lg xss:text-base">Share</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <CiBookmark className="sm:h-7 sm:w-7 xss:h-6 xss:w-6 text-gray-500" />
-                          <span className="text-lg xss:text-base">Save</span>
+                          <div className="flex items-center space-x-1">
+                            <img
+                              src={weuieyesonfilled}
+                              alt="Views"
+                              className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                            />
+                            <span className="text-lg xss:text-base">
+                              {post.viewsCount == null ? 0 : post.viewsCount}{" "}
+                              Views
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <img
+                              src={openmojishare}
+                              alt="Share"
+                              className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                            />
+                            <span className="text-lg xss:text-base">Share</span>
+                          </div>
+                          <div
+                            className="flex items-center space-x-2 cursor-pointer"
+                            onClick={() =>
+                              handlesaved(
+                                post.isSaved ? "deleteSave" : "save",
+                                post.id,
+                                "post"
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon={
+                                post.isSaved ? solidBookmark : regularBookmark
+                              }
+                              className="text-gray-600"
+                            />
+                            <span className="hidden xs:block">
+                              {post.isSaved ? "Saved" : "Save"}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                activeTab === "Posts" && <p>No Post Uploads yet</p>
-
-              )}
+                  ))
+                : activeTab === "Posts" && <p>No Post Uploads yet</p>}
             </>
           ) : null}
         </div>

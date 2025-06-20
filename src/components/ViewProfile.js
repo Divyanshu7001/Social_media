@@ -23,7 +23,10 @@ import {
 } from "./modals/EmploymentModal";
 import Footer from "./Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as solidHeart,
+  faBookmark as solidBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import weuieyesonfilled from "../assets/img/weuieyesonfilled.png";
 import openmojishare from "../assets/img/openmojishare.png";
@@ -31,7 +34,7 @@ import { Context } from "../index.js";
 import toast from "react-hot-toast";
 import api from "./api.js";
 import { BiSolidEditAlt } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 
 const ViewProfile = () => {
@@ -42,7 +45,9 @@ const ViewProfile = () => {
     profileData,
     setProfileData,
     myUploads,
+    setMyUploads,
     savedFiles,
+    setSavedFiles,
     setFetchData,
     followersData,
     followingData,
@@ -146,7 +151,7 @@ const ViewProfile = () => {
   // console.log("Funding Details: ", fundingDetails);
   // console.log("Professional Activities: ", professionalActivityDetails);
   // console.log("Works: ", works);
-  // console.log("Skills: ", skills);
+  //console.log("Skills: ", skills);
 
   // console.log("Map skills: ", skills[0].skills);
 
@@ -192,8 +197,8 @@ const ViewProfile = () => {
 
   const addSkill = (event) => {
     event.preventDefault();
-    if (input && !tempSkills.includes(input)) {
-      setTempSkills([...tempSkills, input]);
+    if (input && !tempSkills.includes(input.toUpperCase())) {
+      setTempSkills([...tempSkills, input.toUpperCase()]);
       setInput("");
     }
   };
@@ -234,7 +239,10 @@ const ViewProfile = () => {
   };
 
   const handleEditSkillsData = async () => {
-    const updatedSkills = [...skills, ...tempSkills];
+    let updatedSkills = [...skills, ...tempSkills];
+    console.log("Updated Skills: ", updatedSkills);
+    // eslint-disable-next-line no-const-assign
+    updatedSkills.length <= 0 && (updatedSkills = [null]);
     try {
       await api
         .post(
@@ -274,7 +282,7 @@ const ViewProfile = () => {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
           setFetchData(true);
           toast.success(res.data.message);
         });
@@ -284,29 +292,129 @@ const ViewProfile = () => {
     }
   };
 
-  const downloadpdf = async (id, user_id) => {
+  const handleLike = async (action, post_id, postType, { refreshType }) => {
     try {
-      const response = await api.post(
-        "downloadArticle",
-        {
-          id: id,
-          user_id: user_id,
-        },
-        {
-          withCredentials: true,
-          responseType: "blob",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const data = new FormData();
+      data.append("user_id", user.id);
+      postType === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", postType);
+      console.log("data: ", data);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        refreshData(refreshType, postType);
+      }
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        if (err.response.data.message) {
+          toast.error(err.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(err.response.data.error, {
+            position: "top-right",
+          });
         }
-      );
-      const blob = await response.data; // Convert the response to a Blob
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    } catch (error) {
-      console.error(error);
+      }
     }
   };
+
+  const handleRemoveSaved = async (action, post_id, type) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      type === "post"
+        ? data.append("post_id", post_id)
+        : data.append("article_id", post_id);
+      data.append("type", type);
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      //dataFetch(true);
+      //console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post"
+          ? refreshData("SavedFiles", "post")
+          : refreshData("SavedFiles", "articles");
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+        type === "post"
+          ? refreshData("SavedFiles", "post")
+          : refreshData("SavedFiles", "articles");
+      }
+      // window.location.reload()
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+      console.log(error);
+    }
+  };
+
+  const refreshData = async (refreshType, typeToUpdate) => {
+    try {
+      await api
+        .post(
+          `fetchProfile`,
+          { user_id: user.id },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          if (refreshType === "SavedFiles") {
+            typeToUpdate === "post"
+              ? setSavedFiles({
+                  posts: res.data.saved_data.posts || [],
+                  articles: savedFiles.articles,
+                })
+              : setSavedFiles({
+                  posts: savedFiles.posts,
+                  articles: res.data.saved_data.articles || [],
+                });
+          } else {
+            typeToUpdate === "post"
+              ? setMyUploads({
+                  posts: res.data.post_upload || [],
+                  articles: myUploads.articles,
+                })
+              : setMyUploads({
+                  posts: myUploads.posts,
+                  articles: res.data.article_upload || [],
+                });
+          }
+        });
+    } catch (error) {
+      console.error(`Error while refreshing ${refreshType} data: `, error);
+      toast.error(`Error while refreshing ${refreshType} data: `, error);
+    }
+  };
+
   // Toggle function for expanding/collapsing sections
   const toggleSection = (section) => {
     switch (section) {
@@ -652,7 +760,10 @@ const ViewProfile = () => {
 
                       <div className="flex flex-wrap gap-2 p-4 break-words">
                         {skills === null || skills.length < 1 ? (
-                          <div className="flex justify-center text-center gap-2">
+                          <div
+                            key={0}
+                            className="flex justify-center text-center gap-2"
+                          >
                             {tempSkills.length < 1 ? (
                               <p>No skills yet</p>
                             ) : (
@@ -660,7 +771,7 @@ const ViewProfile = () => {
                                 {isSkillEdited &&
                                   tempSkills.map((tempSkill, i) => (
                                     <div
-                                      key={i}
+                                      key={tempSkill || i}
                                       className="flex items-center px-2 py-1 border rounded-full w-auto"
                                     >
                                       <span className="mr-1">{tempSkill}</span>
@@ -677,25 +788,39 @@ const ViewProfile = () => {
                           </div>
                         ) : (
                           <div className="flex gap-2 flex-wrap break-words">
+                            {skills.length === 1 &&
+                              tempSkills.length === 0 &&
+                              skills[0] == null && (
+                                <div key={0}>
+                                  <p>No skills yet</p>
+                                </div>
+                              )}
                             {skills.map((skill, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center text-wrap px-3 py-1 border rounded-full"
-                              >
-                                <span className="mr-2 text-wrap">{skill}</span>
-
-                                <button
-                                  onClick={() => removeSkill(skill)}
-                                  className="text-gray-500 hover:text-red-500 focus:outline-none"
-                                >
-                                  ×
-                                </button>
-                              </div>
+                              <>
+                                {skill != null && (
+                                  <>
+                                    <div
+                                      key={skill || index}
+                                      className="flex items-center text-wrap px-3 py-1 border rounded-full"
+                                    >
+                                      <span className="mr-2 text-wrap">
+                                        {skill}
+                                      </span>
+                                      <button
+                                        onClick={() => removeSkill(skill)}
+                                        className="text-gray-500 hover:text-red-500 focus:outline-none"
+                                      >
+                                        ×
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              </>
                             ))}
                             {isSkillEdited &&
                               tempSkills.map((tempSkill, i) => (
                                 <div
-                                  key={i}
+                                  key={tempSkill || i}
                                   className="flex items-center px-3 py-1 border rounded-full"
                                 >
                                   <span className="mr-2">{tempSkill}</span>
@@ -741,46 +866,57 @@ const ViewProfile = () => {
                           </button>
                         </div>
                       </div>
-                      {employmentOpen &&
-                        employeeData.length > 0 &&
-                        employeeData.map((employee, index) => (
-                          <div
-                            key={index}
-                            className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
-                          >
-                            <p>
-                              {employee.role} &nbsp;|&nbsp;
-                              {employee.department}
-                            </p>
-                            <p>
-                              {employee.organization}, {employee.city},{" "}
-                              {employee.region}
-                            </p>
-                            <p className="mb-4">
-                              {employee.start_date} - {employee.end_date}
-                            </p>
-                            <div className="flex gap-4 absolute bottom-2 right-4 ">
-                              <BiSolidEditAlt
-                                onClick={() => {
-                                  setbutton1Clicked((prev) => !prev);
-                                  setEditData(true);
-                                  setEmployeeToEdit(employee);
-                                  setPopup((prev) => !prev);
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
-                              <RiDeleteBin2Line
-                                onClick={() => {
-                                  handleDataDelete({
-                                    dataId: employee.id,
-                                    dataType: "employee",
-                                  });
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
+
+                      {employmentOpen && (
+                        <>
+                          {employeeData.length > 0 ? (
+                            <>
+                              {employeeData.map((employee, index) => (
+                                <div
+                                  key={employee.id || index}
+                                  className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
+                                >
+                                  <p>
+                                    {employee.role} &nbsp;|&nbsp;
+                                    {employee.department}
+                                  </p>
+                                  <p>
+                                    {employee.organization}, {employee.city},{" "}
+                                    {employee.region}
+                                  </p>
+                                  <p className="mb-4">
+                                    {employee.start_date} - {employee.end_date}
+                                  </p>
+                                  <div className="flex gap-4 absolute bottom-2 right-4 ">
+                                    <BiSolidEditAlt
+                                      onClick={() => {
+                                        setbutton1Clicked((prev) => !prev);
+                                        setEditData(true);
+                                        setEmployeeToEdit(employee);
+                                        setPopup((prev) => !prev);
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                    <RiDeleteBin2Line
+                                      onClick={() => {
+                                        handleDataDelete({
+                                          dataId: employee.id,
+                                          dataType: "employee",
+                                        });
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <div className="mt-1 border-[1px] text-lg rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7 xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-5 relative">
+                              Please Add Employment Details
                             </div>
-                          </div>
-                        ))}
+                          )}
+                        </>
+                      )}
                     </div>
 
                     {/* Education Section */}
@@ -813,45 +949,57 @@ const ViewProfile = () => {
                           </button>
                         </div>
                       </div>
-                      {educationOpen &&
-                        educationData.length > 0 &&
-                        educationData.map((education, index) => (
-                          <div
-                            key={index}
-                            className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
-                          >
-                            <p>Degree: {education.degree}</p>
-                            <p>Department: {education.department} </p>
-                            <p>
-                              University Name: {education.organization_name},
-                              {education.city}, {education.region},
-                              {education.country}
-                            </p>
-                            <p className="mb-4">
-                              {education.start_date} - {education.end_date}
-                            </p>
-                            <div className="flex gap-4 absolute bottom-2 right-4">
-                              <BiSolidEditAlt
-                                onClick={() => {
-                                  setbutton2Clicked((prev) => !prev);
-                                  setEditData(true);
-                                  setEducationToEdit(education);
-                                  setPopup((prev) => !prev);
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
-                              <RiDeleteBin2Line
-                                onClick={() => {
-                                  handleDataDelete({
-                                    dataId: education.id,
-                                    dataType: "education",
-                                  });
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
+                      {educationOpen && (
+                        <>
+                          {educationData.length > 0 ? (
+                            <>
+                              {educationData.map((education, index) => (
+                                <div
+                                  key={education.id || index}
+                                  className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
+                                >
+                                  <p>Degree: {education.degree}</p>
+                                  <p>Department: {education.department} </p>
+                                  <p>
+                                    University Name:{" "}
+                                    {education.organization_name},
+                                    {education.city}, {education.region},
+                                    {education.country}
+                                  </p>
+                                  <p className="mb-4">
+                                    {education.start_date} -{" "}
+                                    {education.end_date}
+                                  </p>
+                                  <div className="flex gap-4 absolute bottom-2 right-4">
+                                    <BiSolidEditAlt
+                                      onClick={() => {
+                                        setbutton2Clicked((prev) => !prev);
+                                        setEditData(true);
+                                        setEducationToEdit(education);
+                                        setPopup((prev) => !prev);
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                    <RiDeleteBin2Line
+                                      onClick={() => {
+                                        handleDataDelete({
+                                          dataId: education.id,
+                                          dataType: "education",
+                                        });
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <div className="mt-1 border-[1px] text-lg rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7 xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-5 relative">
+                              Please Add Education Details
                             </div>
-                          </div>
-                        ))}
+                          )}
+                        </>
+                      )}
                     </div>
 
                     {/* Professional Activities Section */}
@@ -884,45 +1032,62 @@ const ViewProfile = () => {
                           </button>
                         </div>
                       </div>
-                      {activitiesOpen &&
-                        professionalActivityDetails.length > 0 &&
-                        professionalActivityDetails.map((activity, index) => (
-                          <div
-                            key={index}
-                            className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
-                          >
-                            <p>
-                              Organization Name: {activity.organization_name}
-                            </p>
-                            <p>Department: {activity.department}</p>
-                            <p>
-                              Location: {activity.city},{activity.country}
-                            </p>
-                            <p className="mb-4">
-                              Date: {activity.start_date}-{activity.end_date}
-                            </p>
-                            <div className="flex gap-4 absolute bottom-2 right-4">
-                              <BiSolidEditAlt
-                                onClick={() => {
-                                  setbutton3Clicked((prev) => !prev);
-                                  setEditData(true);
-                                  setProfessionalActivityToEdit(activity);
-                                  setPopup((prev) => !prev);
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
-                              <RiDeleteBin2Line
-                                onClick={() => {
-                                  handleDataDelete({
-                                    dataId: activity.id,
-                                    dataType: "professional_activity",
-                                  });
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
+                      {activitiesOpen && (
+                        <>
+                          {professionalActivityDetails.length > 0 ? (
+                            <>
+                              {professionalActivityDetails.map(
+                                (activity, index) => (
+                                  <div
+                                    key={activity.id || index}
+                                    className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
+                                  >
+                                    <p>
+                                      Organization Name:{" "}
+                                      {activity.organization_name}
+                                    </p>
+                                    <p>Department: {activity.department}</p>
+                                    <p>
+                                      Location: {activity.city},
+                                      {activity.country}
+                                    </p>
+                                    <p className="mb-4">
+                                      Date: {activity.start_date}-
+                                      {activity.end_date}
+                                    </p>
+                                    <div className="flex gap-4 absolute bottom-2 right-4">
+                                      <BiSolidEditAlt
+                                        onClick={() => {
+                                          setbutton3Clicked((prev) => !prev);
+                                          setEditData(true);
+                                          setProfessionalActivityToEdit(
+                                            activity
+                                          );
+                                          setPopup((prev) => !prev);
+                                        }}
+                                        className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                      />
+                                      <RiDeleteBin2Line
+                                        onClick={() => {
+                                          handleDataDelete({
+                                            dataId: activity.id,
+                                            dataType: "professional_activity",
+                                          });
+                                        }}
+                                        className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                      />
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </>
+                          ) : (
+                            <div className="mt-1 border-[1px] text-lg rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7 xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-5 relative">
+                              Please Add Professional Activities Details
                             </div>
-                          </div>
-                        ))}
+                          )}
+                        </>
+                      )}
                     </div>
 
                     {/* Funding Section */}
@@ -955,47 +1120,58 @@ const ViewProfile = () => {
                           </button>
                         </div>
                       </div>
-                      {fundingOpen &&
-                        fundingDetails.length > 0 &&
-                        fundingDetails.map((funding, index) => (
-                          <div
-                            key={index}
-                            className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
-                          >
-                            <p>
-                              Funding Organization:{funding.funding_agency_name}{" "}
-                              | Funding Type: {funding.funding_type}
-                            </p>
-                            <p>Project Name:{funding.title}</p>
-                            <p>Project Link:{funding.project_link}</p>
-                            <p>
-                              {funding.start_date} - {funding.end_date}
-                            </p>
-                            <p className="mb-4">
-                              Amount: ${funding.total_funding_amt}
-                            </p>
-                            <div className="flex gap-4 absolute bottom-2 right-6">
-                              <BiSolidEditAlt
-                                onClick={() => {
-                                  setbutton4Clicked((prev) => !prev);
-                                  setPopup((prev) => !prev);
-                                  setEditData(true);
-                                  setFundingDetailsToEdit(funding);
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
-                              <RiDeleteBin2Line
-                                onClick={() => {
-                                  handleDataDelete({
-                                    dataId: funding.id,
-                                    dataType: "funding_details",
-                                  });
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
+                      {fundingOpen && (
+                        <>
+                          {fundingDetails.length > 0 ? (
+                            <>
+                              {fundingDetails.map((funding, index) => (
+                                <div
+                                  key={funding.id || index}
+                                  className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
+                                >
+                                  <p>
+                                    Funding Organization:
+                                    {funding.funding_agency_name} | Funding
+                                    Type: {funding.funding_type}
+                                  </p>
+                                  <p>Project Name:{funding.title}</p>
+                                  <p>Project Link:{funding.project_link}</p>
+                                  <p>
+                                    {funding.start_date} - {funding.end_date}
+                                  </p>
+                                  <p className="mb-4">
+                                    Amount: ${funding.total_funding_amt}
+                                  </p>
+                                  <div className="flex gap-4 absolute bottom-2 right-6">
+                                    <BiSolidEditAlt
+                                      onClick={() => {
+                                        setbutton4Clicked((prev) => !prev);
+                                        setPopup((prev) => !prev);
+                                        setEditData(true);
+                                        setFundingDetailsToEdit(funding);
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                    <RiDeleteBin2Line
+                                      onClick={() => {
+                                        handleDataDelete({
+                                          dataId: funding.id,
+                                          dataType: "funding_details",
+                                        });
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <div className="mt-1 border-[1px] text-lg rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7 xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-5 relative">
+                              Please Add Funding Details
                             </div>
-                          </div>
-                        ))}
+                          )}
+                        </>
+                      )}
                     </div>
                     {/* Work Section */}
                     <div>
@@ -1025,41 +1201,51 @@ const ViewProfile = () => {
                           </button>
                         </div>
                       </div>
-                      {workOpen &&
-                        works.length > 0 &&
-                        works.map((work, index) => (
-                          <div
-                            key={index}
-                            className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
-                          >
-                            <p>
-                              {work.work_title} | {work.publication_date}
-                            </p>
-                            <p>Work Type: {work.work_type}</p>
-                            <p>{work.work_title}</p>
-                            <p className="mb-4">{work.link}</p>
-                            <div className="flex gap-4 absolute bottom-2 right-4">
-                              <BiSolidEditAlt
-                                onClick={() => {
-                                  setbutton5Clicked((prev) => !prev);
-                                  setEditData(true);
-                                  setWorkToEdit(work);
-                                  setPopup((prev) => !prev);
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
-                              <RiDeleteBin2Line
-                                onClick={() => {
-                                  handleDataDelete({
-                                    dataId: work.id,
-                                    dataType: "works",
-                                  });
-                                }}
-                                className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
-                              />
+                      {workOpen && (
+                        <>
+                          {works.length > 0 ? (
+                            <>
+                              {works.map((work, index) => (
+                                <div
+                                  key={work.id || index}
+                                  className="mt-2 border-[1px] rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7  xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-10 relative"
+                                >
+                                  <p>
+                                    {work.work_title} | {work.publication_date}
+                                  </p>
+                                  <p>Work Type: {work.work_type}</p>
+                                  <p>{work.work_title}</p>
+                                  <p className="mb-4">{work.link}</p>
+                                  <div className="flex gap-4 absolute bottom-2 right-4">
+                                    <BiSolidEditAlt
+                                      onClick={() => {
+                                        setbutton5Clicked((prev) => !prev);
+                                        setEditData(true);
+                                        setWorkToEdit(work);
+                                        setPopup((prev) => !prev);
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                    <RiDeleteBin2Line
+                                      onClick={() => {
+                                        handleDataDelete({
+                                          dataId: work.id,
+                                          dataType: "works",
+                                        });
+                                      }}
+                                      className="text-4xl text-white bg-[#0000ff] rounded-xl p-1 cursor-pointer"
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            <div className="mt-1 border-[1px] text-lg rounded-[10px] xss:mx-3 xs:mx-0 xss:px-3 xss:leading-7 xs:mr-10 xs:ml-5 xs:px-7 py-6 xs:leading-5 relative">
+                              Please Add Work Details
                             </div>
-                          </div>
-                        ))}
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1125,66 +1311,172 @@ const ViewProfile = () => {
                   <div className="mt-6">
                     {activeTab === "uploads" ? (
                       <>
-                        {myUploads && myUploads.length > 0 ? (
-                          myUploads.map((post, i) => (
-                            <div
-                              key={i}
-                              className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
-                            >
-                              {/* Content for Saved Files */}
-                              <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                                <div className="flex flex-col space-y-1">
-                                  <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                                    {post.paper_title}
-                                  </h4>
-                                  <p className="sm:text-lg xss:text-md text-gray-600">
-                                    By {post.authors}
+                        {myUploads ? (
+                          <>
+                            {myUploads?.posts.length > 0 &&
+                              myUploads?.posts.map((post, i) => (
+                                <div
+                                  key={post.id || i}
+                                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                >
+                                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 pb-2 border-gray-400 border-opacity-35">
+                                    <div className="xss:w-2/6 xs:w-2/6 h-auto md:w-2/6 xl:w-2/6">
+                                      <img
+                                        src={post.post}
+                                        alt="Post"
+                                        className="w-full h-52 object-contain"
+                                      />
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                        {post.description}
+                                      </h4>
+                                      <p className="sm:text-lg xss:text-md text-gray-600">
+                                        By {post.PostUsername}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                    {post.abstract}
                                   </p>
-                                  <p className="xs:block sm:text-lg text-gray-600">
-                                    Publication Name: {post.publication_name}
+                                  <div className="flex justify-between my-1 items-center sm:mx-9">
+                                    <div className="flex items-center space-x-2">
+                                      <FontAwesomeIcon
+                                        onClick={() =>
+                                          handleLike(
+                                            post.am_i_liked ? "unlike" : "like",
+                                            post.id,
+                                            "post",
+                                            { refreshType: "MyUploads" }
+                                          )
+                                        }
+                                        icon={
+                                          post.am_i_liked
+                                            ? solidHeart
+                                            : regularHeart
+                                        }
+                                        className="text-red-600 cursor-pointer text-xl"
+                                      />
+                                      <span className="lg:text-lg xss:text-base">
+                                        {post.likeCount}{" "}
+                                        {post.am_i_liked ? "likes" : "like"}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={weuieyesonfilled}
+                                        alt="Views"
+                                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        {post.viewsCount == null
+                                          ? 0
+                                          : post.viewsCount}{" "}
+                                        Views
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={openmojishare}
+                                        alt="Share"
+                                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        Share
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            {myUploads?.articles.length > 0 &&
+                              myUploads?.articles.map((post, i) => (
+                                <div
+                                  key={post.id || i}
+                                  className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                >
+                                  {/* Content for Saved Files */}
+                                  <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
+                                    <div className="flex flex-col space-y-1 w-full">
+                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                        {post.paper_title}
+                                      </h4>
+                                      <p className="sm:text-lg xss:text-md text-gray-600">
+                                        By {post.authors}
+                                      </p>
+                                      <p className="xs:block sm:text-lg text-gray-600">
+                                        Publication Name:{" "}
+                                        {post.publication_name}
+                                      </p>
+                                      <p className="xs:block sm:text-lg text-gray-600">
+                                        Research Interest:{" "}
+                                        {post.research_interest} | year:{" "}
+                                        {post.year}
+                                      </p>
+
+                                      <Link
+                                        to={`${post.image}${post.article}`}
+                                        rel="noreferrer"
+                                        target="_blank"
+                                        className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
+                                      >
+                                        Download
+                                      </Link>
+                                      <br />
+                                    </div>
+                                  </div>
+                                  <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
+                                    {post.abstract}
                                   </p>
-                                  <p className="xs:block sm:text-lg text-gray-600">
-                                    Research Interest: {post.research_interest}{" "}
-                                    | year: {post.year}
-                                  </p>
+                                  <div className="flex justify-between my-1 items-center sm:mx-9">
+                                    <div className="flex items-center space-x-2">
+                                      <FontAwesomeIcon
+                                        onClick={() =>
+                                          handleLike(
+                                            post.am_i_liked ? "unlike" : "like",
+                                            post.id,
+                                            "article",
+                                            { refreshType: "MyUploads" }
+                                          )
+                                        }
+                                        icon={
+                                          post.am_i_liked
+                                            ? solidHeart
+                                            : regularHeart
+                                        }
+                                        className="text-red-600 cursor-pointer text-xl"
+                                      />
+                                      <span className="sm:text-lg xss:text-base">
+                                        {post.likeCount}{" "}
+                                        {post.am_i_liked ? "likes" : "like"}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={weuieyesonfilled}
+                                        alt="Views"
+                                        className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        {post.viewsCount == null
+                                          ? 0
+                                          : post.viewsCount}{" "}
+                                        Views
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <img
+                                        src={openmojishare}
+                                        alt="Share"
+                                        className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      />
+                                      <span className="text-lg xss:text-base">
+                                        Share
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
-                                {post.abstract}
-                              </p>
-                              <div className="flex justify-between my-1 items-center sm:mx-9">
-                                <div className="flex items-center space-x-2">
-                                  <FontAwesomeIcon
-                                    icon={solidHeart}
-                                    className="text-red-600 sm:text-xl xss:text-lg"
-                                  />
-                                  <span className="sm:text-lg xss:text-base">
-                                    1 likes
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <img
-                                    src={weuieyesonfilled}
-                                    alt="Views"
-                                    className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
-                                  />
-                                  <span className="text-lg xss:text-base">
-                                    2 Views
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <img
-                                    src={openmojishare}
-                                    alt="Share"
-                                    className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
-                                  />
-                                  <span className="text-lg xss:text-base">
-                                    Share
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          ))
+                              ))}
+                          </>
                         ) : (
                           <p>No uploads yet</p>
                         )}
@@ -1195,7 +1487,7 @@ const ViewProfile = () => {
                           <>
                             {savedFiles?.posts?.map((post, i) => (
                               <div
-                                key={i}
+                                key={post.postid || i}
                                 className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                               >
                                 {/* Content for Saved Files */}
@@ -1222,6 +1514,14 @@ const ViewProfile = () => {
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
                                   <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
+                                      onClick={() =>
+                                        handleLike(
+                                          post.am_i_liked ? "unlike" : "like",
+                                          post.postid,
+                                          "post",
+                                          { refreshType: "SavedFiles" }
+                                        )
+                                      }
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
@@ -1257,13 +1557,29 @@ const ViewProfile = () => {
                                       Share
                                     </span>
                                   </div>
+                                  <div
+                                    className="flex items-center space-x-2 cursor-pointer"
+                                    onClick={() =>
+                                      handleRemoveSaved(
+                                        "deleteSave",
+                                        post.postid,
+                                        "post"
+                                      )
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={solidBookmark}
+                                      className="text-gray-600"
+                                    />
+                                    <span>Saved</span>
+                                  </div>
                                 </div>
                               </div>
                             ))}
                             {savedFiles?.articles?.map((post, i) => (
                               <div
-                                key={i}
-                                className="sm:p-1 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
+                                key={post.articleId || i}
+                                className="sm:p-3 xss:p-3 border-2 border-gray-300 rounded-lg mb-2"
                               >
                                 {/* Content for Saved Files */}
                                 <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto border-b-2 border-gray-400 border-opacity-35">
@@ -1338,22 +1654,27 @@ const ViewProfile = () => {
                                         </p>
                                       )}
                                     </div>
-                                    <button
-                                      className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] lg:px-1.5 xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
-                                      onClick={() =>
-                                        downloadpdf(
-                                          post.articleId,
-                                          post.articleUserId
-                                        )
-                                      }
+                                    <Link
+                                      to={post?.image}
+                                      rel="noreferrer"
+                                      target="_blank"
+                                      className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
                                     >
-                                      Download PDF
-                                    </button>
+                                      Download
+                                    </Link>
                                   </div>
                                 </div>
                                 <div className="flex justify-between my-1 items-center sm:mx-9">
                                   <div className="flex items-center space-x-2">
                                     <FontAwesomeIcon
+                                      onClick={() =>
+                                        handleLike(
+                                          post.am_i_liked ? "unlike" : "like",
+                                          post.articleId,
+                                          "article",
+                                          { refreshType: "SavedFiles" }
+                                        )
+                                      }
                                       icon={
                                         post.am_i_liked
                                           ? solidHeart
@@ -1370,7 +1691,7 @@ const ViewProfile = () => {
                                     <img
                                       src={weuieyesonfilled}
                                       alt="Views"
-                                      className="sm:w-7 sm:h-7 xss:w-5 xss:h-5"
+                                      className="sm:w-7 sm:h-7 xss:w-5 xss:h-5 cursor-pointer"
                                     />
                                     <span className="text-lg xss:text-base">
                                       {post.viewsCount ? post.viewsCount : 1}{" "}
@@ -1381,11 +1702,27 @@ const ViewProfile = () => {
                                     <img
                                       src={openmojishare}
                                       alt="Share"
-                                      className="sm:w-7 sm:h-7 xss:h-6 xss:w-6"
+                                      className="sm:w-7 sm:h-7 xss:h-6 xss:w-6 cursor-pointer"
                                     />
                                     <span className="text-lg xss:text-base">
                                       Share
                                     </span>
+                                  </div>
+                                  <div
+                                    className="flex items-center space-x-2 "
+                                    onClick={() =>
+                                      handleRemoveSaved(
+                                        "deleteSave",
+                                        post.articleId,
+                                        "article"
+                                      )
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={solidBookmark}
+                                      className="text-gray-600 cursor-pointer"
+                                    />
+                                    <span>Saved</span>
                                   </div>
                                 </div>
                               </div>
