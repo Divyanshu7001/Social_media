@@ -62,7 +62,7 @@ const ArticleDetails = () => {
     if (id && fetch === true) fetchArticle();
   }, [id, fetch]);
 
-  console.log(article, "article");
+  // console.log(article, "article");
 
   const downloadpdf = async (id, user_id) => {
     try {
@@ -85,6 +85,43 @@ const ArticleDetails = () => {
       window.open(url, "_blank");
     } catch (error) {
       console.error(error);
+    }
+  };
+  const handleLike = async (action, art_id) => {
+    try {
+      const data = new FormData();
+      data.append("user_id", user.id);
+      data.append("article_id", art_id);
+      data.append("type", "article");
+      const response = await api.post(action, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      setFetch(true);
+      // window.location.reload()
+      // console.log(response);
+      if (response.status === 201) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      } else if (response.status === 200) {
+        toast.success(response.data.message, {
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      if (error.code === "ERR_BAD_REQUEST") {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message, {
+            position: "top-right",
+          });
+        } else {
+          toast.error(error.response.data.error, {
+            position: "top-right",
+          });
+        }
+      }
+      console.log(error);
     }
   };
 
@@ -178,7 +215,7 @@ const ArticleDetails = () => {
               <div className="flex-col xss:w-full lg:w-3/5 lg:border-r-4 px-4 ">
                 <h1 className="text-3xl">{art.paper_title}</h1>
                 <div className="flex mt-5 justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center cursor-pointer" onClick={() => navigate(`/profile/${art?.user?.id}`)}>
                     {art.user.image ? (
                       <img
                         src={art.user.image}
@@ -199,7 +236,7 @@ const ArticleDetails = () => {
                   </div>
                 </div>
                 <div className="my-4 flex items-center gap-5">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center cursor-pointer" onClick={() => handleLike(art.am_i_liked ? "unlike" : "like", art.id)}>
                     {/* <img src='./images/like.png'></img> art.am_i_liked */}
                     <FontAwesomeIcon
                       icon={art.am_i_liked ? solidHeart : regularHeart}
@@ -207,8 +244,8 @@ const ArticleDetails = () => {
                     />
                     {/* art.am_i_liked */}
                     <h2 className="text-sm ">
-                      {" "}
-                      {art.am_i_liked ? "Likes" : "Like"}
+                      {art.like_count}
+                      {art.am_i_liked ? " Likes" : " Like"}
                     </h2>
                   </div>
 
@@ -225,19 +262,20 @@ const ArticleDetails = () => {
                   </div>
                 </div>
                 <p className="text-gray-500">{art.abstract}</p>
-                <button
-                  className="bg-primary text-white font-bold  py-2 mt-4 px-5 rounded"
-                  onClick={() => downloadpdf(art.id, art.user.id)}
+                <br></br>
+                <a href={art.article} target="_blank"
+                  className="bg-primary text-white font-bold  py-2 mt-5 px-5 rounded"
+                // onClick={() => downloadpdf(art.id, art.user.id)}
                 >
                   Download
-                </button>
+                </a>
               </div>
               <div className="w-auto lg:w-2/5 ps-6 h-screen">
                 <h1 className="font-semibold text-2xl lg:mt-0 xss:mt-4">
                   About Author
                 </h1>
                 <div className="flex mt-5 justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center cursor-pointer" onClick={() => navigate(`/profile/${art?.user?.id}`)}>
                     {art.user.image ? (
                       <img
                         src={art.user.image}
@@ -294,9 +332,9 @@ const ArticleDetails = () => {
                           </div>
 
                         </div>
-                        <div className="text-sm text-gray-500  px-3 mt-2" onClick={() => navigate(`/profile/${item?.user?.id}`)}>
+                        <div className="text-sm text-gray-500  px-3 mt-2 cursor-pointer" onClick={() => navigate(`/profile/${item?.user?.id}`)}>
 
-                          By {item?.user?.name}
+                          By <span className="hover:border-b-2 hover:border-b-primary">{item?.user?.name}</span>
 
                         </div>
                         {/* <p className="mt-2 text-gray-500 font-medium border-b-2 pb-4 px-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, illum!</p> */}
@@ -305,10 +343,12 @@ const ArticleDetails = () => {
                           <div className="flex items-center space-x-2 cursor-pointer">
                             <LiaDownloadSolid />
                             {/* <FontAwesomeIcon icon={Download} className="text-gray-600" /> */}
-                            <span className="home-like-share-saved" onClick={() => downloadpdf(item.id, item.user.id)}>
+                            <a className="home-like-share-saved" href={item?.article} target="_blank"
+                            //  onClick={() => downloadpdf(item.id, item.user.id)}
+                            >
 
                               Download
-                            </span>
+                            </a>
                           </div>
 
                           <div

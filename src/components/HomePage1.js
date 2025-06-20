@@ -283,6 +283,7 @@ const ArticleCard = ({
   like,
   saved,
   dataFetch,
+  article_data
 }) => {
   // user_id => user follow user_id
   // follow => already follow or not check
@@ -412,12 +413,12 @@ const ArticleCard = ({
     }
   };
 
-  
+
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
       <div className="xss:flex-col md:flex md:flex-row justify-between xss:items-start md:items-center">
         <Link
-          to={`/ArticleDetails/${article_id}`}
+          to={`/ArticleDetails/${article_data?.articleUrl}`}
           className="text-2xl font-semibold pe-5"
         >
           {title}
@@ -460,13 +461,13 @@ const ArticleCard = ({
       {description.length > 100 ? (
         <div className="xss:text-md sm:text-lg xss:pb-1 text-gray-600 text-wrap">
           <span
-            onClick={() => navigate(`/ArticleDetails/${article_id}`)}
+            onClick={() => navigate(`/ArticleDetails/${article_data?.articleUrl}`)}
             className="cursor-pointer"
           >
             {expandDescription ? description : description.slice(0, 130)}
           </span>
           <span
-            onClick={() => navigate(`/ArticleDetails/${article_id}`)}
+            onClick={() => navigate(`/ArticleDetails/${article_data?.articleUrl}`)}
             className="text-lg cursor-pointer"
           >
             ......
@@ -474,7 +475,7 @@ const ArticleCard = ({
         </div>
       ) : (
         <p
-          onClick={() => navigate(`/ArticleDetails/${article_id}`)}
+          onClick={() => navigate(`/ArticleDetails/${article_data?.articleUrl}`)}
           className="xss:text-md sm:text-lg xss:pb-1 text-gray-600 cursor-pointer"
         >
           {description}
@@ -533,6 +534,7 @@ const HomePage1 = ({ posts, articles, dataFetch }) => (
           like={article.am_i_liked}
           saved={article.isSaved}
           dataFetch={dataFetch}
+          article_data={article}
         />
       ))}
     {posts.length > 0 &&
