@@ -36,6 +36,24 @@ import api from "./api.js";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+const ContextMenu = () => {
+  return (
+    <div className="absolute top-0 right-4 min-w-[110px] min-h-[30px] w-fit h-fit p-2 backdrop-blur-xl bg-gray-200  bg-opacity-20 rounded-lg">
+      <div className="flex flex-col space-y-3">
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <BiSolidEditAlt className="text-2xl text-black " />
+          <p className="text-md font-semibold">Edit</p>
+        </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <RiDeleteBin2Line className="text-2xl text-black " />
+          <p className="text-md font-semibold">Delete</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ViewProfile = () => {
   //General States & Context Details
@@ -128,6 +146,10 @@ const ViewProfile = () => {
   const [button6Clicked, setbutton6Clicked] = useState(false);
 
   const [activeTab, setActiveTab] = useState("uploads");
+
+  //Context Menu states
+  const [openPostsContextMenuId, setOpenPostsContextMenuId] = useState(null);
+  const [openArticlesContextMenuId, setOpenArticlesContextMenuId] = useState(null);
 
   useEffect(() => {
     if (!isDataFetched) {
@@ -1327,13 +1349,28 @@ const ViewProfile = () => {
                                         className="w-full h-52 object-contain"
                                       />
                                     </div>
-                                    <div className="flex flex-col space-y-1">
-                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                                        {post.description}
-                                      </h4>
-                                      <p className="sm:text-lg xss:text-md text-gray-600">
-                                        By {post.PostUsername}
-                                      </p>
+                                    <div className="flex justify-between w-full relative">
+                                      <div className="flex flex-col space-y-1">
+                                        <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                          {post.description}
+                                        </h4>
+                                        <p className="sm:text-lg xss:text-md text-gray-600">
+                                          By {post.PostUsername}
+                                        </p>
+                                      </div>
+                                      <MoreVertIcon
+                                        onClick={() => {
+                                          setOpenPostsContextMenuId(
+                                            openPostsContextMenuId === post.id
+                                              ? null
+                                              : post.id
+                                          );
+                                        }}
+                                        className="text-gray-800 cursor-pointer font-bold text-2xl"
+                                      />
+                                      {openPostsContextMenuId === post.id && (
+                                        <ContextMenu />
+                                      )}
                                     </div>
                                   </div>
                                   <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">
@@ -1396,32 +1433,47 @@ const ViewProfile = () => {
                                 >
                                   {/* Content for Saved Files */}
                                   <div className="flex sm:space-x-3 md:space-x-3 xss:space-x-2 mx-auto xs:border-b-2 border-gray-400 border-opacity-35">
-                                    <div className="flex flex-col space-y-1 w-full">
-                                      <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
-                                        {post.paper_title}
-                                      </h4>
-                                      <p className="sm:text-lg xss:text-md text-gray-600">
-                                        By {post.authors}
-                                      </p>
-                                      <p className="xs:block sm:text-lg text-gray-600">
-                                        Publication Name:{" "}
-                                        {post.publication_name}
-                                      </p>
-                                      <p className="xs:block sm:text-lg text-gray-600">
-                                        Research Interest:{" "}
-                                        {post.research_interest} | year:{" "}
-                                        {post.year}
-                                      </p>
+                                    <div className="flex justify-between w-full relative">
+                                      <div className="flex flex-col space-y-1 w-full">
+                                        <h4 className="sm:text-xl xss:text-md xss:font-bold sm:font-bold">
+                                          {post.paper_title}
+                                        </h4>
+                                        <p className="sm:text-lg xss:text-md text-gray-600">
+                                          By {post.authors}
+                                        </p>
+                                        <p className="xs:block sm:text-lg text-gray-600">
+                                          Publication Name:{" "}
+                                          {post.publication_name}
+                                        </p>
+                                        <p className="xs:block sm:text-lg text-gray-600">
+                                          Research Interest:{" "}
+                                          {post.research_interest} | year:{" "}
+                                          {post.year}
+                                        </p>
 
-                                      <Link
-                                        to={`${post.image}${post.article}`}
-                                        rel="noreferrer"
-                                        target="_blank"
-                                        className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
-                                      >
-                                        Download
-                                      </Link>
-                                      <br />
+                                        <Link
+                                          to={`${post.image}${post.article}`}
+                                          rel="noreferrer"
+                                          target="_blank"
+                                          className="bg-primary text-white font-bold  py-2 mt-4 rounded px-[2vw] text-center xl:py-[0.3vw] xss:w-[35%] md:w-[25%] lg:w-[35%] xl:w-[25%]"
+                                        >
+                                          Download
+                                        </Link>
+                                        <br />
+                                      </div>
+                                      <MoreVertIcon
+                                        onClick={() => {
+                                          setOpenArticlesContextMenuId(
+                                            openArticlesContextMenuId === post.id
+                                              ? null
+                                              : post.id
+                                          );
+                                        }}
+                                        className="text-gray-800 cursor-pointer font-bold text-2xl"
+                                      />
+                                      {openArticlesContextMenuId === post.id && (
+                                        <ContextMenu />
+                                      )}
                                     </div>
                                   </div>
                                   <p className="xss:block xs:hidden xss:text-sm sm:text-lg xss:pb-1 text-gray-600 border-b-2 border-gray-300">

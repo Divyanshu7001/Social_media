@@ -19,6 +19,25 @@ import api from "./api";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import { BiSolidEditAlt } from "react-icons/bi";
+import { RiDeleteBin2Line } from "react-icons/ri";
+
+const ContextMenu = () => {
+  return (
+    <div className="absolute top-0 right-4 min-w-[110px] min-h-[30px] w-fit h-fit p-2 backdrop-blur-xl bg-gray-200  bg-opacity-20 rounded-lg">
+      <div className="flex flex-col space-y-3">
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <BiSolidEditAlt className="text-2xl text-black " />
+          <p className="text-md font-semibold">Edit</p>
+        </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <RiDeleteBin2Line className="text-2xl text-black " />
+          <p className="text-md font-semibold">Delete</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PostCard = ({
   name,
@@ -39,6 +58,7 @@ const PostCard = ({
   const navigate = useNavigate();
   const handleView = () => setViews(views + 1);
   const [isPortrait, setIsPortrait] = useState(false);
+  const [openPostsContextMenuId, setOpenPostsContextMenuId] = useState(null);
   useEffect(() => {
     handleView();
     isImagePortrait(image);
@@ -203,7 +223,7 @@ const PostCard = ({
             </div>
           </div>
         </div>
-        <div className="flex px-0 py-4 items-center md:px-0 xl:px-2 lg:px-0 ">
+        <div className="flex px-0 py-4 items-center relative">
           {user.id !== user_id && (
             <button
               className="text-primary text-base lg:text-lg xl:text-xl mr-1 xl:mr-4 lg:mr-2 md:mr-1"
@@ -212,8 +232,17 @@ const PostCard = ({
               {follow ? "Unfollow" : "Follow"}
             </button>
           )}
-
-          <MoreVertIcon />
+          {user.id === user_id && (
+            <MoreVertIcon
+              className="cursor-pointer"
+              onClick={() => {
+                setOpenPostsContextMenuId(
+                  openPostsContextMenuId === post_id ? null : post_id
+                );
+              }}
+            />
+          )}
+          {openPostsContextMenuId === post_id && <ContextMenu />}
         </div>
       </div>
       {/* body */}
@@ -264,8 +293,7 @@ const PostCard = ({
             className="text-gray-600"
           />
           {/* <img src={iconamoonbookmarkthin} alt="Save" className="w-6 h-6" /> */}
-          <span className="hidden xs:block">{saved ? "Saved" : "Save"}
-          </span>
+          <span className="hidden xs:block">{saved ? "Saved" : "Save"}</span>
         </div>
       </div>
     </div>
@@ -289,7 +317,8 @@ const ArticleCard = ({
   const { user } = useContext(Context);
   const [views, setViews] = useState(0);
   const [expandDescription, setExpandDescription] = useState(false);
-
+  const [openArticlesContextMenuId, setOpenArticlesContextMenuId] =
+    useState(null);
   // const handleLike = () => setLiked(!liked);
   const handleView = () => setViews(views + 1);
   const navigate = useNavigate();
@@ -412,7 +441,6 @@ const ArticleCard = ({
     }
   };
 
-  
   return (
     <div className="bg-white shadow-lg  px-4 mb-8  py-2  border-2 rounded-lg">
       <div className="xss:flex-col md:flex md:flex-row justify-between xss:items-start md:items-center">
@@ -432,7 +460,7 @@ const ArticleCard = ({
               {author}
             </p>
           </div>
-          <div className="flex">
+          <div className="flex relative">
             {user.id !== user_id && (
               <button
                 className="text-primary text-base  lg:text-lg xl:text-xl mr-4"
@@ -444,7 +472,17 @@ const ArticleCard = ({
                 {follow ? "Unfollow" : "Follow"}
               </button>
             )}
-            <MoreVertIcon />
+            {user.id === user_id && (
+              <MoreVertIcon
+                className="cursor-pointer"
+                onClick={() => {
+                  setOpenArticlesContextMenuId(
+                    openArticlesContextMenuId === article_id ? null : article_id
+                  );
+                }}
+              />
+            )}
+            {openArticlesContextMenuId === article_id && <ContextMenu />}
           </div>
         </div>
       </div>
