@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default, import/no-named-as-default-member
+/* eslint-disable import/namespace */
+// eslint-disable-next-line import/default, import/no-named-as-default, import/no-named-as-default-member
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
